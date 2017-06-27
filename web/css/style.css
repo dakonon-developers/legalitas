@@ -1,0 +1,55 @@
+.green-color{
+	background-color:#69a48e;
+}
+
+
+.green-color a,.green-color p,.green-color span{
+	color:white;
+}
+
+aside{
+	padding-bottom:10px;
+}
+
+.legalitas-navbar{
+	background-color:white;
+	height: 10%;
+}
+/*
+.navbar img{
+	height:80px;
+	width:220px;
+	
+}*/
+
+.navbar-nav li{
+	padding-top:20%;
+}
+
+.navbar-nav li a{
+	color:black;
+}
+
+/*.legalitas-footer{
+	padding-left:30%;
+	padding-right:30%;
+}*/
+
+.navbar-default .navbar-nav>li>a {
+	color:white;
+}
+
+
+.footer-navbar{
+	list-style: none;
+}
+
+.footer-navbar>li {
+    float: left;
+	padding: 0px 25px 0px 25px;
+}
+
+.footer-navbar span{
+	font-size:8px;
+}
+
