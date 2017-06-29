@@ -21,6 +21,10 @@ $config = [
             ],
         ],
         'db' => $db,
+        //El codigo para migrar el auth es ********php yii migrate --migrationPath=@yii/rbac/migrations/******
+        'authManager' => [
+              'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\PhpManager'
+        ],
     ],
     'params' => $params,
     /*
