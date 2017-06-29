@@ -71,11 +71,10 @@ LegalitasAsset::register($this);
 
 <footer class="footer green-color">
     <div class="col-md-6 col-md-offset-4 col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3">
-        <ul class="footer-navbar">
-            <li><a href="#">WHATSAPP <br><span>Tel. 829.649.8888</span></a></li>
-            <li class="separador"><a href="#">EMAIL <br><span>contacto@legalitasrd.com</span></a></li>
-            <li><a href="#">INSTAGRAM <br><span>@LegalitasRD</span></a></li>
-        </ul>
+
+            <div class="col-md-3"><a href="#">WHATSAPP <br><span>Tel. 829.649.8888</span></a></div>
+            <div class="col-md-3" id="separador"><a href="#">EMAIL <br><span>contacto@legalitasrd.com</span></a></div>
+            <div class="col-md-3"><a href="#">INSTAGRAM <br><span>@LegalitasRD</span></a></div>
     </div>
 </footer>
 
