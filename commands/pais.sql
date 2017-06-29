@@ -7,7 +7,7 @@
 -- Versión del servidor: 5.5.53-0+deb8u1
 -- Versión de PHP: 5.6.29-0+deb8u1
 
-INSERT INTO `pais` (`id`, `nombre`) VALUES
+INSERT INTO pais (id, nombre) VALUES
 (1, 'Afganistán'),
 (2, 'Akrotiri'),
 (3, 'Albania'),
@@ -262,4 +262,3 @@ INSERT INTO `pais` (`id`, `nombre`) VALUES
 (252, 'Yibuti'),
 (253, 'Zambia'),
 (254, 'Zimbabue');
-

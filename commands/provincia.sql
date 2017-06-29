@@ -7,7 +7,7 @@
 -- Versión del servidor: 5.5.53-0+deb8u1
 -- Versión de PHP: 5.6.29-0+deb8u1
 
-INSERT INTO `provincia` (`id`, `fk_pais`, `nombre`) VALUES
+INSERT INTO provincia (id, fk_pais, nombre) VALUES
 (1, 194, 'Azua'),
 (2, 194, 'Bahoruco'),
 (3, 194, 'Barahona'),
@@ -40,36 +40,3 @@ INSERT INTO `provincia` (`id`, `fk_pais`, `nombre`) VALUES
 (30, 194, 'Santiago Rodríguez'),
 (31, 194, 'Santo Domingo'),
 (32, 194, 'Valverde');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `provincia`
---
-ALTER TABLE `provincia`
- ADD PRIMARY KEY (`id`), ADD KEY `i-fk_pais` (`fk_pais`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `provincia`
---
-ALTER TABLE `provincia`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `provincia`
---
-ALTER TABLE `provincia`
-ADD CONSTRAINT `provincia_pais` FOREIGN KEY (`fk_pais`) REFERENCES `pais` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

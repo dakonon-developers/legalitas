@@ -1,4 +1,4 @@
-INSERT INTO `municipio` (`id`, `fk_provincia`, `nombre`) VALUES
+INSERT INTO municipio (id, fk_provincia, nombre) VALUES
 (1,5,'Distrito Nacional'),
 (2,1,'Azua de Compostela'),
 (3,1,'Estebanía'),

@@ -7,37 +7,7 @@
 -- Versión del servidor: 5.5.53-0+deb8u1
 -- Versión de PHP: 5.6.29-0+deb8u1
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Base de datos: `legalitas`
---
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `nacionalidad`
---
-
-CREATE TABLE IF NOT EXISTS `nacionalidad` (
-`id` int(11) NOT NULL,
-  `fk_pais` int(11) NOT NULL,
-  `nombre` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `abreviatura` varchar(3) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Volcado de datos para la tabla `nacionalidad`
---
-
-INSERT INTO `nacionalidad` (`id`, `fk_pais`, `nombre`, `abreviatura`) VALUES
+INSERT INTO nacionalidad (id, fk_pais, nombre, abreviatura) VALUES
 (1, 6, 'Angoleña', 'AGO'),
 (2, 13, 'Argelina', 'DZA'),
 (3, 43, 'Camerunesa', 'CMR'),
@@ -142,36 +112,3 @@ INSERT INTO `nacionalidad` (`id`, `fk_pais`, `nombre`, `abreviatura`) VALUES
 (103, 239, 'Ucraniana', 'UKR'),
 (104, 19, 'Australiana', 'AUS'),
 (105, 174, 'Neozelandesa', 'NZL');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `nacionalidad`
---
-ALTER TABLE `nacionalidad`
- ADD PRIMARY KEY (`id`), ADD KEY `i-fk_pais` (`fk_pais`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `nacionalidad`
---
-ALTER TABLE `nacionalidad`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=106;
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `nacionalidad`
---
-ALTER TABLE `nacionalidad`
-ADD CONSTRAINT `pais_nacionalidad` FOREIGN KEY (`fk_pais`) REFERENCES `pais` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

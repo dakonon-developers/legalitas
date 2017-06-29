@@ -18,7 +18,7 @@ class m170628_132446_nacionalidad extends Migration
             'abreviatura' => $this->string(3)->notNull()
             ], $tableOptions);
 
-        $this->createIndex('i-fk_pais','nacionalidad','fk_pais');
+        $this->createIndex('i-fk_pais_n','nacionalidad','fk_pais');
         $this->addForeignKey('pais_nacionalidad','nacionalidad','fk_pais','pais','id','CASCADE','CASCADE');
     }
 

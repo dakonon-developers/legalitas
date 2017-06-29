@@ -17,7 +17,7 @@ class m170628_132952_provincia extends Migration
             'nombre' => $this->string(128)->notNull(),
             ], $tableOptions);
 
-        $this->createIndex('i-fk_pais','provincia','fk_pais');
+        $this->createIndex('i-fk_pais_p','provincia','fk_pais');
         $this->addForeignKey('provincia_pais','provincia','fk_pais','pais','id','CASCADE','CASCADE');
 
     }
