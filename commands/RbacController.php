@@ -29,6 +29,10 @@ class RbacController extends Controller
         $usuario = $auth->createRole('Usuario');
         $usuario->description = 'Es el rol del usuario común';
         $auth->add($usuario);
+        // se crea el permiso del invitado
+        $invitado = $auth->createRole('Invitado');
+        $invitado->description = 'Es el rol de invitado';
+        $auth->add($invitado);
         echo "Se crearon los roles con exito";
     }
 }

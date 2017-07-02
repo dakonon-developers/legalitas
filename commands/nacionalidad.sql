@@ -7,7 +7,7 @@
 -- Versión del servidor: 5.5.53-0+deb8u1
 -- Versión de PHP: 5.6.29-0+deb8u1
 
-INSERT INTO nacionalidad (id, fk_pais, nombre, abreviatura) VALUES
+INSERT INTO nacionalidad(id, fk_pais, nombre, abreviatura) VALUES
 (1, 6, 'Angoleña', 'AGO'),
 (2, 13, 'Argelina', 'DZA'),
 (3, 43, 'Camerunesa', 'CMR'),

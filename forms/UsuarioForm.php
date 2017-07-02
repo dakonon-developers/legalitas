@@ -1,0 +1,171 @@
+<?php
+namespace app\forms;
+
+use yii\base\Model;
+
+/**
+ * Usuario form
+ */
+class UsuarioForm extends Model
+{
+    // User
+    public $username;
+    public $email;
+    public $password;
+    public $password_repeat;
+    // Profile
+    public $nombres;
+    public $apellidos;
+    public $documento_identidad;
+    public $nombre_representante;
+    public $documento_identidad_representante;
+    public $foto_documento_identidad;
+    public $telefono_oficina;
+    public $celular;
+    public $tarjeta_credito;
+    public $fk_nacionalidad;
+    public $fk_municipio;
+    public $provincia;
+    public $categoria;
+    // Questions
+    public $demandado;
+    public $cantidad;
+    public $consulta_info;
+    public $servicios;
+
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['username', 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\app\models\User'],
+            ['username', 'string', 'min' => 2, 'max' => 255],
+
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\app\models\User'],
+
+            ['password', 'required'],
+            ['password', 'string', 'min' => 6],
+            ['password_repeat', 'required'],
+            ['password_repeat', 'compare', 'compareAttribute'=>'password'],
+
+            [['nombres', 'apellidos', 'documento_identidad', 'telefono_oficina', 
+            'celular', 'tarjeta_credito', 'fk_nacionalidad', 'fk_municipio',
+             'categoria','provincia'], 'required'],
+            [['fk_nacionalidad', 'fk_municipio', 'provincia'], 'integer'],
+            [['nombres', 'apellidos','nombre_representante'], 'string', 'max' => 50],
+            [['documento_identidad','documento_identidad_representante'], 'string', 'max' => 14],
+            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf'],
+            [['telefono_oficina', 'celular'], 'string', 'max' => 10],
+            [['tarjeta_credito'], 'string', 'max' => 16],
+            [['categoria'], 'string', 'max' => 2],
+            [['nombre_representante','documento_identidad_representante'],'required', 'when' => function($model) {
+                return $model->categoria == 'OA' or $model->categoria == 'NE';},
+                'whenClient' => "function (attribute, value) {
+                    return $('#categoria').val() == 'OA' || $('#categoria').val() == 'NE';
+                }" ],
+            [['fk_municipio'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Municipio::className(), 'targetAttribute' => ['fk_municipio' => 'id']],
+            [['provincia'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Provincia::className(), 'targetAttribute' => ['provincia' => 'id']],
+            [['fk_nacionalidad'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Nacionalidad::className(), 'targetAttribute' => ['fk_nacionalidad' => 'id']],
+
+            // Preguntas
+            [['demandado', 'consulta_info','servicios'], 'required'],
+            [['demandado', 'consulta_info'], 'boolean'],
+            [['cantidad'], 'integer'],
+            [['cantidad'],'required', 'when' => function($model) {
+                return $model->consulta_info == "1";},
+                'whenClient' => "function (attribute, value) {
+                    return $('.field-usuarioform-demandado input[type=\'radio\']:checked').val() == \"1\";
+                }" ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'username' => 'Nombre de Usuario',
+            'email' => 'Correo',
+            'password' => 'Contraseña',
+            'password_repeat' => 'Repita su contraseña',
+            // Perfil
+            'nombres' => 'Nombres',
+            'apellidos' => 'Apellidos',
+            'documento_identidad' => 'Documento de Identidad',
+            'foto_documento_identidad' => 'Foto Documento Identidad',
+            'nombre_representante' => 'Nombre Completo del Representante',
+            'documento_identidad_representante' => 'Documento de Identidad del Representante',
+            'telefono_oficina' => 'Telefono Oficina',
+            'celular' => 'Celular',
+            'tarjeta_credito' => 'Tarjeta Crédito',
+            'fk_nacionalidad' => 'Nacionalidad',
+            'fk_municipio' => 'Municipio',
+            'categoria' => 'Categoría',
+            // Preguntas
+            'demandado' => 'Demandado',
+            'cantidad' => 'Cantidad',
+            'consulta_info' => 'Info',
+        ];
+    }
+
+
+    /**
+     * Signs user up.
+     *
+     * @return User|null the saved model or null if saving fails
+     */
+    public function save()
+    {
+        if (!$this->validate()) {
+            return null;
+        }
+        // Model User 
+        $user = new \app\models\User();
+        $user->username = $this->username;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+        $user->save();
+        // Model Perfil
+        $perfil = new \app\models\User();
+        $perfil->nombres = $this->nombres;
+        $perfil->apellidos = $this->apellidos;
+        $perfil->documento_identidad = $this->documento_identidad;
+        $perfil->telefono_oficina = $this->telefono_oficina;
+        $perfil->celular = $this->celular;
+        $perfil->tarjeta_credito = $this->tarjeta_credito;
+        $perfil->activo = 0;
+        $perfil->fk_nacionalidad = $this->fk_nacionalidad;
+        $perfil->fk_municipio = $this->fk_municipio;
+        $perfil->fk_usuario = $user->id;
+        $perfil->categoria = $this->categoria;
+        $perfil->save();
+        // Si la categoria lo amerita se crea el representante
+        if($this->categoria=='OA' || $this->categoria=='NE'){
+            $perfil_rep = new \app\models\PerfilRepresentante();
+            $perfil_rep->nombre_representante = $this->nombre_representante;
+            $perfil_rep->documento_identidad_representante = $this->documento_identidad_representante;
+            $perfil_rep->fk_perfil_usuario = $perfil->id;
+            $perfil_rep->save();
+        }
+        // Model de pregunta
+        $pregunta = new \app\models\Preguntas();
+        $pregunta->demandado = $this->demandado;
+        $pregunta->cantidad = $this->cantidad;
+        $pregunta->consulta_info = $this->consulta_info;
+        $pregunta->fk_usuario = $user->id;
+        $pregunta->save();
+
+        return true;
+    }
+}
