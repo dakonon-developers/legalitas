@@ -1,6 +1,7 @@
 <?php
 namespace app\forms;
 
+use Yii;
 use yii\base\Model;
 
 /**
@@ -9,6 +10,7 @@ use yii\base\Model;
 class UsuarioForm extends Model
 {
     // User
+    public $id;
     public $username;
     public $email;
     public $password;
@@ -20,6 +22,7 @@ class UsuarioForm extends Model
     public $nombre_representante;
     public $documento_identidad_representante;
     public $foto_documento_identidad;
+    public $foto_documento_identidad_string;
     public $telefono_oficina;
     public $celular;
     public $tarjeta_credito;
@@ -62,7 +65,6 @@ class UsuarioForm extends Model
             [['fk_nacionalidad', 'fk_municipio', 'provincia'], 'integer'],
             [['nombres', 'apellidos','nombre_representante'], 'string', 'max' => 50],
             [['documento_identidad','documento_identidad_representante'], 'string', 'max' => 14],
-            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf'],
             [['telefono_oficina', 'celular'], 'string', 'max' => 10],
             [['tarjeta_credito'], 'string', 'max' => 16],
             [['categoria'], 'string', 'max' => 2],
@@ -74,7 +76,9 @@ class UsuarioForm extends Model
             [['fk_municipio'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Municipio::className(), 'targetAttribute' => ['fk_municipio' => 'id']],
             [['provincia'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Provincia::className(), 'targetAttribute' => ['provincia' => 'id']],
             [['fk_nacionalidad'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Nacionalidad::className(), 'targetAttribute' => ['fk_nacionalidad' => 'id']],
-
+            //Archivo
+            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf'],
+            [['foto_documento_identidad_string'], 'string', 'max' => 128],
             // Preguntas
             [['demandado', 'consulta_info','servicios'], 'required'],
             [['demandado', 'consulta_info'], 'boolean'],
@@ -137,10 +141,11 @@ class UsuarioForm extends Model
         $user->generateAuthKey();
         $user->save();
         // Model Perfil
-        $perfil = new \app\models\User();
+        $perfil = new \app\models\PerfilUsuario();
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;
+        $perfil->foto_documento_identidad = $this->foto_documento_identidad_string;
         $perfil->telefono_oficina = $this->telefono_oficina;
         $perfil->celular = $this->celular;
         $perfil->tarjeta_credito = $this->tarjeta_credito;
@@ -163,8 +168,12 @@ class UsuarioForm extends Model
         $pregunta->demandado = $this->demandado;
         $pregunta->cantidad = $this->cantidad;
         $pregunta->consulta_info = $this->consulta_info;
-        $pregunta->fk_usuario = $user->id;
+        $pregunta->fk_user = $user->id;
         $pregunta->save();
+        // Se asigna el rol
+        $auth = Yii::$app->authManager;
+        $authorRole = $auth->getRole('Invitado');
+        $auth->assign($authorRole, $user->id);
 
         return true;
     }

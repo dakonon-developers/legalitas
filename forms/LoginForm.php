@@ -17,7 +17,8 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
-    private $_user = false;
+    private $_user_username = false;
+    private $_user_email = false;
 
 
     /**
@@ -45,9 +46,10 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
+            $user_un = $this->getUser();
+            $user_em = $this->getMail();
 
-            if (!$user || !$user->validatePassword($this->password)) {
+            if ((!$user_un || !$user_un->validatePassword($this->password)) and ((!$user_em || !$user_em->validatePassword($this->password)))) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }
@@ -55,12 +57,13 @@ class LoginForm extends Model
 
     /**
      * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
+     * @return boolean whether the user is logged in successfully
      */
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            $user = $this->getUser() == True ? $this->getUser():$this->getMail();
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
     }
@@ -72,10 +75,25 @@ class LoginForm extends Model
      */
     public function getUser()
     {
-        if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+        if ($this->_user_username === false) {
+            $this->_user_username = User::findByUsername($this->username);
         }
 
-        return $this->_user;
+        return $this->_user_username;
+    }
+
+    /**
+     * Método para obtener un usuario por email
+     * @author Rodrigo Boet
+     * @date 10/09/2016
+     * @return Regresa el usuario
+    */
+    public function getMail()
+    {
+        if ($this->_user_email === false) {
+            $this->_user_email = User::findByEmail($this->username);
+        }
+
+        return $this->_user_email;
     }
 }

@@ -12,6 +12,7 @@ use yii\widgets\ActiveForm;
 use app\forms\LoginForm;
 use app\forms\UsuarioForm;
 use app\forms\AbogadoForm;
+use app\models\UploadModel;
 
 class SiteController extends Controller
 {
@@ -116,8 +117,11 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            print_r($model->validate());
-            return print_r($model);
+            $model->foto_documento_identidad_string = UploadModel::upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
+                $model->documento_identidad);
+            $model->save();
+            Yii::$app->session->setFlash('success', 'Se registro con éxito.');
+            return $this->render('index');
         }
 
         return $this->render('userRegister', [

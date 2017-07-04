@@ -39,8 +39,8 @@ LegalitasAsset::register($this);
     $item = [];
     if(Yii::$app->user->isGuest){
         $item = ['label' => 'REGISTRARSE', 'items' => [
-           ['label' => 'Registrarse como Usuario', 'url' => ['/site/user-register']],
-           ['label' => 'Registrarse como Abogado', 'url' => ['/site/abogado-register']], 
+           ['label' => 'Como Usuario', 'url' => ['/site/user-register']],
+           ['label' => 'Como Abogado', 'url' => ['/site/abogado-register']], 
         ]];
     }
     echo Nav::widget([
