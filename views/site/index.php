@@ -15,7 +15,7 @@ $this->title = 'LegalitasRd';
             <br>
             <br>
             <div class="col-md-offset-1 col-md-4">
-                <?= Html::a('Consulta', '#', ['class' => 'btn btn-home btn-block btn-flat btn-lg']) ?>
+                <?= Html::a('Consulta', ['consulta/create', 'categoria' => 62], ['class' => 'btn btn-home btn-block btn-flat btn-lg']) ?>
             </div>
             <br>
             <br>

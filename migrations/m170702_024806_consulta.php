@@ -14,16 +14,19 @@ class m170702_024806_consulta extends Migration
         $this->createTable('{{%consulta}}',[
             'id' => $this->primaryKey(),
             'fk_cliente' => $this->integer()->notNull(),
-            'fk_especialidad' => $this->integer()->notNull(),
+            'fk_servicio' => $this->integer()->notNull(),
             'fk_abogado_asignado' => $this->integer(12),
-            'nombre' => $this->string(128)->notNull(),
-            'descripcion' => $this->text()->notNull(),
+            'pregunta' => $this->text()->notNull(),
+            'imagen' => $this->string(128),
+            'finalizado' => $this->boolean()->notNull()->defaultValue(false),
+            'creado_en' => $this->timestamp(),
+            'fecha_fin' => $this->date(),
             ], $tableOptions);
 
         $this->createIndex('i-fk_cliente_q', 'consulta', 'fk_cliente');
         $this->addForeignKey('consulta_cliente', 'consulta', 'fk_cliente','perfil_usuario','id','CASCADE','CASCADE');
-        $this->createIndex('i-fk_especialidad_q', 'consulta', 'fk_especialidad');
-        $this->addForeignKey('consulta_especialidad', 'consulta', 'fk_especialidad','especializacion','id','CASCADE','CASCADE');
+        $this->createIndex('i-consulta_servicio', 'consulta', 'fk_servicio');
+        $this->addForeignKey('consulta_servicio', 'consulta', 'fk_servicio','servicios','id','CASCADE','CASCADE');
         $this->createIndex('i-fk_abogado_q', 'consulta', 'fk_abogado_asignado');
         $this->addForeignKey('consulta_abogado', 'consulta', 'fk_abogado_asignado','perfil_abogado','id','CASCADE','CASCADE');
 

@@ -119,9 +119,12 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->foto_documento_identidad_string = UploadModel::upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
                 $model->documento_identidad);
-            $model->save();
-            Yii::$app->session->setFlash('success', 'Se registro con éxito.');
-            return $this->render('index');
+            if($model->foto_documento_identidad_string!=''){
+                $model->save();
+                Yii::$app->session->setFlash('success', 'Se registro con éxito.');
+                return $this->render('index'); 
+            }
+            Yii::$app->session->setFlash('error', 'Debe adjuntar un documento.');
         }
 
         return $this->render('userRegister', [

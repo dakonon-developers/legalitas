@@ -14,7 +14,7 @@ class m170702_004623_perfil_representante extends Migration
         $this->createTable('{{%perfil_representante}}',[
             'id' => $this->primaryKey(),
             'nombre_representante' => $this->string(50)->notNull(),
-            'documento_identidad_represetntante' => $this->string(14)->notNull(),
+            'documento_identidad_representante' => $this->string(14)->notNull(),
             'fk_perfil_usuario' => $this->integer()->notNull()->unique(),
             ], $tableOptions);
         

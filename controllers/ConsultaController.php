@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\PerfilUsuario;
-use app\models\PerfilUsuarioSearch;
+use app\models\Consulta;
+use app\models\ConsultaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
- * PerfilUsuarioController implements the CRUD actions for PerfilUsuario model.
+ * ConsultaController implements the CRUD actions for Consulta model.
  */
-class PerfilUsuarioController extends Controller
+class ConsultaController extends Controller
 {
     /**
      * @inheritdoc
@@ -26,16 +27,35 @@ class PerfilUsuarioController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['create','view'],
+                        'allow' => true,
+                        'roles' => ['Usuario'],
+                    ],
+                    [
+                        'actions' => ['index','asignar'],
+                        'allow' => true,
+                        'roles' => ['Admin'],
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
-     * Lists all PerfilUsuario models.
+     * Lists all Consulta models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PerfilUsuarioSearch();
+        $searchModel = new ConsultaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +65,7 @@ class PerfilUsuarioController extends Controller
     }
 
     /**
-     * Displays a single PerfilUsuario model.
+     * Displays a single Consulta model.
      * @param integer $id
      * @return mixed
      */
@@ -57,15 +77,19 @@ class PerfilUsuarioController extends Controller
     }
 
     /**
-     * Creates a new PerfilUsuario model.
+     * Creates a new Consulta model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($categoria)
     {
-        $model = new PerfilUsuario();
+        $model = new Consulta();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+            $model->fk_servicio = $categoria;
+            $model->fk_cliente = $perfil->id;
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -75,7 +99,7 @@ class PerfilUsuarioController extends Controller
     }
 
     /**
-     * Updates an existing PerfilUsuario model.
+     * Updates an existing Consulta model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,36 +118,7 @@ class PerfilUsuarioController extends Controller
     }
 
     /**
-    *   Funcion para permitir al usuario activar/desactivar perfiles
-    *   @author Rodrigo Da Costa
-    *   @date 09/07/2017
-    */
-    public function actionActivar($id)
-    {
-        $model = $this->findModel($id);
-        $auth = Yii::$app->authManager;
-        if($model->activo==True)
-        {
-            $model->activo=False;
-            $auth->revokeAll($model->fk_usuario);
-            $authorRole = $auth->getRole('Invitado');
-            $auth->assign($authorRole, $model->fk_usuario);
-            Yii::$app->getSession()->setFlash('warning',"Se desactivo el usuario.");
-        }
-        else
-        {
-            $model->activo=True;
-            $auth->revokeAll($model->fk_usuario);
-            $authorRole = $auth->getRole('Usuario');
-            $auth->assign($authorRole, $model->fk_usuario);
-            Yii::$app->getSession()->setFlash('success',"Se activo el usuario.");
-        }
-        $model->save();
-        return $this->redirect('index');
-    }
-
-    /**
-     * Deletes an existing PerfilUsuario model.
+     * Deletes an existing Consulta model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -136,15 +131,32 @@ class PerfilUsuarioController extends Controller
     }
 
     /**
-     * Finds the PerfilUsuario model based on its primary key value.
+     * Deletes an existing Consulta model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionAsignar($id)
+    {        
+        if (Yii::$app->request->post()) {
+            return $this->redirect(['index']);
+        } 
+        
+        return $this->render('asignar',[
+            'id' => $id,
+            ]);
+    }
+
+    /**
+     * Finds the Consulta model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return PerfilUsuario the loaded model
+     * @return Consulta the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = PerfilUsuario::findOne($id)) !== null) {
+        if (($model = Consulta::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

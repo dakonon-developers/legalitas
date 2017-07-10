@@ -50,7 +50,7 @@ class LoginForm extends Model
             $user_em = $this->getMail();
 
             if ((!$user_un || !$user_un->validatePassword($this->password)) and ((!$user_em || !$user_em->validatePassword($this->password)))) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Nombre incorrecto o contraseña.');
             }
         }
     }
@@ -76,7 +76,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user_username === false) {
-            $this->_user_username = User::findByUsername($this->username);
+            $this->_user_username = \app\models\User::findByUsername($this->username);
         }
 
         return $this->_user_username;
@@ -91,7 +91,7 @@ class LoginForm extends Model
     public function getMail()
     {
         if ($this->_user_email === false) {
-            $this->_user_email = User::findByEmail($this->username);
+            $this->_user_email = \app\models\User::findByEmail($this->username);
         }
 
         return $this->_user_email;
