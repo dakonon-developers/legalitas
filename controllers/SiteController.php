@@ -145,9 +145,17 @@ class SiteController extends Controller
         $especializacion = \app\models\Especializacion::find()->where(['activo'=>true])
         ->all();
 
-        /*if ($model->setAttributes(Yii::$app->request->post()) && $model->validate()) {
-            pass;
-        }*/
+       if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->foto_documento_identidad_string = UploadModel::upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
+                $model->documento_identidad);
+            $model->foto_carnet_string = UploadModel::upload(UploadedFile::getInstance($model, 'foto_carnet'),
+                $model->documento_identidad);
+            $model->cv_adjunto_string = UploadModel::upload(UploadedFile::getInstance($model, 'cv_adjunto'),
+                $model->documento_identidad);
+            $model->save();
+            Yii::$app->session->setFlash('success', 'Se registro con éxito.');
+            return $this->render('index');
+        }
 
         return $this->render('abogadoRegister', [
             'model' => $model,

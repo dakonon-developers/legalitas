@@ -19,6 +19,7 @@ class m170701_191806_perfil_abogado extends Migration
             'foto_documento_identidad' => $this->string(128)->notNull(),
             'exequatur' => $this->string(14)->notNull()->unique(),
             'num_carnet' => $this->string(14)->notNull()->unique(),
+            'foto_carnet' => $this->string(128)->notNull(),
             'telefono_oficina' => $this->string(10)->notNull(),
             'celular' => $this->string(10)->notNull(),
             'cv_adjunto' => $this->string(128)->notNull(),
