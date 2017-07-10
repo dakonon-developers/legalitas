@@ -25,6 +25,10 @@ $categorias = $const['categories'];
         'enableAjaxValidation' => true,
         'options' => ['enctype'=>'multipart/form-data']]
     ); ?>
+    
+		<div class="form-group">
+			<?= $form->errorSummary($model); ?>
+		</div>
 
         <div class="form-group">
             <?= $form->field($model, 'categoria')->dropDownList($categorias,
