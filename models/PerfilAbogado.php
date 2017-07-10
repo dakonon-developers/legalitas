@@ -14,6 +14,7 @@ use Yii;
  * @property string $foto_documento_identidad
  * @property string $exequatur
  * @property string $num_carnet
+ * @property string $foto_carnet
  * @property string $telefono_oficina
  * @property string $celular
  * @property string $cv_adjunto
@@ -43,12 +44,12 @@ class PerfilAbogado extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombres', 'apellidos', 'documento_identidad', 'foto_documento_identidad', 'exequatur', 'num_carnet', 'telefono_oficina', 'celular', 'cv_adjunto', 'tipo_abogado', 'activo', 'fk_nacionalidad', 'fk_municipio', 'fk_usuario'], 'required'],
+            [['nombres', 'apellidos', 'documento_identidad', 'foto_documento_identidad', 'exequatur', 'num_carnet', 'foto_carnet', 'telefono_oficina', 'celular', 'cv_adjunto', 'tipo_abogado', 'activo', 'fk_nacionalidad', 'fk_municipio', 'fk_usuario'], 'required'],
             [['tipo_abogado', 'activo'], 'boolean'],
             [['fk_nacionalidad', 'fk_municipio', 'fk_usuario'], 'integer'],
             [['nombres', 'apellidos'], 'string', 'max' => 50],
             [['documento_identidad', 'exequatur', 'num_carnet'], 'string', 'max' => 14],
-            [['foto_documento_identidad', 'cv_adjunto'], 'string', 'max' => 128],
+            [['foto_documento_identidad', 'foto_carnet', 'cv_adjunto'], 'string', 'max' => 128],
             [['telefono_oficina', 'celular'], 'string', 'max' => 10],
             [['exequatur'], 'unique'],
             [['fk_usuario'], 'unique'],
@@ -72,6 +73,7 @@ class PerfilAbogado extends \yii\db\ActiveRecord
             'foto_documento_identidad' => 'Foto Documento Identidad',
             'exequatur' => 'Exequatur',
             'num_carnet' => 'Num Carnet',
+            'foto_carnet' => 'Foto Carnet',
             'telefono_oficina' => 'Telefono Oficina',
             'celular' => 'Celular',
             'cv_adjunto' => 'Cv Adjunto',

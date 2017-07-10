@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-register">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype'=>'multipart/form-data']]); ?>
     <div id="myCarousel" class="carousel slide">
         <div class="carousel-inner">
             <div class="item active">
@@ -48,7 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="row">
                     <div class="col-md-6">
-                        <?= $form->field($model, 'documento_identidad')->textInput() ?>
+                        <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
+                'mask' => '999-9999999-9',])  ?>
                     </div>
                     <div class="col-md-6">
                         <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
@@ -59,17 +60,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-md-6">
                         <?= $form->field($model, 'exequatur')->textInput() ?>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <?= $form->field($model, 'num_carnet')->textInput() ?>
+                    </div>
+                    <div class="col-md-3">
+                        <?= $form->field($model, 'foto_carnet')->fileInput() ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <?= $form->field($model, 'telefono_oficina')->textInput() ?>
+                        <?= $form->field($model, 'telefono_oficina')->widget(\yii\widgets\MaskedInput::className(), [
+                'mask' => '9999999999',]) ?>
                     </div>
                     <div class="col-md-6">
-                        <?= $form->field($model, 'celular')->textInput() ?>
+                        <?= $form->field($model, 'celular')->widget(\yii\widgets\MaskedInput::className(), [
+                'mask' => '9999999999',] )?>
                     </div>
                 </div>
 

@@ -86,7 +86,7 @@ class UsuarioForm extends Model
             [['cantidad'],'required', 'when' => function($model) {
                 return $model->consulta_info == "1";},
                 'whenClient' => "function (attribute, value) {
-                    return $('.field-usuarioform-demandado input[type=\'radio\']:checked').val() == \"1\";
+                    return $('.field-usuarioform-demandado input[type=\'radio\']:checked').val() === \"1\";
                 }" ],
         ];
     }
@@ -137,6 +137,7 @@ class UsuarioForm extends Model
         $user = new \app\models\User();
         $user->username = $this->username;
         $user->email = $this->email;
+        $user->status = 0;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->save();
@@ -166,10 +167,17 @@ class UsuarioForm extends Model
         // Model de pregunta
         $pregunta = new \app\models\Preguntas();
         $pregunta->demandado = $this->demandado;
-        $pregunta->cantidad = $this->cantidad;
+        $pregunta->cantidad = $this->cantidad ? $this->cantidad:0;
         $pregunta->consulta_info = $this->consulta_info;
         $pregunta->fk_user = $user->id;
         $pregunta->save();
+        //Se guardan los servicios
+        foreach ($this->servicios as $key => $value) {
+            $especializacion = new \app\models\PreguntaEspecializacion();
+            $especializacion->fk_pregunta = $pregunta->id;
+            $especializacion->fk_especialidad = $value;
+            $especializacion->save();
+        }
         // Se asigna el rol
         $auth = Yii::$app->authManager;
         $authorRole = $auth->getRole('Invitado');
