@@ -26,25 +26,17 @@ class AdminController extends Controller
             if($model->validate())
             {
                 $user = new User();
-                $user->username = 'Admin';
+                $user->username = 'admin';
                 $user->email = "admin@app.com";
                 $user->setPassword($model->password);
                 $user->generateAuthKey();
                 $user->save();
                 //Se crea el perfil
-                /*$perfil = new Perfil();
-                $perfil->telefono = '000-0000000';
-                $perfil->genero = 'M';
-                $perfil->edad = 1;
-                $perfil->fecha_nacimiento = date('Y-m-d');
-                $perfil->fk_user = $user->id;
-                $perfil->fk_pais = 66;
-                $perfil->save();
                 //Se asigna el rol del usuario
                 $auth = Yii::$app->authManager;
-                $authorRole = $auth->getRole('ADMIN');
+                $authorRole = $auth->getRole('Admin');
                 $auth->assign($authorRole, $user->id);
-                echo "Se creo el admin con exito";*/
+                echo "Se creo el admin con exito";
             }
             else
             {

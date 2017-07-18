@@ -77,6 +77,8 @@ class PerfilUsuario extends \yii\db\ActiveRecord
             'fk_municipio' => 'Fk Municipio',
             'fk_usuario' => 'Fk Usuario',
             'categoria' => 'Categoria',
+            'fkUsuario.username' => 'Usuario',
+            'fkUsuario.email' => 'Correo',
         ];
     }
 

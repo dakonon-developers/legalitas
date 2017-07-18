@@ -36,34 +36,37 @@ LegalitasAsset::register($this);
             'class' => 'legalitas-navbar',
         ],
     ]);
-    $item = [];
+    $menuItems = [
+        ['label' => 'HOME', 'url' => ['/site/index']],
+    ];
     if(Yii::$app->user->isGuest){
-        $item = ['label' => 'REGISTRARSE', 'items' => [
+        $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
+        $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
+        $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];
+        $menuItems[] = ['label' => 'REGISTRARSE', 'items' => [
            ['label' => 'Como Usuario', 'url' => ['/site/user-register']],
            ['label' => 'Como Abogado', 'url' => ['/site/abogado-register']], 
         ]];
+        $menuItems[] = ['label' => 'ENTRAR', 'url' => ['/site/login']];
+    }
+    else{
+        if(Yii::$app->user->can('Admin')){
+            $menuItems[] = ['label' => 'CONSULTAS', 'url' => ['/consulta/index']];
+            $menuItems[] = ['label' => 'USUARIOS', 'items' => [
+           ['label' => 'Abogado', 'url' => ['/perfil-abogado/index']],
+           ['label' => 'Usuario', 'url' => ['/perfil-usuario/index']], 
+        ]];
+        }
+        else{
+            $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
+            $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
+            $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];
+        }
+        $menuItems[] = ['label' => 'SALIR', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']];
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'HOME', 'url' => ['/site/index']],
-            ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']],
-            ['label' => 'SERVICIOS', 'url' => ['/site/servicios']],
-            ['label' => 'CONTRATA', 'url' => ['/site/contrata']],
-            $item,
-            Yii::$app->user->isGuest ? (
-                ['label' => 'ENTRAR', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'SALIR (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $menuItems,
     ]);
     NavBar::end();
     ?>

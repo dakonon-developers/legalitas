@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $nombre_representante
- * @property string $documento_identidad_represetntante
+ * @property string $documento_identidad_representante
  * @property integer $fk_perfil_usuario
  *
  * @property PerfilUsuario $fkPerfilUsuario
@@ -30,10 +30,10 @@ class PerfilRepresentante extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre_representante', 'documento_identidad_represetntante', 'fk_perfil_usuario'], 'required'],
+            [['nombre_representante', 'documento_identidad_representante', 'fk_perfil_usuario'], 'required'],
             [['fk_perfil_usuario'], 'integer'],
             [['nombre_representante'], 'string', 'max' => 50],
-            [['documento_identidad_represetntante'], 'string', 'max' => 14],
+            [['documento_identidad_representante'], 'string', 'max' => 14],
             [['fk_perfil_usuario'], 'unique'],
             [['fk_perfil_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => PerfilUsuario::className(), 'targetAttribute' => ['fk_perfil_usuario' => 'id']],
         ];
@@ -47,7 +47,7 @@ class PerfilRepresentante extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre_representante' => 'Nombre Representante',
-            'documento_identidad_represetntante' => 'Documento Identidad Represetntante',
+            'documento_identidad_representante' => 'Documento Identidad Represetntante',
             'fk_perfil_usuario' => 'Fk Perfil Usuario',
         ];
     }

@@ -18,8 +18,8 @@ class UploadModel
             $ext = pathinfo($file->name,PATHINFO_EXTENSION);
             $name = $unique_string.Yii::$app->security->generateRandomString();
             $name .= '.'.$ext;
-            $file->saveAs(Yii::getAlias('@webroot') . '/uploads/' . $name);
-            return Yii::getAlias('@webroot') . '/uploads/' . $name;
+            $file->saveAs(Yii::getAlias('@webroot'). '/uploads/' . $name);
+            return '/uploads/' . $name;
         }
         return '';
     }

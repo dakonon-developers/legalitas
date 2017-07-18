@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\PerfilUsuario;
-use yii\data\ActiveDataProvider;
+use app\models\PerfilUsuarioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,11 +35,11 @@ class PerfilUsuarioController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => PerfilUsuario::find(),
-        ]);
+        $searchModel = new PerfilUsuarioSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -91,6 +91,35 @@ class PerfilUsuarioController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+    *   Funcion para permitir al usuario activar/desactivar perfiles
+    *   @author Rodrigo Da Costa
+    *   @date 09/07/2017
+    */
+    public function actionActivar($id)
+    {
+        $model = $this->findModel($id);
+        $auth = Yii::$app->authManager;
+        if($model->activo==True)
+        {
+            $model->activo=False;
+            $auth->revokeAll($model->fk_usuario);
+            $authorRole = $auth->getRole('Invitado');
+            $auth->assign($authorRole, $model->fk_usuario);
+            Yii::$app->getSession()->setFlash('warning',"Se desactivo el usuario.");
+        }
+        else
+        {
+            $model->activo=True;
+            $auth->revokeAll($model->fk_usuario);
+            $authorRole = $auth->getRole('Usuario');
+            $auth->assign($authorRole, $model->fk_usuario);
+            Yii::$app->getSession()->setFlash('success',"Se activo el usuario.");
+        }
+        $model->save();
+        return $this->redirect('index');
     }
 
     /**
