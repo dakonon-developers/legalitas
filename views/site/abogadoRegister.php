@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                 </div>
             </div>
-            <ol class="carousel-indicators" id="list" ">
+            <ol class="carousel-indicators" id="list">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
             </ol>

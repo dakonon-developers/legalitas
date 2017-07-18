@@ -169,6 +169,13 @@ class AbogadoForm extends Model
         $pregunta->consulta_info = $this->consulta_info;
         $pregunta->fk_user = $user->id;
         $pregunta->save();
+        //Se guardan los servicios
+        foreach ($this->servicios as $key => $value) {
+            $especializacion = new \app\models\PreguntaEspecializacion();
+            $especializacion->fk_pregunta = $pregunta->id;
+            $especializacion->fk_especialidad = $value;
+            $especializacion->save();
+        }
         // Se asigna el rol
         $auth = Yii::$app->authManager;
         $authorRole = $auth->getRole('Invitado');

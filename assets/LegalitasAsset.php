@@ -21,10 +21,12 @@ class LegalitasAsset extends AssetBundle
         'css/site.css',
         'css/style.css',
        'bootstrap-toogle/css/bootstrap-toggle.min.css',
+       'bootstrap-fileinput/css/fileinput.min.css',
     ];
     public $js = [
         'js/functions.js',
         'bootstrap-toogle/js/bootstrap-toggle.min.js',
+        'bootstrap-fileinput/js/fileinput.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

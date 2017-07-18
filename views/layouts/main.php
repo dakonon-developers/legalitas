@@ -92,6 +92,40 @@ LegalitasAsset::register($this);
 </footer>
 
 <?php $this->endBody() ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#abogadoform-foto_documento_identidad, #usuarioform-foto_documento_identidad").fileinput({
+            showCaption: true,
+            previewFileType: "image",
+            browseClass: "btn btn-success",
+            browseLabel: "Subir Imagen del Documento",
+            browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+            removeLabel: "Eliminar",
+            uploadLabel:"Actualizar",
+            allowedFileExtensions: ['svg','jpg', 'png', 'jpeg']
+        });
+
+        $("#abogadoform-foto_carnet").fileinput({
+            showCaption: true,
+            previewFileType: "image",
+            browseClass: "btn btn-success",
+            browseLabel: "Subir Imagen del Carnet",
+            browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+            removeLabel: "Eliminar",
+            uploadLabel:"Actualizar",
+            allowedFileExtensions: ['svg','jpg', 'png', 'jpeg']
+        });
+
+        $("#abogadoform-cv_adjunto").fileinput({
+            showCaption: true,
+            browseClass: "btn btn-success",
+            browseLabel: "Subir Curriculum",
+            removeLabel: "Eliminar",
+            uploadLabel:"Actualizar",
+            allowedFileExtensions: ['pdf','odt', 'doc']
+        });
+    });
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>
