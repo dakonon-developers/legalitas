@@ -138,7 +138,7 @@ class AbogadoForm extends Model
             return null;
         }
         // Model User
-        $user = new User();
+        $user = new \app\models\User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
