@@ -20,23 +20,43 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'nombres',
             'apellidos',
             'documento_identidad',
-            'foto_documento_identidad',
+            //'foto_documento_identidad',
             // 'exequatur',
-            // 'num_carnet',
+            'num_carnet',
             // 'telefono_oficina',
             // 'celular',
             // 'cv_adjunto',
-            // 'tipo_abogado',
+            //'tipo_abogado',
+            ['attribute'=>'tipo_abogado','value'=>function($model){ return $model->tipo_abogado ? "Interno":"Externo";}],
+            ['attribute'=>'activo','value'=>function($model){ return $model->activo ? "Si":"No";}],
             // 'activo',
             // 'fk_nacionalidad',
             // 'fk_municipio',
             // 'fk_usuario',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{view}{activar}{delete}',
+                'buttons'=> [
+                    'activar' => function($url,$model)
+                    {
+                        return Html::a(
+                        '<span class="glyphicon glyphicon-refresh"></span>',
+                        ['activar','id'=>$model->id],
+                        [
+                            'title'=> 'Activar',
+                            'data-pjax' => '0',
+                            'data' => [
+                                'confirm' => '¿Desea activar/desactivar este usuario?',
+                                'method' => 'post',
+                            ],
+                        ]);
+                    }
+                ],
+            ],
         ],
     ]); ?>
 </div>

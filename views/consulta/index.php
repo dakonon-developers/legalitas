@@ -20,13 +20,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'fk_cliente',
             'fk_servicio',
             'fk_abogado_asignado',
             'pregunta:ntext',
             // 'imagen',
-            'finalizado',
+            ['attribute'=>'finalizado','value'=>function($model){ return $model->finalizado ? "Si":"No";}],
+            //'finalizado',
             'creado_en',
             //'fecha_fin',
 

@@ -3,17 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Consulta;
-use app\models\ConsultaSearch;
+use app\models\Dudas;
+use app\models\DudasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * ConsultaController implements the CRUD actions for Consulta model.
+ * DudasController implements the CRUD actions for Dudas model.
  */
-class ConsultaController extends Controller
+class DudasController extends Controller
 {
     /**
      * @inheritdoc
@@ -31,18 +31,9 @@ class ConsultaController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['error'],
+                        'actions' => ['index','create'],
                         'allow' => true,
-                    ],
-                    [
-                        'actions' => ['create','view'],
-                        'allow' => true,
-                        'roles' => ['Usuario'],
-                    ],
-                    [
-                        'actions' => ['index','asignar'],
-                        'allow' => true,
-                        'roles' => ['Admin'],
+                        'roles' => ['Usuario','Abogado Interno','Abogado Externo'],
                     ],
                 ],
             ],
@@ -50,22 +41,36 @@ class ConsultaController extends Controller
     }
 
     /**
-     * Lists all Consulta models.
+     * Lists all Dudas models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($consulta)
     {
-        $searchModel = new ConsultaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('Usuario')){
+            $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one()->id;
+        }
+        else{
+            $perfil = \app\models\PerfilAbogado::find()->where(['fk_usuario'=>Yii::$app->user->id])->one()->id;   
+        }
+        if(\app\models\Consulta::find()->where('id='.$consulta.' AND (fk_cliente='.$perfil.' OR 
+            fk_abogado_asignado='.$perfil.')')->one())
+        {
+            $searchModel = new DudasSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'consulta' => $consulta,
+            ]);
+        }
+        else{
+            throw new \yii\web\ForbiddenHttpException("No tiene permitido ejecutar esta acción.");
+        }
     }
 
     /**
-     * Displays a single Consulta model.
+     * Displays a single Dudas model.
      * @param integer $id
      * @return mixed
      */
@@ -77,29 +82,30 @@ class ConsultaController extends Controller
     }
 
     /**
-     * Creates a new Consulta model.
+     * Creates a new Dudas model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($categoria)
+    public function actionCreate($consulta)
     {
-        $model = new Consulta();
+        $model = new Dudas();
 
         if ($model->load(Yii::$app->request->post())) {
-            $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
-            $model->fk_servicio = $categoria;
-            $model->fk_cliente = $perfil->id;
+            $model->fk_user = Yii::$app->user->id;
+            $model->fk_consulta = $consulta;
             $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Se publicó con éxito.');
+            return $this->redirect(['index', 'consulta' => $consulta]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'consulta' => $consulta,
             ]);
         }
     }
 
     /**
-     * Updates an existing Consulta model.
+     * Updates an existing Dudas model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -118,7 +124,7 @@ class ConsultaController extends Controller
     }
 
     /**
-     * Deletes an existing Consulta model.
+     * Deletes an existing Dudas model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -131,38 +137,15 @@ class ConsultaController extends Controller
     }
 
     /**
-     * Deletes an existing Consulta model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionAsignar($id)
-    {     
-        $abogados = \app\models\PerfilAbogado::find()->all();
-        if (count(Yii::$app->request->post())>1) {
-            $consulta = \app\models\Consulta::findOne($id);
-            $consulta->fk_abogado_asignado = Yii::$app->request->post()['Abogados'];
-            $consulta->save();
-            Yii::$app->getSession()->setFlash('success',"Se asignó el abogado al caso con éxito.");
-            return $this->redirect(['index']);
-        } 
-        
-        return $this->render('asignar',[
-            'id' => $id,
-            'abogados' => $abogados,
-        ]);
-    }
-
-    /**
-     * Finds the Consulta model based on its primary key value.
+     * Finds the Dudas model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Consulta the loaded model
+     * @return Dudas the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Consulta::findOne($id)) !== null) {
+        if (($model = Dudas::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

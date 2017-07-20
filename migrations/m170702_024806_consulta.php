@@ -17,7 +17,7 @@ class m170702_024806_consulta extends Migration
             'fk_servicio' => $this->integer()->notNull(),
             'fk_abogado_asignado' => $this->integer(12),
             'pregunta' => $this->text()->notNull(),
-            'imagen' => $this->string(128),
+            'archivo' => $this->string(128),
             'finalizado' => $this->boolean()->notNull()->defaultValue(false),
             'creado_en' => $this->timestamp(),
             'fecha_fin' => $this->date(),

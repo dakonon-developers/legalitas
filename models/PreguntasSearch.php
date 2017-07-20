@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Consulta;
+use app\models\Preguntas;
 
 /**
- * ConsultaSearch represents the model behind the search form about `app\models\Consulta`.
+ * PreguntasSearch represents the model behind the search form about `app\models\Preguntas`.
  */
-class ConsultaSearch extends Consulta
+class PreguntasSearch extends Preguntas
 {
     /**
      * @inheritdoc
@@ -18,8 +18,7 @@ class ConsultaSearch extends Consulta
     public function rules()
     {
         return [
-            [['id', 'fk_cliente', 'fk_servicio', 'fk_abogado_asignado', 'finalizado'], 'integer'],
-            [['pregunta', 'archivo', 'creado_en', 'fecha_fin'], 'safe'],
+            [['id', 'demandado', 'cantidad', 'consulta_info', 'fk_user'], 'integer'],
         ];
     }
 
@@ -41,7 +40,7 @@ class ConsultaSearch extends Consulta
      */
     public function search($params)
     {
-        $query = Consulta::find();
+        $query = Preguntas::find();
 
         // add conditions that should always apply here
 
@@ -60,16 +59,11 @@ class ConsultaSearch extends Consulta
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'fk_cliente' => $this->fk_cliente,
-            'fk_servicio' => $this->fk_servicio,
-            'fk_abogado_asignado' => $this->fk_abogado_asignado,
-            'finalizado' => $this->finalizado,
-            'creado_en' => $this->creado_en,
-            'fecha_fin' => $this->fecha_fin,
+            'demandado' => $this->demandado,
+            'cantidad' => $this->cantidad,
+            'consulta_info' => $this->consulta_info,
+            'fk_user' => $this->fk_user,
         ]);
-
-        $query->andFilterWhere(['like', 'pregunta', $this->pregunta])
-            ->andFilterWhere(['like', 'archivo', $this->archivo]);
 
         return $dataProvider;
     }

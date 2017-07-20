@@ -34,7 +34,7 @@ class Dudas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['texto', 'fk_user', 'fk_consulta'], 'required'],
+            [['texto'], 'required'],
             [['texto'], 'string'],
             [['leido', 'fk_user', 'fk_consulta'], 'integer'],
             [['fecha'], 'safe'],

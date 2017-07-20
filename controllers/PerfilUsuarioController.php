@@ -8,6 +8,7 @@ use app\models\PerfilUsuarioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * PerfilUsuarioController implements the CRUD actions for PerfilUsuario model.
@@ -24,6 +25,25 @@ class PerfilUsuarioController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['create','view'],
+                        'allow' => true,
+                        'roles' => ['Usuario'],
+                    ],
+                    [
+                        'actions' => ['index','activar'],
+                        'allow' => true,
+                        'roles' => ['Admin'],
+                    ],
                 ],
             ],
         ];
@@ -108,7 +128,7 @@ class PerfilUsuarioController extends Controller
             $auth->revokeAll($model->fk_usuario);
             $authorRole = $auth->getRole('Invitado');
             $auth->assign($authorRole, $model->fk_usuario);
-            Yii::$app->getSession()->setFlash('warning',"Se desactivo el usuario.");
+            Yii::$app->getSession()->setFlash('warning',"Se desactivó el usuario.");
         }
         else
         {
@@ -116,7 +136,7 @@ class PerfilUsuarioController extends Controller
             $auth->revokeAll($model->fk_usuario);
             $authorRole = $auth->getRole('Usuario');
             $auth->assign($authorRole, $model->fk_usuario);
-            Yii::$app->getSession()->setFlash('success',"Se activo el usuario.");
+            Yii::$app->getSession()->setFlash('success',"Se activó el usuario.");
         }
         $model->save();
         return $this->redirect('index');

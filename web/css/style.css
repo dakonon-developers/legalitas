@@ -1,3 +1,7 @@
+/*
+    Navbar
+*/
+
 .green-color{
 	background-color:#69a48e;
 }
@@ -37,10 +41,6 @@ aside{
 .navbar-toogle .icon-bar{
 	background-color: #69a48e;
 }
-/*.legalitas-footer{
-	padding-left:30%;
-	padding-right:30%;
-}*/
 
 .navbar-default .navbar-nav>li>a {
 	color:white;
@@ -50,6 +50,9 @@ aside{
 	font-size:8px;
 }
 
+/*
+    Footer
+*/
 #separador {
     height: 100%;
     border-left: 1px solid white;
@@ -66,17 +69,44 @@ aside{
 	padding-top: 10px;	
 } 
 
-
+/*
+    Buttons
+*/
 .btn-home{
     background-color:  rgba(105, 164, 142, 1);
     color: #fff;
-     border-radius: 0 0 0 0;
+    border-radius: 0 0 0 0;
 }
 
 .btn-home:hover{
     background-color:  #416b5b;
     color: #fff;
 }
+
+/*
+    Carrusel
+*/
+.carousel-indicators .active {
+    background-color: #69a48e;
+}
+
+.carousel-indicators li {
+    border: 1px solid #69a48e;
+}
+
+.carousel-indicators {
+    position: inherit;
+    bottom: 10px;
+    left: 50%;
+    z-index: 15;
+    text-align: center;
+    list-style: none;
+}
+
+
+/*
+    Portafolio
+*/
 
 .style-iwxow80r{
     //left: 99px;
@@ -102,23 +132,6 @@ aside{
 
 .font_info{
 	font: normal normal normal 18px/1.4em avenir-lt-w01_35-light1475496,sans-serif;
-}
-
-.carousel-indicators .active {
-    background-color: #69a48e;
-}
-
-.carousel-indicators li {
-    border: 1px solid #69a48e;
-}
-
-.carousel-indicators {
-    position: inherit;
-    bottom: 10px;
-    left: 50%;
-    z-index: 15;
-    text-align: center;
-    list-style: none;
 }
 
 .portfolio-box {
@@ -167,4 +180,42 @@ aside{
 }
 .portfolio-box:focus {
   outline: none;
+}
+
+/*
+    Chat
+*/
+.boxchat-left{
+  background-color: #69a48e;
+  color:white;
+  font-weight: bold;
+}
+
+.boxchat-left_arrow{
+  content:'';
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent #69a48e transparent transparent;
+}
+
+.boxchat-right{
+  background-color: LightSeaGreen;
+  color:white;
+  font-weight: bold;
+}
+
+.boxchat-right_arrow{
+  content:'';
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent LightSeaGreen;
+}
+
+.list-view .item{
+  margin-top: 15px;
+  margin-bottom: 100px;
 }

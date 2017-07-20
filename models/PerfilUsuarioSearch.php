@@ -12,6 +12,8 @@ use app\models\PerfilUsuario;
  */
 class PerfilUsuarioSearch extends PerfilUsuario
 {
+    public $username;
+    public $email;
     /**
      * @inheritdoc
      */
@@ -19,7 +21,9 @@ class PerfilUsuarioSearch extends PerfilUsuario
     {
         return [
             [['id', 'activo', 'fk_nacionalidad', 'fk_municipio', 'fk_usuario'], 'integer'],
-            [['nombres', 'apellidos', 'documento_identidad', 'foto_documento_identidad', 'telefono_oficina', 'celular', 'tarjeta_credito', 'categoria'], 'safe'],
+            [['nombres', 'apellidos', 'documento_identidad', 'foto_documento_identidad', 
+            'telefono_oficina', 'celular', 'tarjeta_credito', 'categoria',
+            'username','email'], 'safe'],
         ];
     }
 
@@ -43,11 +47,21 @@ class PerfilUsuarioSearch extends PerfilUsuario
     {
         $query = PerfilUsuario::find();
 
+        $query->joinWith('fkUsuario');
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+        $dataProvider->sort->attributes['email'] = [
+            'asc' => ['email' => SORT_ASC],
+            'desc' => ['email' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['username'] = [
+            'asc' => ['username' => SORT_ASC],
+            'desc' => ['username' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -73,7 +87,10 @@ class PerfilUsuarioSearch extends PerfilUsuario
             ->andFilterWhere(['like', 'telefono_oficina', $this->telefono_oficina])
             ->andFilterWhere(['like', 'celular', $this->celular])
             ->andFilterWhere(['like', 'tarjeta_credito', $this->tarjeta_credito])
-            ->andFilterWhere(['like', 'categoria', $this->categoria]);
+            ->andFilterWhere(['like', 'categoria', $this->categoria])
+            ->andFilterWhere(['like', 'user.email', $this->email])
+            ->andFilterWhere(['like', 'user.username', $this->username])
+            ;
 
         return $dataProvider;
     }

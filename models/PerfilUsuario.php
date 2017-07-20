@@ -28,6 +28,8 @@ use Yii;
  */
 class PerfilUsuario extends \yii\db\ActiveRecord
 {
+    public $username;
+    public $email;
     /**
      * @inheritdoc
      */

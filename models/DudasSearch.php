@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Consulta;
+use app\models\Dudas;
 
 /**
- * ConsultaSearch represents the model behind the search form about `app\models\Consulta`.
+ * DudasSearch represents the model behind the search form about `app\models\Dudas`.
  */
-class ConsultaSearch extends Consulta
+class DudasSearch extends Dudas
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ConsultaSearch extends Consulta
     public function rules()
     {
         return [
-            [['id', 'fk_cliente', 'fk_servicio', 'fk_abogado_asignado', 'finalizado'], 'integer'],
-            [['pregunta', 'archivo', 'creado_en', 'fecha_fin'], 'safe'],
+            [['id', 'leido', 'fk_user', 'fk_consulta'], 'integer'],
+            [['texto', 'adjunto', 'fecha'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ConsultaSearch extends Consulta
      */
     public function search($params)
     {
-        $query = Consulta::find();
+        $query = Dudas::find();
 
         // add conditions that should always apply here
 
@@ -60,16 +60,14 @@ class ConsultaSearch extends Consulta
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'fk_cliente' => $this->fk_cliente,
-            'fk_servicio' => $this->fk_servicio,
-            'fk_abogado_asignado' => $this->fk_abogado_asignado,
-            'finalizado' => $this->finalizado,
-            'creado_en' => $this->creado_en,
-            'fecha_fin' => $this->fecha_fin,
+            'leido' => $this->leido,
+            'fecha' => $this->fecha,
+            'fk_user' => $this->fk_user,
+            'fk_consulta' => $this->fk_consulta,
         ]);
 
-        $query->andFilterWhere(['like', 'pregunta', $this->pregunta])
-            ->andFilterWhere(['like', 'archivo', $this->archivo]);
+        $query->andFilterWhere(['like', 'texto', $this->texto])
+            ->andFilterWhere(['like', 'adjunto', $this->adjunto]);
 
         return $dataProvider;
     }

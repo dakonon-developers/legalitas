@@ -24,12 +24,17 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout','actuaciones'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['actuaciones'],
+                        'allow' => true,
+                        'roles' => ['Usuario','Abogado Interno','Abogado Externo'],
                     ],
                 ],
             ],
@@ -100,6 +105,12 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+
+    /**
+     * Registra el usuario.
+     *
+     * @return render
+     */
     public function actionUserRegister(){
 
         $model = new UsuarioForm();
@@ -136,6 +147,11 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Registra el abogado.
+     *
+     * @return render
+     */
     public function actionAbogadoRegister(){
 
         $model = new AbogadoForm();
@@ -163,6 +179,26 @@ class SiteController extends Controller
             'provincia' => $provincia,
             'municipio' => $municipio,
             'especializacion' => $especializacion,
+        ]);
+    }
+
+    /**
+     * Visualiza actuaciones.
+     * @return mixed
+     */
+    public function actionActuaciones()
+    {
+        if(Yii::$app->user->can('Usuario')){
+            $searchModel = new \app\models\ActuacionSearch(['user'=>Yii::$app->user->id]);
+        }
+        else{
+            $searchModel = new \app\models\ActuacionSearch(['abogado'=>Yii::$app->user->id]);
+        }
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('actuacion', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

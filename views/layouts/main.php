@@ -58,6 +58,7 @@ LegalitasAsset::register($this);
         ]];
         }
         else{
+            $menuItems[] = ['label' => 'ACTUACIONES', 'url' => ['/site/actuaciones']];
             $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
             $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
             $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];
@@ -85,47 +86,13 @@ LegalitasAsset::register($this);
 
 <footer class="footer green-color">
     <div class="col-md-12">
-        <div class="col-md-4 text-center"><a href="#">WHATSAPP <br><span class="small">Tel. 829.649.8888</span></a></div>
-        <div class="col-md-4 text-center" id="separador"><a href="#">EMAIL <br><span class="small">contacto@legalitasrd.com</span></a></div>
-        <div class="col-md-4 text-center"><a href="#">INSTAGRAM <br><span class="small">@LegalitasRD</span></a></div>
+        <div class="col-md-4 col-xs-4 col-sm-4 text-center"><a href="#">WHATSAPP <br><span class="small">Tel. 829.649.8888</span></a></div>
+        <div class="col-md-4 col-xs-4 col-sm-4 text-center" id="separador"><a href="#">EMAIL <br><span class="small">contacto@legalitasrd.com</span></a></div>
+        <div class="col-md-4 col-xs-4 col-sm-4 text-center"><a href="#">INSTAGRAM <br><span class="small">@LegalitasRD</span></a></div>
     </div>
 </footer>
 
 <?php $this->endBody() ?>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#abogadoform-foto_documento_identidad, #usuarioform-foto_documento_identidad").fileinput({
-            showCaption: true,
-            previewFileType: "image",
-            browseClass: "btn btn-success",
-            browseLabel: "Subir Imagen del Documento",
-            browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
-            removeLabel: "Eliminar",
-            uploadLabel:"Actualizar",
-            allowedFileExtensions: ['svg','jpg', 'png', 'jpeg']
-        });
-
-        $("#abogadoform-foto_carnet").fileinput({
-            showCaption: true,
-            previewFileType: "image",
-            browseClass: "btn btn-success",
-            browseLabel: "Subir Imagen del Carnet",
-            browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
-            removeLabel: "Eliminar",
-            uploadLabel:"Actualizar",
-            allowedFileExtensions: ['svg','jpg', 'png', 'jpeg']
-        });
-
-        $("#abogadoform-cv_adjunto").fileinput({
-            showCaption: true,
-            browseClass: "btn btn-success",
-            browseLabel: "Subir Curriculum",
-            removeLabel: "Eliminar",
-            uploadLabel:"Actualizar",
-            allowedFileExtensions: ['pdf','odt', 'doc']
-        });
-    });
-</script>
 </body>
 </html>
 <?php $this->endPage() ?>

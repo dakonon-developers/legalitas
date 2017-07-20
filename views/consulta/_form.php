@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'pregunta')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'imagen')->fileInput() ?>
+    <?= $form->field($model, 'archivo')->fileInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Enviar' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

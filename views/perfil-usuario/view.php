@@ -41,7 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'telefono_oficina',
             'celular',
             'tarjeta_credito',
-            }
             ['attribute'=>'activo','value'=>$model->activo ? "Si":"No"],
             ['attribute'=>'fk_nacionalidad','value'=>$model->fkNacionalidad->nombre],
             ['attribute'=>'fk_municipio','value'=>$model->fkMunicipio->nombre],

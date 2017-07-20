@@ -33,7 +33,7 @@ class RespuestaConsulta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['texto', 'fk_abogado', 'fk_consulta'], 'required'],
+            [['texto'], 'required'],
             [['texto'], 'string'],
             [['fecha'], 'safe'],
             [['fk_abogado', 'fk_consulta'], 'integer'],

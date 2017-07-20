@@ -12,7 +12,7 @@ use Yii;
  * @property integer $fk_servicio
  * @property integer $fk_abogado_asignado
  * @property string $pregunta
- * @property string $imagen
+ * @property string $archivo
  * @property integer $finalizado
  * @property string $creado_en
  * @property string $fecha_fin
@@ -44,7 +44,7 @@ class Consulta extends \yii\db\ActiveRecord
             [['fk_cliente', 'fk_servicio', 'fk_abogado_asignado', 'finalizado'], 'integer'],
             [['pregunta'], 'string'],
             [['creado_en', 'fecha_fin'], 'safe'],
-            [['imagen'], 'string', 'max' => 128],
+            [['archivo'], 'string', 'max' => 128],
             [['fk_abogado_asignado'], 'exist', 'skipOnError' => true, 'targetClass' => PerfilAbogado::className(), 'targetAttribute' => ['fk_abogado_asignado' => 'id']],
             [['fk_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => PerfilUsuario::className(), 'targetAttribute' => ['fk_cliente' => 'id']],
             [['fk_servicio'], 'exist', 'skipOnError' => true, 'targetClass' => Servicios::className(), 'targetAttribute' => ['fk_servicio' => 'id']],
@@ -62,7 +62,7 @@ class Consulta extends \yii\db\ActiveRecord
             'fk_servicio' => 'Fk Servicio',
             'fk_abogado_asignado' => 'Fk Abogado Asignado',
             'pregunta' => 'Pregunta',
-            'imagen' => 'Imagen',
+            'archivo' => 'Archivo',
             'finalizado' => 'Finalizado',
             'creado_en' => 'Creado En',
             'fecha_fin' => 'Fecha Fin',
