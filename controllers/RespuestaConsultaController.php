@@ -62,11 +62,25 @@ class RespuestaConsultaController extends Controller
         {
             $searchModel = new RespuestaConsultaSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $model = new RespuestaConsulta();
+
+            $consulta_finalizo = \app\models\Consulta::findOne($consulta)->finalizado;
+
+            // Se instancia el servicio y las recomendaciones
+            $servicio = new \app\models\CalificarServicio();
+            $recomendaciones = new \app\models\Recomendaciones();
+            // Se instancia la calificacion
+            $calificacion = \app\models\CalificarServicio::find()->where(['fk_consulta'=>$consulta])->one();
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
                 'consulta' => $consulta,
+                'model' => $model,
+                'finalizo' => $consulta_finalizo,
+                'servicio' => $servicio,
+                'recomendaciones' => $recomendaciones,
+                'calificacion' => $calificacion,
             ]);
         }
         else{
@@ -94,8 +108,9 @@ class RespuestaConsultaController extends Controller
     public function actionCreate($consulta)
     {
         $model = new RespuestaConsulta();
+        $consulta_finalizo = \app\models\Consulta::findOne($consulta)->finalizado;
 
-        if ($model->load(Yii::$app->request->post()) ) {
+        if ($model->load(Yii::$app->request->post()) and !$consulta_finalizo) {
             // Se guarda la respuesta
             $perfil = \app\models\PerfilAbogado::find()->where(['fk_usuario'=>Yii::$app->user->id])->one()->id; 
             $model->fk_consulta = $consulta;
@@ -107,12 +122,12 @@ class RespuestaConsultaController extends Controller
             $consulta->save();
             Yii::$app->session->setFlash('success', 'Se publicó la respuesta con éxito.');
             return $this->redirect(['index', 'consulta' => $consulta]);
-        } else {
+        } /*else {
             return $this->render('create', [
                 'model' => $model,
                 'consulta' => $consulta,
             ]);
-        }
+        }*/
     }
 
     /**

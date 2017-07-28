@@ -53,9 +53,9 @@ LegalitasAsset::register($this);
         if(Yii::$app->user->can('Admin')){
             $menuItems[] = ['label' => 'CONSULTAS', 'url' => ['/consulta/index']];
             $menuItems[] = ['label' => 'USUARIOS', 'items' => [
-           ['label' => 'Abogado', 'url' => ['/perfil-abogado/index']],
-           ['label' => 'Usuario', 'url' => ['/perfil-usuario/index']], 
-        ]];
+               ['label' => 'Abogado', 'url' => ['/perfil-abogado/index']],
+               ['label' => 'Usuario', 'url' => ['/perfil-usuario/index']], 
+            ]];
         }
         else{
             $menuItems[] = ['label' => 'ACTUACIONES', 'url' => ['/site/actuaciones']];

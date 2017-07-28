@@ -10,9 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="dudas-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['action'=>['dudas/create','consulta'=>$consulta]]); ?>
 
-    <?= $form->field($model, 'texto')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'texto')->textarea(['rows' => 6])->label(false) ?>
 
     <?= $form->field($model, 'adjunto')->fileInput() ?>
 
