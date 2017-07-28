@@ -122,6 +122,9 @@ $categorias = $const['categories'];
                                 ['multiple'=>True]) ?>
                         </div>
                         <div>
+                            <?= $form->field($model, 'otros')->textInput(["data-role"=>"tagsinput"]) ?>
+                        </div>
+                        <div>
                             <?= $form->field($model, 'demandado')->inline()->radioList([1 => 'Si', 0 => 'No'],
                                 ['onchange'=>'radio_value(this,"#cantidad",1);'])
                                 ->label("2. ¿Le han demandado o citado a algún tribunal?") ?>
