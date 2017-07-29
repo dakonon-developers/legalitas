@@ -186,7 +186,7 @@ class UsuarioForm extends Model
                     
                     $especializacion = new \app\models\PreguntaEspecializacion();
                     $especializacion->fk_pregunta = $pregunta->id;
-                    $especializacion->fk_especialidad = $value;
+                    $especializacion->fk_especialidad = $nueva_especialidad->id;
                     $especializacion->save();
                 }
             }

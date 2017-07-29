@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "especializacion".
  *
  * @property integer $id
- * @property boolean $nombre
+ * @property string $nombre
  * @property string $descripcion
  * @property boolean $activo
  *
@@ -31,8 +31,10 @@ class Especializacion extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'descripcion', 'activo'], 'required'],
-            [['nombre', 'activo'], 'boolean'],
             [['descripcion'], 'string'],
+            [['activo'], 'boolean'],
+            [['nombre'], 'string', 'max' => 128],
+            [['nombre'], 'unique'],
         ];
     }
 

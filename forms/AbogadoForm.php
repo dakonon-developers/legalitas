@@ -152,13 +152,13 @@ class AbogadoForm extends Model
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;
-        $perfil->foto_documento_identidad = $this->foto_documento_identidad_string;
+        $perfil->foto_documento_identidad = '$this->foto_documento_identidad_string';
         $perfil->exequatur = $this->exequatur;
         $perfil->num_carnet = $this->num_carnet;
-        $perfil->foto_carnet = $this->foto_carnet_string;
+        $perfil->foto_carnet = '$this->foto_carnet_string';
         $perfil->telefono_oficina = $this->telefono_oficina;
         $perfil->celular = $this->celular;
-        $perfil->cv_adjunto = $this->cv_adjunto_string;
+        $perfil->cv_adjunto = '$this->cv_adjunto_string';
         $perfil->tipo_abogado = $this->tipo_abogado;
         $perfil->activo = 0;
         $perfil->fk_nacionalidad = $this->fk_nacionalidad;
@@ -185,7 +185,7 @@ class AbogadoForm extends Model
                     
                     $especializacion = new \app\models\PreguntaEspecializacion();
                     $especializacion->fk_pregunta = $pregunta->id;
-                    $especializacion->fk_especialidad = $value;
+                    $especializacion->fk_especialidad = $nueva_especialidad->id;
                     $especializacion->save();
                 }
             }
