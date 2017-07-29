@@ -93,6 +93,7 @@ class AbogadoForm extends Model
                 'whenClient' => "function (attribute, value) {
                     return $('.field-abogadoform-demandado input[type=\'radio\']:checked').val() == \"1\";
                 }" ],
+            [['otros'], 'string', 'max' => 256],
         ];
     }
 
@@ -174,12 +175,12 @@ class AbogadoForm extends Model
         //Se guardan los servicios
         if  ($this->otros != ''){
             $otros_array = preg_split("/[,]+/", $this->otros);
-            foreach ($otros_array as $key => $value) {
+            foreach (preg_split("/[,]+/", $this->otros) as $key => $value) {
                 $descripcion = "Describe el tipo de especialidad para el servicio legal que identifica los aspectos del tipo $value";
                 $nueva_especialidad =  new \app\models\Especializacion();
                 $nueva_especialidad->nombre = $value;
                 $nueva_especialidad->descripcion = $descripcion;
-                $nueva_especialidad->activo = false;
+                $nueva_especialidad->activo = 0;
                 $nueva_especialidad->save();
                 $especializacion = new \app\models\PreguntaEspecializacion();
                 $especializacion->fk_pregunta = $pregunta->id;
@@ -201,3 +202,4 @@ class AbogadoForm extends Model
         return true;
     }
 }
+
