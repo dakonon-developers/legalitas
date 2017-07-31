@@ -24,9 +24,12 @@ use Yii;
  * @property integer $fk_municipio
  * @property integer $fk_usuario
  *
+ * @property Consulta[] $consultas
  * @property Municipio $fkMunicipio
  * @property Nacionalidad $fkNacionalidad
  * @property User $fkUsuario
+ * @property RespuestaConsulta[] $respuestaConsultas
+ * @property Consulta[] $fkConsultas
  */
 class PerfilAbogado extends \yii\db\ActiveRecord
 {
@@ -88,6 +91,14 @@ class PerfilAbogado extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getConsultas()
+    {
+        return $this->hasMany(Consulta::className(), ['fk_abogado_asignado' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getFkMunicipio()
     {
         return $this->hasOne(Municipio::className(), ['id' => 'fk_municipio']);
@@ -107,5 +118,21 @@ class PerfilAbogado extends \yii\db\ActiveRecord
     public function getFkUsuario()
     {
         return $this->hasOne(User::className(), ['id' => 'fk_usuario']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRespuestaConsultas()
+    {
+        return $this->hasMany(RespuestaConsulta::className(), ['fk_abogado' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkConsultas()
+    {
+        return $this->hasMany(Consulta::className(), ['id' => 'fk_consulta'])->viaTable('respuesta_consulta', ['fk_abogado' => 'id']);
     }
 }

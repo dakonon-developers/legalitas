@@ -35,6 +35,7 @@ class UsuarioForm extends Model
     public $cantidad;
     public $consulta_info;
     public $servicios;
+    public $otros;
 
 
     /**
@@ -119,6 +120,7 @@ class UsuarioForm extends Model
             'demandado' => 'Demandado',
             'cantidad' => 'Cantidad',
             'consulta_info' => 'Info',
+            'otros'=>'Otros Servicios',
         ];
     }
 
@@ -172,6 +174,22 @@ class UsuarioForm extends Model
         $pregunta->fk_user = $user->id;
         $pregunta->save();
         //Se guardan los servicios
+        if  ($this->otros != ''){
+                $otros_array = preg_split("/[,]+/", $this->otros);
+                foreach ($otros_array as $key => $value) {
+                    $descripcion = "Describe el tipo de especialidad para el servicio legal que identifica los aspectos del tipo $value";
+                    $nueva_especialidad =  new \app\models\Especializacion();
+                    $nueva_especialidad->nombre = $value;
+                    $nueva_especialidad->descripcion = $descripcion;
+                    $nueva_especialidad->activo = 0;
+                    $nueva_especialidad->save();
+                    
+                    $especializacion = new \app\models\PreguntaEspecializacion();
+                    $especializacion->fk_pregunta = $pregunta->id;
+                    $especializacion->fk_especialidad = $nueva_especialidad->id;
+                    $especializacion->save();
+                }
+            }
         foreach ($this->servicios as $key => $value) {
             $especializacion = new \app\models\PreguntaEspecializacion();
             $especializacion->fk_pregunta = $pregunta->id;

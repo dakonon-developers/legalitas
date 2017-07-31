@@ -46,6 +46,8 @@ class DudasController extends Controller
      */
     public function actionIndex($consulta)
     {
+        $model = new Dudas();
+
         if(Yii::$app->user->can('Usuario')){
             $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one()->id;
         }
@@ -58,10 +60,14 @@ class DudasController extends Controller
             $searchModel = new DudasSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+            $consulta_finalizo = \app\models\Consulta::findOne($consulta)->finalizado;
+
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
                 'consulta' => $consulta,
+                'model' => $model,
+                'finalizo' => $consulta_finalizo,
             ]);
         }
         else{
@@ -89,19 +95,20 @@ class DudasController extends Controller
     public function actionCreate($consulta)
     {
         $model = new Dudas();
+        $consulta_finalizo = \app\models\Consulta::findOne($consulta)->finalizado;
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) and !$consulta_finalizo) {
             $model->fk_user = Yii::$app->user->id;
             $model->fk_consulta = $consulta;
             $model->save();
             Yii::$app->session->setFlash('success', 'Se publicó con éxito.');
             return $this->redirect(['index', 'consulta' => $consulta]);
-        } else {
+        } /*else {
             return $this->render('create', [
                 'model' => $model,
                 'consulta' => $consulta,
             ]);
-        }
+        }*/
     }
 
     /**

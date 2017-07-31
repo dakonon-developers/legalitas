@@ -59,3 +59,33 @@ function checkbox_abogado(element, id){
 		$(id).text("3. ¿Tiene experiencia consultando?");
 	}
 }
+
+function calificar_servicio(id_consulta){
+	var html = '';
+	bootbox.dialog({ 
+		message: html, 
+		buttons: {
+			close: {
+				label: 'Cancelar',
+				className: "btn-default",
+			},
+			success: {
+				label: 'Calificar',
+				className: "btn-primary",
+			},
+		} 
+	});
+}
+
+function show_and_require(element,div,find_elmt){
+	if($(element).prop('checked')){
+		$(div).show();
+		var field = $(div).find(find_elmt);
+		$(field).attr('required',true);
+	}
+	else{
+		$(div).hide();
+		var field = $(div).find(find_elmt);
+		$(field).removeAttr('required');
+	}
+}

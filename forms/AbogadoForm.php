@@ -40,6 +40,7 @@ class AbogadoForm extends Model
     public $cantidad;
     public $consulta_info;
     public $servicios;
+    public $otros;
 
 /**
  * @inheritdoc
@@ -92,6 +93,7 @@ class AbogadoForm extends Model
                 'whenClient' => "function (attribute, value) {
                     return $('.field-abogadoform-demandado input[type=\'radio\']:checked').val() == \"1\";
                 }" ],
+            [['otros'], 'string', 'max' => 256],
         ];
     }
 
@@ -124,6 +126,7 @@ class AbogadoForm extends Model
             'demandado' => 'Demandado',
             'cantidad' => 'Cantidad',
             'consulta_info' => 'Info',
+            'otros'=>'Otros Servicios'
         ];
     }
 
@@ -149,13 +152,13 @@ class AbogadoForm extends Model
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;
-        $perfil->foto_documento_identidad = $this->foto_documento_identidad_string;
+        $perfil->foto_documento_identidad = '$this->foto_documento_identidad_string';
         $perfil->exequatur = $this->exequatur;
         $perfil->num_carnet = $this->num_carnet;
-        $perfil->foto_carnet = $this->foto_carnet_string;
+        $perfil->foto_carnet = '$this->foto_carnet_string';
         $perfil->telefono_oficina = $this->telefono_oficina;
         $perfil->celular = $this->celular;
-        $perfil->cv_adjunto = $this->cv_adjunto_string;
+        $perfil->cv_adjunto = '$this->cv_adjunto_string';
         $perfil->tipo_abogado = $this->tipo_abogado;
         $perfil->activo = 0;
         $perfil->fk_nacionalidad = $this->fk_nacionalidad;
@@ -170,6 +173,22 @@ class AbogadoForm extends Model
         $pregunta->fk_user = $user->id;
         $pregunta->save();
         //Se guardan los servicios
+        if  ($this->otros != ''){
+                $otros_array = preg_split("/[,]+/", $this->otros);
+                foreach ($otros_array as $key => $value) {
+                    $descripcion = "Describe el tipo de especialidad para el servicio legal que identifica los aspectos del tipo $value";
+                    $nueva_especialidad =  new \app\models\Especializacion();
+                    $nueva_especialidad->nombre = $value;
+                    $nueva_especialidad->descripcion = $descripcion;
+                    $nueva_especialidad->activo = 0;
+                    $nueva_especialidad->save();
+                    
+                    $especializacion = new \app\models\PreguntaEspecializacion();
+                    $especializacion->fk_pregunta = $pregunta->id;
+                    $especializacion->fk_especialidad = $nueva_especialidad->id;
+                    $especializacion->save();
+                }
+            }
         foreach ($this->servicios as $key => $value) {
             $especializacion = new \app\models\PreguntaEspecializacion();
             $especializacion->fk_pregunta = $pregunta->id;
@@ -184,3 +203,4 @@ class AbogadoForm extends Model
         return true;
     }
 }
+

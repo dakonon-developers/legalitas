@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="respuesta-consulta-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['action'=>['respuesta-consulta/create','consulta'=>$consulta]]); ?>
 
     <?= $form->field($model, 'texto')->textarea(['rows' => 6]) ?>
 
