@@ -28,6 +28,7 @@ class m170701_191806_perfil_abogado extends Migration
             'fk_nacionalidad' => $this->integer()->notNull(),
             'fk_municipio' => $this->integer()->notNull(),
             'fk_usuario' => $this->integer()->notNull()->unique(),
+            'UNIQUE(id,fk_nacionalidad,fk_municipio)',
             ], $tableOptions);
 
         $this->createIndex('i-fk_nacionalidad_pa','perfil_abogado','fk_nacionalidad');

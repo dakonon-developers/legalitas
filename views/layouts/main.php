@@ -30,7 +30,7 @@ LegalitasAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Html::img('@web/img/legalitas-logo.png',['width'=>'250px']),
+        'brandLabel' => Html::img('@web/img/legalitas-logo.png',['width'=>'50%']),
         'brandUrl' => '',
         'options' => [
             'class' => 'legalitas-navbar',
@@ -50,15 +50,30 @@ LegalitasAsset::register($this);
         $menuItems[] = ['label' => 'ENTRAR', 'url' => ['/site/login']];
     }
     else{
+        // Apartado del admin
         if(Yii::$app->user->can('Admin')){
             $menuItems[] = ['label' => 'CONSULTAS', 'url' => ['/consulta/index']];
             $menuItems[] = ['label' => 'USUARIOS', 'items' => [
                ['label' => 'Abogado', 'url' => ['/perfil-abogado/index']],
                ['label' => 'Usuario', 'url' => ['/perfil-usuario/index']], 
             ]];
+            $menuItems[] = ['label' => 'ACTUACIONES', 'items' => [
+               ['label' => 'Ver', 'url' => ['/site/actuaciones']],
+               ['label' => 'Calificaciones', 'url' => ['/calificacion/index']], 
+            ]];
         }
         else{
-            $menuItems[] = ['label' => 'ACTUACIONES', 'url' => ['/site/actuaciones']];
+            // Actuaciones para los usuarios
+            if(Yii::$app->user->can('Usuario')){
+                $menuItems[] = ['label' => 'ACTUACIONES', 'url' => ['/site/actuaciones']];
+            }
+            // Actuaciones para los abogados
+            else if (Yii::$app->user->can('Abogado Interno') or Yii::$app->user->can('Abogado Externo')){
+                $menuItems[] = ['label' => 'ACTUACIONES', 'items' => [
+                   ['label' => 'Ver', 'url' => ['/site/actuaciones']],
+                   ['label' => 'Mis Calificaciones', 'url' => ['/calificacion/micalificacion']], 
+                ]];
+            }
             $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
             $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
             $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];

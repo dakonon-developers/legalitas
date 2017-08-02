@@ -17,6 +17,8 @@ use Yii;
  * @property string $creado_en
  * @property string $fecha_fin
  *
+ * @property Calificacion $calificacion
+ * @property CalificarServicio $calificarServicio
  * @property PerfilAbogado $fkAbogadoAsignado
  * @property PerfilUsuario $fkCliente
  * @property Servicios $fkServicio
@@ -40,7 +42,7 @@ class Consulta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'pregunta'], 'required'],
+            [['fk_cliente', 'fk_servicio', 'pregunta'], 'required'],
             [['fk_cliente', 'fk_servicio', 'fk_abogado_asignado', 'finalizado'], 'integer'],
             [['pregunta'], 'string'],
             [['creado_en', 'fecha_fin'], 'safe'],
@@ -67,6 +69,22 @@ class Consulta extends \yii\db\ActiveRecord
             'creado_en' => 'Creado En',
             'fecha_fin' => 'Fecha Fin',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalificacion()
+    {
+        return $this->hasOne(Calificacion::className(), ['fk_consulta' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalificarServicio()
+    {
+        return $this->hasOne(CalificarServicio::className(), ['fk_consulta' => 'id']);
     }
 
     /**
