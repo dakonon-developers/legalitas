@@ -60,7 +60,7 @@ class RespuestaConsultaController extends Controller
         if(\app\models\Consulta::find()->where('id='.$consulta.' AND (fk_cliente='.$perfil.' OR 
             fk_abogado_asignado='.$perfil.')')->one())
         {
-            $searchModel = new RespuestaConsultaSearch();
+            $searchModel = new RespuestaConsultaSearch(['fk_consulta'=>$consulta]);
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             $model = new RespuestaConsulta();
 
