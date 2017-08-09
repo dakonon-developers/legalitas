@@ -93,7 +93,7 @@ $categorias = $const['categories'];
                             </div>
                             <div class="col-md-6">
                                 <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999999999',]) ?>
+                'mask' => '9999999999',]) ?> 
                             </div>
                         </div>
 
