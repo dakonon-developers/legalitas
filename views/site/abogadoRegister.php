@@ -48,8 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="row">
                     <div class="col-md-6">
-                        <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '999-9999999-9',])  ?>
+                        <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',])  ?>
                     </div>
                     <div class="col-md-6">
                         <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
@@ -70,12 +69,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div class="row">
                     <div class="col-md-6">
-                        <?= $form->field($model, 'telefono_oficina')->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999999999',]) ?>
+                        <?= $form->field($model, 'telefono_oficina')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',]) ?>
                     </div>
                     <div class="col-md-6">
-                        <?= $form->field($model, 'celular')->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999999999',] )?>
+                        <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',] ) ?>
                     </div>
                 </div>
 
