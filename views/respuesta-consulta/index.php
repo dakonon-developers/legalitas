@@ -11,6 +11,16 @@ use yii\widgets\ActiveForm;
 $this->title = 'Respuesta';
 $this->params['breadcrumbs'][] = ['label' => 'Actuaciones', 'url' => ['site/actuaciones']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$servicio->ayuda_requerimiento = 1;
+$servicio->tiempo_respuesta = 1;
+$servicio->nos_recomendaria = 1;
+
+$star = 0;
+if($calificacion)
+{
+    $star = $calificacion->calificacion;
+}
 ?>
 <div class="respuesta-consulta-index">
 
@@ -47,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
     <?php
-        if(Yii::$app->user->can('Usuario') and $finalizo){
+        if(Yii::$app->user->can('Usuario') and $finalizo and !$calificacion){
             echo '<div class="text-center">';
             echo '<button class="btn btn-primary" data-toggle="modal" data-target="#calificar">
             Califica el servicio</button></div>'; 
@@ -62,78 +72,93 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);
             echo '</div>';
         }
+        else if(Yii::$app->user->can('Usuario') and $finalizo and $calificacion){
+            echo '<div class="text-center">';
+            echo '<button class="btn btn-default" disabled="disabled">
+            Califica el servicio</button></div>'; 
+        }
      ?>
 </div>
 
-<div class="modal fade" id="calificar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <?php $form = ActiveForm::begin(['action' => ['calificar-servicio/create', 'consulta'=> $consulta] ]); ?>
-  
-    <div class="modal-dialog"> 
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">
-                Califica nuestro servicio
-                </h4>
-            </div>
-            <div class="modal-body">
+<?php if($finalizo): ?>
+    <div class="modal fade" id="calificar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <?php $form = ActiveForm::begin(['action' => ['calificar-servicio/create', 'consulta'=> $consulta] ]); ?>
+      
+        <div class="modal-dialog"> 
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">
+                    Califica nuestro servicio
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    
+                    <h3 class="text-center">Califica nuestro Abogado</h3>
+                    <?= Html::input('text','star_rating',$star,['class'=>'rating rating-loading', 'data-size'=>'xs']) ?>
                 
-                <h3 class="text-center">Califica nuestro Abogado</h3>
-                <?= Html::input('text','star_rating',$calificacion,['class'=>'rating rating-loading', 'data-size'=>'xs']) ?>
-            
 
-                <h3 class="text-center">Califica nuestro Servicio</h3>
-                <?= $form->field($servicio, 'ayuda_requerimiento')->checkbox([
-                    'data-toggle'=>'toggle', 
-                    'data-on'=>'Si',
-                    'data-off'=> 'No', 
-                    'onchange'=>'show_and_require(this,"#ayuda_requerimiento_texto","textarea")'
-                ])->label('¿Le ayudamos en su requerimiento?') ?>
+                    <h3 class="text-center">Califica nuestro Servicio</h3>
+                    <?= $form->field($servicio, 'ayuda_requerimiento')->checkbox([
+                        'data-toggle'=>'toggle', 
+                        'data-on'=>'Si',
+                        'data-off'=> 'No', 
+                        'onchange'=>'show_and_require(this,"#ayuda_requerimiento_texto","textarea")'
+                    ])->label('¿Le ayudamos en su requerimiento?') ?>
 
-                <div id="ayuda_requerimiento_texto" style="display:none;">
-                    <?= $form->field($servicio, 'ayuda_requerimiento_texto')->textarea(['rows' => 6])->label('¿Por qué?') ?>
+                    <div id="ayuda_requerimiento_texto" style="display:none;">
+                        <?= $form->field($servicio, 'ayuda_requerimiento_texto')->textarea(['rows' => 6])->label('¿Por qué?') ?>
+                    </div>
+
+                    <?= $form->field($servicio, 'tiempo_respuesta')->checkbox([
+                        'data-toggle'=>'toggle', 
+                        'data-on'=>'Si',
+                        'data-off'=> 'No', 
+                        'onchange'=>'show_and_require(this,"#tiempo_respuesta_texto","textarea")'
+                    ])->label('¿El tiempo de respuesta le pareció adecuado?') ?>
+
+                    <div id="tiempo_respuesta_texto" style="display:none;">
+                        <?= $form->field($servicio, 'tiempo_respuesta_texto')->textarea(['rows' => 6])->label('¿Por qué?') ?>
+                    </div>
+
+                    <?= $form->field($servicio, 'nos_recomendaria')->checkbox([
+                        'data-toggle'=>'toggle', 
+                        'data-on'=>'Si',
+                        'data-off'=> 'No', 
+                        'onchange'=>'show_and_require(this,"#nos_recomendaria_texto_no","textarea");
+                        show_recomendations(this,"#nos_recomendaria_texto_si");'
+                    ])->label('¿Nos recomendaría?') ?>
+
+                    <div id="nos_recomendaria_texto_no" style="display:none;">
+                        <?= $form->field($servicio, 'nos_recomendaria_texto')->textarea(['rows' => 6])->label('¿Por qué?') ?>
+                    </div>
+
+                    <div id="nos_recomendaria_texto_si" style="display:none;">
+                        <h4 class="text-center">¿Díganos a quién? </h4>
+                        <?php for($i=1;$i<=3;$i++):?>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <?= Html::activeInput('email',$recomendaciones,'correo[]',['class'=>'form-control','placeholder'=>'correo']) ?>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <?= Html::activeInput('text',$recomendaciones,'telefono[]',['class'=>'form-control',
+                                    'placeholder'=>'telefono','min-length'=>10]) ?>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                    
                 </div>
-
-                <?= $form->field($servicio, 'tiempo_respuesta')->checkbox([
-                    'data-toggle'=>'toggle', 
-                    'data-on'=>'Si',
-                    'data-off'=> 'No', 
-                    'onchange'=>'show_and_require(this,"#tiempo_respuesta_texto","textarea")'
-                ])->label('¿El tiempo de respuesta le pareció adecuado?') ?>
-
-                <div id="tiempo_respuesta_texto" style="display:none;">
-                    <?= $form->field($servicio, 'tiempo_respuesta_texto')->textarea(['rows' => 6])->label('¿Por qué?') ?>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Calificar</button>
                 </div>
-
-                <?= $form->field($servicio, 'nos_recomendaria')->checkbox([
-                    'data-toggle'=>'toggle', 
-                    'data-on'=>'Si',
-                    'data-off'=> 'No', 
-                    'onchange'=>'show_and_require(this,"#nos_recomendaria_texto_no","textarea")'
-                ])->label('¿Nos recomendaría?') ?>
-
-                <div id="nos_recomendaria_texto_no" style="display:none;">
-                    <?= $form->field($servicio, 'nos_recomendaria_texto')->textarea(['rows' => 6])->label('¿Por qué?') ?>
-                </div>
-
-                <div id="nos_recomendaria_texto_si">
-                    <h4 class="text-center">¿Díganos a quién? </h4>
-                    <?php for($i=1;$i<=3;$i++):?>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            <?= Html::activeInput('text',$recomendaciones,'correo[]',['class'=>'form-control','placeholder'=>'correo']) ?>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                            <?= Html::activeInput('text',$recomendaciones,'telefono[]',['class'=>'form-control','placeholder'=>'telefono']) ?>
-                        </div>
-                    <?php endfor; ?>
-                </div>
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Calificar</button>
             </div>
         </div>
+        <?php ActiveForm::end(); ?>
     </div>
-    <?php ActiveForm::end(); ?>
-</div>
+<?php 
+    endif;
+    $this->registerJs("show_recomendations($('#calificarservicio-nos_recomendaria'),'#nos_recomendaria_texto_si')", 
+    \yii\web\View::POS_END);
+?>

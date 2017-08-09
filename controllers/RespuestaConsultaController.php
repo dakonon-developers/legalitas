@@ -60,7 +60,7 @@ class RespuestaConsultaController extends Controller
         if(\app\models\Consulta::find()->where('id='.$consulta.' AND (fk_cliente='.$perfil.' OR 
             fk_abogado_asignado='.$perfil.')')->one())
         {
-            $searchModel = new RespuestaConsultaSearch();
+            $searchModel = new RespuestaConsultaSearch(['fk_consulta'=>$consulta]);
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             $model = new RespuestaConsulta();
 
@@ -70,7 +70,7 @@ class RespuestaConsultaController extends Controller
             $servicio = new \app\models\CalificarServicio();
             $recomendaciones = new \app\models\Recomendaciones();
             // Se instancia la calificacion
-            $calificacion = \app\models\CalificarServicio::find()->where(['fk_consulta'=>$consulta])->one();
+            $calificacion = \app\models\Calificacion::find()->where(['fk_consulta'=>$consulta])->one();
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
@@ -117,9 +117,9 @@ class RespuestaConsultaController extends Controller
             $model->fk_abogado = $perfil;
             $model->save();
             // Se actualiza la consulta
-            $consulta = \app\models\Consulta::findOne($consulta);
-            $consulta->finalizado = True;
-            $consulta->save();
+            $consulta_guardar = \app\models\Consulta::findOne($consulta);
+            $consulta_guardar->finalizado = True;
+            $consulta_guardar->save();
             Yii::$app->session->setFlash('success', 'Se publicó la respuesta con éxito.');
             return $this->redirect(['index', 'consulta' => $consulta]);
         } /*else {

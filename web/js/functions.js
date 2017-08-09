@@ -1,4 +1,5 @@
-function show_content(element,id,value=''){
+function show_content(element,id,value){
+	value = value ? value:'';
 	if($(element).val()!=value){
 		$(id).show(2000);
 	}
@@ -78,7 +79,7 @@ function calificar_servicio(id_consulta){
 }
 
 function show_and_require(element,div,find_elmt){
-	if($(element).prop('checked')){
+	if(!$(element).prop('checked')){
 		$(div).show();
 		var field = $(div).find(find_elmt);
 		$(field).attr('required',true);
@@ -88,4 +89,34 @@ function show_and_require(element,div,find_elmt){
 		var field = $(div).find(find_elmt);
 		$(field).removeAttr('required');
 	}
+}
+
+function show_recomendations(element,id){
+	if($(element).prop('checked')){
+		$(id).show();
+		var parent = $(element).parent().parent().parent().parent().find(id+' input[type="text"]');
+		muti_add_required(parent);
+		parent = $(element).parent().parent().parent().parent().find(id+' input[type="email"]');
+		muti_add_required(parent);
+	}
+	else{
+		$(id).hide();
+		var parent = $(element).parent().parent().parent().parent().find(id+' input[type="text"]');
+		muti_add_required(parent,false);
+		parent = $(element).parent().parent().parent().parent().find(id+' input[type="email"]');
+		muti_add_required(parent,false);
+		console.log(parent);
+	}
+}
+
+function muti_add_required(field,add){
+	add = add===false ? add:true;
+	$.each(field,function(key,value){
+		if(add){
+			$(value).attr('required',true);
+		}
+		else{
+			$(value).removeAttr('required');
+		}
+	});
 }

@@ -57,7 +57,7 @@ class DudasController extends Controller
         if(\app\models\Consulta::find()->where('id='.$consulta.' AND (fk_cliente='.$perfil.' OR 
             fk_abogado_asignado='.$perfil.')')->one())
         {
-            $searchModel = new DudasSearch();
+            $searchModel = new DudasSearch(['fk_consulta'=>$consulta]);
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
             $consulta_finalizo = \app\models\Consulta::findOne($consulta)->finalizado;

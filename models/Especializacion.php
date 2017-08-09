@@ -10,7 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $nombre
  * @property string $descripcion
- * @property boolean $activo
+ * @property integer $activo
  *
  * @property PreguntaEspecializacion[] $preguntaEspecializacions
  */
@@ -32,7 +32,7 @@ class Especializacion extends \yii\db\ActiveRecord
         return [
             [['nombre', 'descripcion', 'activo'], 'required'],
             [['descripcion'], 'string'],
-            [['activo'], 'boolean'],
+            [['activo'], 'integer'],
             [['nombre'], 'string', 'max' => 128],
             [['nombre'], 'unique'],
         ];

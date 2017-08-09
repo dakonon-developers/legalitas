@@ -14,7 +14,7 @@ class m170724_003051_calificacion extends Migration
         $this->createTable('{{%calificacion}}',[
             'id' => $this->primaryKey(),
             'fk_consulta' => $this->integer()->notNull(),
-            'calificacion' => $this->decimal(1,1)->notNull(),
+            'calificacion' => $this->decimal(10,1)->notNull(),
             'UNIQUE(fk_consulta)',
             ], $tableOptions);
 

@@ -219,3 +219,7 @@ aside{
   margin-top: 15px;
   margin-bottom: 100px;
 }
+
+.label-info {
+    background-color: #69a48e;
+}

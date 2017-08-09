@@ -46,6 +46,13 @@ class Calificacion extends \yii\db\ActiveRecord
             'id' => 'ID',
             'fk_consulta' => 'Fk Consulta',
             'calificacion' => 'Calificacion',
+            'fkConsulta.fkAbogadoAsignado.documento_identidad' => 'Documento de Identidad del Abogado',
+            'abogado_documento' => 'Documento de Identidad del Abogado',
+            'fkConsulta.fkAbogadoAsignado.nombres' => 'Nombres y Apellidos del Abogado',
+            'fkConsulta.fkCliente.documento_identidad' => 'Documento de Identidad del Cliente',
+            'cliente_documento' => 'Documento de Identidad del Cliente',
+            'fkConsulta.fkCliente.nombres' => 'Nombres y Apellidos del Cliente',
+            'fkConsulta.fkServicio.nombre' => 'Tipo de Servicio'
         ];
     }
 

@@ -8,6 +8,7 @@ use app\models\CalificarServicioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CalificarServicioController implements the CRUD actions for CalificarServicio model.
@@ -24,6 +25,16 @@ class CalificarServicioController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['Usuario'],
+                    ],
                 ],
             ],
         ];
@@ -72,32 +83,32 @@ class CalificarServicioController extends Controller
             if(!CalificarServicio::find()->where(['fk_consulta'=>$consulta])->one())
             {
                 $model->fk_consulta = $consulta;
-                //$model->save();
+                $model->save();
                 // Se guardan las recomendaciones
                 if($model->nos_recomendaria){
                     foreach ($post['Recomendaciones']['correo'] as $key => $value) {
                         $recomendaciones = new \app\models\Recomendaciones();
                         $recomendaciones->correo = $value;
                         $recomendaciones->telefono = $post['Recomendaciones']['telefono'][$key];
-                        //$recomendaciones->fk_calificacion_servicio = $model->id;
-                        //$recomendaciones->save();
+                        $recomendaciones->fk_calificacion_servicio = $model->id;
+                        $recomendaciones->save();
                     }
                 }
                 Yii::$app->session->addFlash('success', 'Se calificó el servicio con éxito.');
             }
             else{
-                Yii::$app->session->setFlash('error', 'Ya calificó este servicio.');
+                Yii::$app->session->addFlash('error', 'Ya calificó este servicio.');
             }
             // Se califica el abogado
             if(!\app\models\Calificacion::find()->where(['fk_consulta'=>$consulta])->one())
             {
                 $calificacion->calificacion = $post['star_rating'] ? $post['star_rating']:0;
                 $calificacion->fk_consulta = $consulta;
-                //$calificacion->save();
+                $calificacion->save();
                 Yii::$app->session->addFlash('success', 'Se calificó el abogado con éxito.');
             }
             else{
-                Yii::$app->session->setFlash('error', 'Ya calificó este abogado.');
+                Yii::$app->session->addFlash('error', 'Ya calificó este abogado.');
             }
             return $this->redirect(['/respuesta-consulta', 'consulta' => $consulta]);
             //print_r($post);

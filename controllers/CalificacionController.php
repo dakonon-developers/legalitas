@@ -8,6 +8,7 @@ use app\models\CalificacionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CalificacionController implements the CRUD actions for Calificacion model.
@@ -24,6 +25,21 @@ class CalificacionController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                        'roles' => ['Admin'],
+                    ],
+                    [
+                        'actions' => ['micalificacion'],
+                        'allow' => true,
+                        'roles' => ['Abogado Interno','Abogado Externo'],
+                    ],
                 ],
             ],
         ];
@@ -45,14 +61,33 @@ class CalificacionController extends Controller
     }
 
     /**
+     * Lists all Calificacion of lawyer.
+     * @return mixed
+     */
+    public function actionMicalificacion()
+    {
+        $perfil = \app\models\PerfilAbogado::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+        $searchModel = new CalificacionSearch(['abogado'=> $perfil->id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('micalificacion', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
      * Displays a single Calificacion model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $recomendaciones = $model->fkConsulta->calificarServicio->recomendaciones;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'recomendaciones' => $recomendaciones,
         ]);
     }
 
