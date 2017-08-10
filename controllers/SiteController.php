@@ -128,7 +128,8 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->foto_documento_identidad_string = UploadModel::upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
+            $upload_model = new UploadModel();
+            $model->foto_documento_identidad_string = $upload_model->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
                 $model->documento_identidad);
             if($model->foto_documento_identidad_string!=''){
                 $model->save();
