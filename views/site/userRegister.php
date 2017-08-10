@@ -70,7 +70,7 @@ $categorias = $const['categories'];
 
                         <div class="row row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'documento_identidad')->textInput() ?>
+                                <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',]) ?>
                             </div>
                             <div class="col-md-6">
                                 <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
@@ -88,15 +88,18 @@ $categorias = $const['categories'];
 
                         <div class="row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'telefono_oficina')->textInput() ?>
+                                <?= $form->field($model, 'telefono_oficina')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
+                'mask' => '9999999999',]) ?>
                             </div>
                             <div class="col-md-6">
-                                <?= $form->field($model, 'celular')->textInput() ?>
+                                <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
+                'mask' => '9999999999',]) ?> 
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <?= $form->field($model, 'tarjeta_credito')->textInput() ?>
+                            <?= $form->field($model, 'tarjeta_credito')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
+                'mask' => '9999-9999-9999-9999',]) ?>
                         </div>
 
                         <div class="row">
