@@ -99,7 +99,7 @@ $categorias = $const['categories'];
 
                         <div class="form-group">
                             <?= $form->field($model, 'tarjeta_credito')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999-9999-9999-9999',]) ?>
+                'mask' => '9999999999999999',]) ?>
                         </div>
 
                         <div class="row">
