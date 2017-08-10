@@ -77,11 +77,11 @@ class AbogadoForm extends Model
             [['fk_municipio'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Municipio::className(), 'targetAttribute' => ['fk_municipio' => 'id']],
             [['fk_nacionalidad'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Nacionalidad::className(), 'targetAttribute' => ['fk_nacionalidad' => 'id']],
             [['fk_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\User::className(), 'targetAttribute' => ['fk_usuario' => 'id']],
-            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf'],
+            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf','maxSize'=>1024 * 2048],
             [['foto_documento_identidad_string'], 'string', 'max' => 128],
-            [['foto_carnet'], 'file', 'extensions' => 'png, jpg, pdf'],
+            [['foto_carnet'], 'file', 'extensions' => 'png, jpg, pdf','maxSize'=>1024 * 2048],
             [['foto_carnet_string'], 'string', 'max' => 128],
-            [['cv_adjunto'], 'file', 'extensions' => 'png, jpg, pdf'],
+            [['cv_adjunto'], 'file', 'extensions' => 'png, jpg, pdf','maxSize'=>1024 * 2048],
             [['cv_adjunto_string'], 'string', 'max' => 128],
         
             // Preguntas

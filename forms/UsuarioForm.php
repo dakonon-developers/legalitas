@@ -78,7 +78,7 @@ class UsuarioForm extends Model
             [['provincia'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Provincia::className(), 'targetAttribute' => ['provincia' => 'id']],
             [['fk_nacionalidad'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Nacionalidad::className(), 'targetAttribute' => ['fk_nacionalidad' => 'id']],
             //Archivo
-            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf'],
+            [['foto_documento_identidad'], 'file', 'extensions' => 'png, jpg, pdf','maxSize'=>1024 * 2048],
             [['foto_documento_identidad_string'], 'string', 'max' => 128],
             // Preguntas
             [['demandado', 'consulta_info','servicios'], 'required'],
