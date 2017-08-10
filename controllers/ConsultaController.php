@@ -146,7 +146,7 @@ class ConsultaController extends Controller
                 Yii::$app->getSession()->setFlash('success',"Se asignó el abogado al caso con éxito.");
             }
             else{
-                echo "error";
+                print_r($consulta->getErrors());
             }
             //return $this->redirect(['index']);
         } 
