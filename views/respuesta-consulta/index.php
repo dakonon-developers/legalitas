@@ -27,13 +27,6 @@ if($calificacion)
     <h1><?= Html::encode($this->title) ?></h1>
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?php
-            if((Yii::$app->user->can('Abogado Interno') or Yii::$app->user->can('Abogado Externo')) and !$finalizo){
-                echo Html::a('Publicar Respuesta', ['create','consulta'=>$consulta], ['class' => 'btn btn-success']); 
-            }
-         ?>
-    </p>
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item row'],
