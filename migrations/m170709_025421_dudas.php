@@ -16,7 +16,7 @@ class m170709_025421_dudas extends Migration
             'texto' => $this->text()->notNull(),
             'adjunto' => $this->string(128),
             'leido' => $this->boolean()->notNull()->defaultValue(false),
-            'fecha' => $this->timestamp()->notNull(),
+            'fecha' => $this->integer(),
             'fk_user' => $this->integer()->notNull(),
             'fk_consulta' => $this->integer()->notNull(),
             ], $tableOptions);

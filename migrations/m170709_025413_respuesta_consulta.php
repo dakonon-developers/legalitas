@@ -15,7 +15,7 @@ class m170709_025413_respuesta_consulta extends Migration
             'id' => $this->primaryKey(),
             'texto' => $this->text()->notNull(),
             'adjunto' => $this->string(128),
-            'fecha' => $this->timestamp()->notNull(),
+            'fecha' => $this->integer(),
             'fk_abogado' => $this->integer()->notNull(),
             'fk_consulta' => $this->integer()->notNull(),
             'UNIQUE(fk_abogado,fk_consulta)',

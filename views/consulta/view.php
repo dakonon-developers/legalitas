@@ -23,7 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'pregunta:ntext',
             'archivo',
             ['attribute'=>'finalizado','value'=>$model->finalizado ? "Si":"No"],
-            'creado_en',
+            //'creado_en',
+            ['attribute'=>'creado_en','value'=> date('d-m-Y H:i:s',$model->creado_en) ],
             'fecha_fin',
         ],
     ]) ?>

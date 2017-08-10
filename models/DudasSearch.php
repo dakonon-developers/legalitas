@@ -47,7 +47,9 @@ class DudasSearch extends Dudas
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['fecha'=>SORT_ASC]]
         ]);
+
 
         $this->load($params);
 

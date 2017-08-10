@@ -142,13 +142,8 @@ class ConsultaController extends Controller
         if (count(Yii::$app->request->post())>1) {
             $consulta = \app\models\Consulta::findOne($id);
             $consulta->fk_abogado_asignado = Yii::$app->request->post()['Abogados'];
-            if($consulta->save()){
-                Yii::$app->getSession()->setFlash('success',"Se asignó el abogado al caso con éxito.");
-            }
-            else{
-                print_r($consulta->getErrors());
-            }
-            //return $this->redirect(['index']);
+            $consulta->save();
+            return $this->redirect(['index']);
         } 
         
         return $this->render('asignar',[

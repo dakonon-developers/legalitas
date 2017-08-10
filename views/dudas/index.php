@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $html = $header;
                 $html .= $model->texto.'<br/>';
                 $html .= $model->adjunto.'<br/>';
-                $html .= date('d-m-Y H:i:s(a)',strtotime($model->fecha));
+                $html .= date('d-m-Y H:i:s(a)',$model->fecha);
                 $html .= $footer;
                 return $html;
             },

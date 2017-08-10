@@ -110,7 +110,7 @@ class RespuestaConsultaController extends Controller
         $model = new RespuestaConsulta();
         $consulta_finalizo = \app\models\Consulta::findOne($consulta)->finalizado;
 
-        if ($model->load(Yii::$app->request->post()) and !$consulta_finalizo) {
+        if ($model->load(Yii::$app->request->post()) and (!$consulta_finalizo or $consulta_finalizo==null)) {
             // Se guarda la respuesta
             $perfil = \app\models\PerfilAbogado::find()->where(['fk_usuario'=>Yii::$app->user->id])->one()->id; 
             $model->fk_consulta = $consulta;
@@ -119,10 +119,12 @@ class RespuestaConsultaController extends Controller
             // Se actualiza la consulta
             $consulta_guardar = \app\models\Consulta::findOne($consulta);
             $consulta_guardar->finalizado = True;
+            $consulta_guardar->fecha_fin = date('Y-m-d');
             $consulta_guardar->save();
             Yii::$app->session->setFlash('success', 'Se publicó la respuesta con éxito.');
             return $this->redirect(['index', 'consulta' => $consulta]);
-        } /*else {
+        }
+         /*else {
             return $this->render('create', [
                 'model' => $model,
                 'consulta' => $consulta,

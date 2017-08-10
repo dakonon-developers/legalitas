@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "dudas".
@@ -26,6 +27,21 @@ class Dudas extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'dudas';
+    }
+
+    /**
+     * @behaviors
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['fecha'],
+                ],
+            ],
+        ];
     }
 
     /**

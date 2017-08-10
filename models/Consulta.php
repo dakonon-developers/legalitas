@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+
 
 /**
  * This is the model class for table "consulta".
@@ -34,6 +36,21 @@ class Consulta extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'consulta';
+    }
+
+    /**
+     * @behaviors
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['creado_en'],
+                ],
+            ],
+        ];
     }
 
     /**
