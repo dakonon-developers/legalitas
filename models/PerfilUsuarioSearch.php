@@ -86,7 +86,6 @@ class PerfilUsuarioSearch extends PerfilUsuario
             ->andFilterWhere(['like', 'foto_documento_identidad', $this->foto_documento_identidad])
             ->andFilterWhere(['like', 'telefono_oficina', $this->telefono_oficina])
             ->andFilterWhere(['like', 'celular', $this->celular])
-            ->andFilterWhere(['like', 'tarjeta_credito', $this->tarjeta_credito])
             ->andFilterWhere(['like', 'categoria', $this->categoria])
             ->andFilterWhere(['like', 'user.email', $this->email])
             ->andFilterWhere(['like', 'user.username', $this->username])

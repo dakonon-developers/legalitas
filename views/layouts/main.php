@@ -61,6 +61,10 @@ LegalitasAsset::register($this);
                ['label' => 'Ver', 'url' => ['/site/actuaciones']],
                ['label' => 'Calificaciones', 'url' => ['/calificacion/index']], 
             ]];
+            $menuItems[] = ['label' => 'IGUALAS Y SERVICIOS', 'items' => [
+               ['label' => 'Igualas', 'url' => ['/site/actuaciones']],
+               ['label' => 'Servicios', 'url' => ['/promociones/index']], 
+            ]];
         }
         else{
             // Actuaciones para los usuarios

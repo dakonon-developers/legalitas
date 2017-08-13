@@ -147,6 +147,18 @@ class AbogadoForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->save();
+        # Sedn Mail confirm
+        \Yii::$app->mailer->compose()
+                ->setTo($user->email)
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                ->setSubject('Confirmacion de Registro')
+                ->setTextBody("
+                Persiona click en el enlace para confirma tu registro en la paltaforma Legalitas".\yii\helpers\Html::a('confirm',
+                Yii::$app->urlManager->createAbsoluteUrl(
+                ['site/confirm','key'=>$user->auth_key]
+                ))
+                )
+                ->send();
          // Model Perfil
         $perfil = new \app\models\PerfilAbogado();
         $perfil->nombres = $this->nombres;

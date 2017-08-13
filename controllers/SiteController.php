@@ -13,6 +13,8 @@ use app\forms\LoginForm;
 use app\forms\UsuarioForm;
 use app\forms\AbogadoForm;
 use app\models\UploadModel;
+require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
+header('Content-Type: application/json');
 
 class SiteController extends Controller
 {
@@ -128,17 +130,24 @@ class SiteController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $upload_model = new UploadModel();
-            $model->foto_documento_identidad_string = $upload_model->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
+            $uploads = new UploadModel();
+            $model->foto_documento_identidad_string = $uploads->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
                 $model->documento_identidad);
             if($model->foto_documento_identidad_string!=''){
                 $model->save();
-                Yii::$app->session->setFlash('success', 'Se registro con éxito.');
+            
+                if($model->email){
+                Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
+                }
+                else{
+                Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                }
                 return $this->render('index'); 
             }
+
             Yii::$app->session->setFlash('error', 'Debe adjuntar un documento.');
         }
-
+        
         return $this->render('userRegister', [
             'model' => $model,
             'nacionalidad' => $nacionalidad,
@@ -163,15 +172,21 @@ class SiteController extends Controller
         ->all();
 
        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $upload_model = new UploadModel();
-            $model->foto_documento_identidad_string = $upload_model->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
-               $model->documento_identidad);
-            $model->foto_carnet_string = $upload_model->upload(UploadedFile::getInstance($model, 'foto_carnet'),
-              $model->documento_identidad);
-            $model->cv_adjunto_string = $upload_model->upload(UploadedFile::getInstance($model, 'cv_adjunto'),
-             $model->documento_identidad);
+            $uploads = new UploadModel();
+            $model->foto_documento_identidad_string = $uploads->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
+                $model->documento_identidad);
+            $model->foto_carnet_string = $uploads->upload(UploadedFile::getInstance($model, 'foto_carnet'),
+                $model->documento_identidad);
+            $model->cv_adjunto_string = $uploads->upload(UploadedFile::getInstance($model, 'cv_adjunto'),
+                $model->documento_identidad);
             $model->save();
-            Yii::$app->session->setFlash('success', 'Se registro con éxito.');
+            if($model->email){
+                Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
+                }
+                else{
+                Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                }
+                
             return $this->render('index');
         }
 
@@ -262,7 +277,7 @@ class SiteController extends Controller
      */
     public function actionConfirm($key)
     {
-        $user = User::findByAccessToken($key);
+        $user = \app\models\User::findByAccessToken($key);
         if(!empty($user))
         {
             $user->status=10;

@@ -120,3 +120,29 @@ function muti_add_required(field,add){
 		}
 	});
 }
+
+String.prototype.splice = function(idx, rem, str) {
+    return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+};
+
+function render_input_to_cents(field) {
+    var value = $('#' + field.id).val().replace(/[^0-9]/g,'');
+    if (parseInt(value) == 0 || value == ""){
+        return $('#' + field.id).val("0,00");
+    }
+    if (value < 99 && value > 9)
+        value = "0," + parseInt(value);
+    else if (value < 99 && value < 9)
+        value = "0,0" + parseInt(value);
+    else {
+        if (value[0] == "0") value = value.slice(1);
+        value = value.splice(value.length - 2, 0, ",");
+    }
+    $('#' + field.id).val(value);
+}
+
+function render_text_to_cents(field) {
+    var value = field.textContent.replace(/[^0-9]/g,'');
+    value = value.splice(value.length - 2, 0, ",");
+    field.textContent = value;
+}

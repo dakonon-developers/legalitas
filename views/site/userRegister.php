@@ -20,15 +20,15 @@ $categorias = $const['categories'];
 <div class="site-register">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php $form = ActiveForm::begin([           
+    <?php $form = ActiveForm::begin([
         'enableClientValidation' => true,
         'enableAjaxValidation' => true,
         'options' => ['enctype'=>'multipart/form-data']]
     ); ?>
-    
-		<div class="form-group">
-			<?= $form->errorSummary($model); ?>
-		</div>
+
+        <div class="form-group">
+            <?= $form->errorSummary($model); ?>
+        </div>
 
         <div class="form-group">
             <?= $form->field($model, 'categoria')->dropDownList($categorias,
@@ -70,7 +70,7 @@ $categorias = $const['categories'];
 
                         <div class="row row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',]) ?>
+                                <?= $form->field($model, 'documento_identidad')->textInput() ?>
                             </div>
                             <div class="col-md-6">
                                 <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
@@ -88,18 +88,28 @@ $categorias = $const['categories'];
 
                         <div class="row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'telefono_oficina')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999999999',]) ?>
+                                <?= $form->field($model, 'telefono_oficina')->textInput() ?>
                             </div>
                             <div class="col-md-6">
-                                <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999999999',]) ?> 
+                                <?= $form->field($model, 'celular')->textInput() ?>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <?= $form->field($model, 'tarjeta_credito')->textInput()->widget(\yii\widgets\MaskedInput::className(), [
-                'mask' => '9999999999999999',]) ?>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'tarjeta_credito')->textInput() ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'cvc')->textInput() ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'exp_month')->textInput() ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'exp_year')->textInput() ?>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -125,9 +135,6 @@ $categorias = $const['categories'];
                                 ['multiple'=>True]) ?>
                         </div>
                         <div>
-                            <?= $form->field($model, 'otros')->textInput(["data-role"=>"tagsinput"]) ?>
-                        </div>
-                        <div>
                             <?= $form->field($model, 'demandado')->inline()->radioList([1 => 'Si', 0 => 'No'],
                                 ['onchange'=>'radio_value(this,"#cantidad",1);'])
                                 ->label("2. ¿Le han demandado o citado a algún tribunal?") ?>
@@ -151,7 +158,7 @@ $categorias = $const['categories'];
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
             </ol>
-            
+
         </div>
 
     <?php ActiveForm::end(); ?>
