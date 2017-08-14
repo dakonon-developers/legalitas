@@ -20,10 +20,11 @@ class LegalitasAsset extends AssetBundle
     public $css = [
         'css/site.css',
         'css/style.css',
-       'plugins/bootstrap-toogle/css/bootstrap-toggle.min.css',
-       'plugins/bootstrap-fileinput/css/fileinput.min.css',
-       'plugins/bootstrap-star-rating/css/star-rating.min.css',
-       'plugins/bootstrap-tagsinput/bootstrap-tagsinput.css',
+        'plugins/bootstrap-toogle/css/bootstrap-toggle.min.css',
+        'plugins/bootstrap-fileinput/css/fileinput.min.css',
+        'plugins/bootstrap-star-rating/css/star-rating.min.css',
+        'plugins/bootstrap-tagsinput/bootstrap-tagsinput.css',
+        'plugins/font-awesome/css/font-awesome.min.css',
     ];
     public $js = [
         'js/ready.js',

@@ -12,7 +12,7 @@ class PromocionController extends Controller
 {
     public function actionInit()
     {
-        $promocion = \app\models\Promociones::find(1);
+        $promocion = \app\models\Promociones::findOne(1);
         if(!$promocion){
             $promocion = new \app\models\Promociones();
             $promocion->slim = 5;
@@ -20,12 +20,16 @@ class PromocionController extends Controller
             $promocion->plus = 20;
             $promocion->save();
         }
-        foreach (\app\models\Servicios::findAll() as $key => $servicio) {
+        else{
+            $promocion = $promocion->one();    
+        }
+        foreach (\app\models\Servicios::find()->all() as $key => $servicio) {
             $serv_prom = new \app\models\ServicioPromocion();
             $serv_prom->fk_servicio = $servicio->id; 
             $serv_prom->fk_promocion = $promocion->id;
             $serv_prom->save();
         }
+        echo "Se establecieron las promociones con éxito";
     }
 
     /*public function actionTruncate()

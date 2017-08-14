@@ -14,6 +14,11 @@ use Yii;
  * @property double $costo
  *
  * @property Consulta[] $consultas
+ * @property IgualasServicios[] $igualasServicios
+ * @property Igualas[] $fkIgualas
+ * @property ServicioPayments[] $servicioPayments
+ * @property ServicioPromocion[] $servicioPromocions
+ * @property Promociones[] $fkPromocions
  * @property Materia $fkMateria
  */
 class Servicios extends \yii\db\ActiveRecord
@@ -48,7 +53,8 @@ class Servicios extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
-            'fk_materia' => 'Fk Materia',
+            'fk_materia' => 'Materia',
+            'fkMateria' => 'Materia',
             'activo' => 'Activo',
             'costo' => 'Costo',
         ];
@@ -60,6 +66,46 @@ class Servicios extends \yii\db\ActiveRecord
     public function getConsultas()
     {
         return $this->hasMany(Consulta::className(), ['fk_servicio' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIgualasServicios()
+    {
+        return $this->hasMany(IgualasServicios::className(), ['fk_servicio' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkIgualas()
+    {
+        return $this->hasMany(Igualas::className(), ['id' => 'fk_iguala'])->viaTable('igualas_servicios', ['fk_servicio' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServicioPayments()
+    {
+        return $this->hasMany(ServicioPayments::className(), ['fk_service' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServicioPromocions()
+    {
+        return $this->hasMany(ServicioPromocion::className(), ['fk_servicio' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkPromocions()
+    {
+        return $this->hasMany(Promociones::className(), ['id' => 'fk_promocion'])->viaTable('servicio_promocion', ['fk_servicio' => 'id']);
     }
 
     /**

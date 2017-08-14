@@ -223,3 +223,7 @@ aside{
 .label-info {
     background-color: #69a48e;
 }
+
+.navbar-toggle .icon-bar{
+  background-color: #69a48e;
+}

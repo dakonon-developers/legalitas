@@ -63,7 +63,8 @@ LegalitasAsset::register($this);
             ]];
             $menuItems[] = ['label' => 'IGUALAS Y SERVICIOS', 'items' => [
                ['label' => 'Igualas', 'url' => ['/site/actuaciones']],
-               ['label' => 'Servicios', 'url' => ['/promociones/index']], 
+               ['label' => 'Servicios', 'url' => ['/servicios/index']], 
+               ['label' => 'Servicios - Promociones', 'url' => ['/promociones/index']],
             ]];
         }
         else{
@@ -105,9 +106,9 @@ LegalitasAsset::register($this);
 
 <footer class="footer green-color">
     <div class="col-md-12">
-        <div class="col-md-4 col-xs-4 col-sm-4 text-center"><a href="#">WHATSAPP <br><span class="small">Tel. 829.649.8888</span></a></div>
-        <div class="col-md-4 col-xs-4 col-sm-4 text-center" id="separador"><a href="#">EMAIL <br><span class="small">contacto@legalitasrd.com</span></a></div>
-        <div class="col-md-4 col-xs-4 col-sm-4 text-center"><a href="#">INSTAGRAM <br><span class="small">@LegalitasRD</span></a></div>
+        <div class="col-md-4 col-xs-4 col-sm-4 text-center"><a href="#"><i class="fa fa-whatsapp"></i> WHATSAPP <br><span class="small">Tel. 829.649.8888</span></a></div>
+        <div class="col-md-4 col-xs-4 col-sm-4 text-center" id="separador"><a href="#"><i class="fa fa-envelope-o"></i> EMAIL <br><span class="small">contacto@legalitasrd.com</span></a></div>
+        <div class="col-md-4 col-xs-4 col-sm-4 text-center"><a href="#"><i class="fa fa-instagram"></i> INSTAGRAM <br><span class="small">@LegalitasRD</span></a></div>
     </div>
 </footer>
 
