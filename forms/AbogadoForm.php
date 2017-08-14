@@ -153,10 +153,10 @@ class AbogadoForm extends Model
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
                 ->setSubject('Confirmacion de Registro')
                 ->setTextBody("
-                Persiona click en el enlace para confirma tu registro en la paltaforma Legalitas".\yii\helpers\Html::a('confirm',
+                Persiona click en el enlace para confirma tu registro en la paltaforma Legalitas ".
                 Yii::$app->urlManager->createAbsoluteUrl(
-                ['site/confirm','key'=>$user->auth_key]
-                ))
+                    ['site/confirm','key'=>$user->auth_key]
+                )
                 )
                 ->send();
          // Model Perfil

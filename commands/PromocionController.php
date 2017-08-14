@@ -20,9 +20,6 @@ class PromocionController extends Controller
             $promocion->plus = 20;
             $promocion->save();
         }
-        else{
-            $promocion = $promocion->one();    
-        }
         foreach (\app\models\Servicios::find()->all() as $key => $servicio) {
             $serv_prom = new \app\models\ServicioPromocion();
             $serv_prom->fk_servicio = $servicio->id; 

@@ -17,7 +17,7 @@ use Yii;
  * @property IgualasServicios[] $igualasServicios
  * @property Igualas[] $fkIgualas
  * @property ServicioPayments[] $servicioPayments
- * @property ServicioPromocion[] $servicioPromocions
+ * @property ServicioPromocion $servicioPromocion
  * @property Promociones[] $fkPromocions
  * @property Materia $fkMateria
  */
@@ -95,9 +95,9 @@ class Servicios extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getServicioPromocions()
+    public function getServicioPromocion()
     {
-        return $this->hasMany(ServicioPromocion::className(), ['fk_servicio' => 'id']);
+        return $this->hasOne(ServicioPromocion::className(), ['fk_servicio' => 'id']);
     }
 
     /**

@@ -31,6 +31,7 @@ class ServicioPromocion extends \yii\db\ActiveRecord
         return [
             [['fk_servicio', 'fk_promocion'], 'required'],
             [['fk_servicio', 'fk_promocion'], 'integer'],
+            [['fk_servicio'], 'unique'],
             [['fk_servicio', 'fk_promocion'], 'unique', 'targetAttribute' => ['fk_servicio', 'fk_promocion'], 'message' => 'The combination of Fk Servicio and Fk Promocion has already been taken.'],
             [['fk_promocion'], 'exist', 'skipOnError' => true, 'targetClass' => Promociones::className(), 'targetAttribute' => ['fk_promocion' => 'id']],
             [['fk_servicio'], 'exist', 'skipOnError' => true, 'targetClass' => Servicios::className(), 'targetAttribute' => ['fk_servicio' => 'id']],

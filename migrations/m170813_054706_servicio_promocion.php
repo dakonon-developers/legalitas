@@ -12,7 +12,7 @@ class m170813_054706_servicio_promocion extends Migration
         }
 
         $this->createTable('{{%servicio_promocion}}',[
-            'fk_servicio' => $this->integer()->notNull(),
+            'fk_servicio' => $this->integer()->notNull()->unique(),
             'fk_promocion' => $this->integer()->notNull(),
             'UNIQUE(fk_servicio, fk_promocion)',
             ], $tableOptions);

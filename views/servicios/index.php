@@ -38,6 +38,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'costo',
+            ['attribute'=>'servicioPromocion.fkPromocion.slim','value'=>function($model){
+                return '-'.$model->servicioPromocion->fkPromocion->slim.'%';
+            }],
+                        ['attribute'=>'servicioPromocion.fkPromocion.med','value'=>function($model){
+                return '-'.$model->servicioPromocion->fkPromocion->med.'%';
+            }],
+                        ['attribute'=>'servicioPromocion.fkPromocion.slim','value'=>function($model){
+                return '-'.$model->servicioPromocion->fkPromocion->plus.'%';
+            }],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
