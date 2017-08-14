@@ -6,7 +6,7 @@
  */
  //Yii::import('application.vendors.*');
 
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'vendor'.DIRECTORY_SEPARATOR.'stripe-php-5.1.2'.DIRECTORY_SEPARATOR.'init.php';
+require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'vendor'.DIRECTORY_SEPARATOR.'stripe'.DIRECTORY_SEPARATOR.'stripe-php'.DIRECTORY_SEPARATOR.'init.php';
 \Stripe\Stripe::setApiKey("sk_test_AHLcqAqtMbTOLWqjKHC64wkr");
 
 /* Stripe info
