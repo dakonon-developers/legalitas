@@ -12,6 +12,9 @@ use app\models\Consulta;
  */
 class ConsultaSearch extends Consulta
 {
+    public $servicio;
+    public $abogado_asignado;
+    public $cliente;
     /**
      * @inheritdoc
      */
@@ -19,7 +22,7 @@ class ConsultaSearch extends Consulta
     {
         return [
             [['id', 'fk_cliente', 'fk_servicio', 'fk_abogado_asignado', 'finalizado'], 'integer'],
-            [['pregunta', 'archivo', 'creado_en', 'fecha_fin'], 'safe'],
+            [['pregunta', 'archivo', 'creado_en', 'fecha_fin','servicio','abogado_asignado','cliente'], 'safe'],
         ];
     }
 
@@ -43,11 +46,32 @@ class ConsultaSearch extends Consulta
     {
         $query = Consulta::find();
 
+        //Joins de la tabla
+        $query->joinWith('fkServicio');
+        $query->joinWith('fkAbogadoAsignado');
+        $query->joinWith('fkCliente');
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['creado_en'=>SORT_DESC]]
         ]);
+
+        $dataProvider->sort->attributes['servicio'] = [
+            'asc' => ['servicios.nombre' => SORT_ASC],
+            'desc' => ['servicios.nombre' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['abogado_asignado'] = [
+            'asc' => ['perfil_abogado.nombres' => SORT_ASC],
+            'desc' => ['perfil_abogado.nombres' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['cliente'] = [
+            'asc' => ['perfil_usuario.nombres' => SORT_ASC],
+            'desc' => ['perfil_usuario.nombres' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -69,7 +93,18 @@ class ConsultaSearch extends Consulta
         ]);
 
         $query->andFilterWhere(['like', 'pregunta', $this->pregunta])
-            ->andFilterWhere(['like', 'archivo', $this->archivo]);
+            ->andFilterWhere(['like', 'archivo', $this->archivo])
+            ->andFilterWhere([
+                'or',
+                ['like', 'perfil_usuario.nombres', $this->cliente],
+                ['like', 'perfil_usuario.apellidos', $this->cliente],
+            ])
+            ->andFilterWhere([
+                'or',
+                ['like', 'perfil_abogado.nombres', $this->abogado_asignado],
+                ['like', 'perfil_abogado.apellidos', $this->abogado_asignado],
+            ])
+            ->andFilterWhere(['like', 'servicios.nombre', $this->servicio]);
 
         return $dataProvider;
     }

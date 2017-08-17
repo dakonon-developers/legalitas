@@ -24,8 +24,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'celular')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'tarjeta_credito')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'activo')->textInput() ?>
 
     <?= $form->field($model, 'fk_nacionalidad')->textInput() ?>

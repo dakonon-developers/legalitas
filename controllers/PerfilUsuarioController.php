@@ -35,12 +35,12 @@ class PerfilUsuarioController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create','view'],
+                        'actions' => ['create','view','update'],
                         'allow' => true,
                         'roles' => ['Usuario'],
                     ],
                     [
-                        'actions' => ['index','activar'],
+                        'actions' => ['index','activar','view'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],

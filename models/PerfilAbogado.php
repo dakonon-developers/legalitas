@@ -79,9 +79,9 @@ class PerfilAbogado extends \yii\db\ActiveRecord
             'cv_adjunto' => 'Cv Adjunto',
             'tipo_abogado' => 'Tipo Abogado',
             'activo' => 'Activo',
-            'fk_nacionalidad' => 'Fk Nacionalidad',
-            'fk_municipio' => 'Fk Municipio',
-            'fk_usuario' => 'Fk Usuario',
+            'fk_nacionalidad' => 'Nacionalidad',
+            'fk_municipio' => 'Municipio',
+            'fk_usuario' => 'Usuario',
         ];
     }
 

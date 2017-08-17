@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
+$const = require(__DIR__ . '/../../config/constants.php');
+$categorias = $const['categories'];
+
 /* @var $this yii\web\View */
 /* @var $model app\models\PerfilUsuario */
 
@@ -15,14 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php // Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -40,12 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'telefono_oficina',
             'celular',
-            'tarjeta_credito',
             ['attribute'=>'activo','value'=>$model->activo ? "Si":"No"],
             ['attribute'=>'fk_nacionalidad','value'=>$model->fkNacionalidad->nombre],
             ['attribute'=>'fk_municipio','value'=>$model->fkMunicipio->nombre],
             //'fk_usuario',
-            'categoria',
+            ['attribute'=>'categoria','value'=>$categorias[$model->categoria]],
+            //'categoria',
         ],
     ]) ?>
 

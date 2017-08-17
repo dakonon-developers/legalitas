@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'categoria',
 
             ['class' => 'yii\grid\ActionColumn',
-                'template' => '{view}{activar}{delete}',
+                'template' => '{view}{activar}',
                 'buttons'=> [
                     'activar' => function($url,$model)
                     {

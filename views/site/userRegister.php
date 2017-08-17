@@ -167,6 +167,22 @@ $categorias = $const['categories'];
         "var municipio = ".\yii\helpers\Json::htmlEncode($municipio).";",
         View::POS_HEAD,'municipio'
     );
+
+
+    $script = <<< JS
+    if ($('#usuarioform-categoria').val()!=""){
+        $('#register').show();
+    }
+    if($('#usuarioform-fk_nacionalidad').val()!=""){
+        $('#usuarioform-provincia').removeAttr('disabled');
+    }
+    if($('#usuarioform-provincia').val()!=""){
+        $('#usuarioform-fk_municipio').removeAttr('disabled');
+    }
+JS;
+
+    $this->registerJs($script);
+
 ?>
 
 </div>

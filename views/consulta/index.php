@@ -21,9 +21,17 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'fk_cliente',
-            'fk_servicio',
-            'fk_abogado_asignado',
+            //'fk_cliente',
+            ['attribute'=>'cliente','value'=>function($model){ return $model->fkCliente->nombres.' '.$model->fkCliente->apellidos; }],
+            ['attribute'=>'servicio','value'=>function($model){ return $model->fkServicio->nombre; }],
+            //'fk_servicio',
+            //'fk_abogado_asignado',
+            ['attribute'=>'abogado_asignado','value'=>function($model){ 
+                return ($model->fk_abogado_asignado !='' ? 
+                    $model->fkAbogadoAsignado->nombres.' '.$model->fkAbogadoAsignado->apellidos:
+                    $model->fk_abogado_asignado
+                ); 
+            }],
             'pregunta:ntext',
             // 'imagen',
             ['attribute'=>'finalizado','value'=>function($model){ return $model->finalizado ? "Si":"No";}],

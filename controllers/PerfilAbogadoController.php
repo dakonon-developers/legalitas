@@ -35,12 +35,12 @@ class PerfilAbogadoController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create','view'],
+                        'actions' => ['create','view','update'],
                         'allow' => true,
                         'roles' => ['Abogado Interno','Abogado Externo'],
                     ],
                     [
-                        'actions' => ['index','activar'],
+                        'actions' => ['index','activar','view'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],

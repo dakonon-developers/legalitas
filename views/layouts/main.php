@@ -52,13 +52,12 @@ LegalitasAsset::register($this);
     else{
         // Apartado del admin
         if(Yii::$app->user->can('Admin')){
-            $menuItems[] = ['label' => 'CONSULTAS', 'url' => ['/consulta/index']];
             $menuItems[] = ['label' => 'USUARIOS', 'items' => [
                ['label' => 'Abogado', 'url' => ['/perfil-abogado/index']],
                ['label' => 'Usuario', 'url' => ['/perfil-usuario/index']], 
             ]];
             $menuItems[] = ['label' => 'ACTUACIONES', 'items' => [
-               ['label' => 'Ver', 'url' => ['/site/actuaciones']],
+               ['label' => 'Ver', 'url' => ['/consulta/index']],
                ['label' => 'Calificaciones', 'url' => ['/calificacion/index']], 
             ]];
             $menuItems[] = ['label' => 'IGUALAS Y SERVICIOS', 'items' => [
