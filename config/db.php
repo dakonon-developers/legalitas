@@ -6,7 +6,7 @@ return [
     #'dsn' => 'pgsql:host=ec2-107-20-188-239.compute-1.amazonaws.com;port=5432;dbname=d8n8ugs5dumbar',
     #'dsn' => 'pgsql:host=localhost;port=5432;dbname=legalitas',
     'username' => 'root',
-    'password' => '123456',
+    'password' => '123',
     'charset' => 'utf8',
 ];
     

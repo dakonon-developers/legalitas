@@ -163,6 +163,12 @@ class UsuarioForm extends Model
 
         if ($stripe_customer_charge->status != "succeeded")
           return false;
+        $charge = new \app\models\Payments();
+        $charge->charge_id = $stripe_customer_charge->id;
+        $charge->monto = $precio;
+        $charge->fecha = time();
+        $charge->save();
+
         // Model User
         $user = new \app\models\User();
         $user->username = $this->username;

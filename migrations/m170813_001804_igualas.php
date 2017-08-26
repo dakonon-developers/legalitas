@@ -13,7 +13,7 @@ class m170813_001804_igualas extends Migration
 
         $this->createTable('{{%igualas}}',[
             'id' => $this->primaryKey(),
-            'nombre' => $this->string(255)->notNull()->unique(),
+            'nombre' => $this->string(255)->notNull(),
             'descripcion' => $this->text(),
             'slim_duracion' => $this->integer()->notNull()->defaultValue(3),
             'med_duracion' => $this->integer()->notNull()->defaultValue(7),
