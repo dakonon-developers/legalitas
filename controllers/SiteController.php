@@ -181,10 +181,10 @@ class SiteController extends Controller
                 $model->documento_identidad);
             $model->save();
             if($model->email){
-                Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
+                Yii::$app->session->setFlash('success', 'Se registró con éxito, verifique su correo.');
                 }
                 else{
-                Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                Yii::$app->getSession()->setFlash('warning','Falló, contacte al administrador del sitio!');
                 }
                 
             return $this->render('index');

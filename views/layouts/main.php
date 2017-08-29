@@ -98,6 +98,9 @@ LegalitasAsset::register($this);
         ]) ?>
         <div class="row">
             <?= Alert::widget() ?>
+            <?php if (Yii::$app->user->can('Invitado')): ?>
+                <div class="alert alert-info">Pendiente de validación de legalitas.</div>
+            <?php endif; ?>
         </div>
         <?= $content ?>
     </div>
