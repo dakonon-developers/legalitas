@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                 </div>
             </div>
-            <ol class="carousel-indicators" id="list" ">
+            <ol class="carousel-indicators" id="list">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
             </ol>
@@ -140,5 +140,16 @@ $this->params['breadcrumbs'][] = $this->title;
         "var municipio = ".\yii\helpers\Json::htmlEncode($municipio).";",
         View::POS_HEAD,'municipio'
     );
+    $script = <<< JS
+    $('form').on('keyup keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) { 
+            e.preventDefault();
+            return false;
+        }
+    });
+JS;
+
+    $this->registerJs($script);
 ?>
 </div>

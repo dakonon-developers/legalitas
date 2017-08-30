@@ -150,6 +150,15 @@ class PerfilAbogadoController extends Controller
             $authorRole = $model->tipo_abogado ? $auth->getRole('Abogado Interno'):$auth->getRole('Abogado Externo');
             $auth->assign($authorRole, $model->fk_usuario);
             Yii::$app->getSession()->setFlash('success',"Se activó el usuario.");
+            //Se crea una notificación por correo
+            \Yii::$app->mailer->compose()
+                ->setTo($model->fkUsuario->email)
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                ->setSubject('Activación por el admin de legalitas')
+                ->setTextBody("
+                Fue activado por el admin de legalitas, ya puede utilizar el sistema"
+                )
+                ->send();
         }
         $model->save();
         return $this->redirect('index');

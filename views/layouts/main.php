@@ -56,6 +56,7 @@ LegalitasAsset::register($this);
                ['label' => 'Abogado', 'url' => ['/perfil-abogado/index']],
                ['label' => 'Usuario', 'url' => ['/perfil-usuario/index']], 
             ]];
+            $menuItems[] = ['label' => 'PAGOS', 'url' => ['/payments/index']];
             $menuItems[] = ['label' => 'ACTUACIONES', 'items' => [
                ['label' => 'Ver', 'url' => ['/consulta/index']],
                ['label' => 'Calificaciones', 'url' => ['/calificacion/index']], 
@@ -98,9 +99,6 @@ LegalitasAsset::register($this);
         ]) ?>
         <div class="row">
             <?= Alert::widget() ?>
-            <?php if (Yii::$app->user->can('Invitado')): ?>
-                <div class="alert alert-info">Pendiente de validación de legalitas.</div>
-            <?php endif; ?>
         </div>
         <?= $content ?>
     </div>
