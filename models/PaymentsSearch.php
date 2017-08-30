@@ -8,9 +8,9 @@ use yii\data\ActiveDataProvider;
 use app\models\Payments;
 
 /**
- * PaymentSearch represents the model behind the search form about `app\models\Payments`.
+ * PaymentsSearch represents the model behind the search form about `app\models\Payments`.
  */
-class PaymentSearch extends Payments
+class PaymentsSearch extends Payments
 {
     /**
      * @inheritdoc
@@ -18,7 +18,7 @@ class PaymentSearch extends Payments
     public function rules()
     {
         return [
-            [['id', 'fecha'], 'integer'],
+            [['id', 'fecha', 'fk_usuario'], 'integer'],
             [['charge_id'], 'safe'],
             [['monto'], 'number'],
         ];
@@ -48,6 +48,7 @@ class PaymentSearch extends Payments
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['fecha'=>SORT_DESC]]
         ]);
 
         $this->load($params);
@@ -63,6 +64,7 @@ class PaymentSearch extends Payments
             'id' => $this->id,
             'monto' => $this->monto,
             'fecha' => $this->fecha,
+            'fk_usuario' => $this->fk_usuario,
         ]);
 
         $query->andFilterWhere(['like', 'charge_id', $this->charge_id]);
