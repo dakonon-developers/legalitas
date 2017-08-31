@@ -16,9 +16,9 @@ use Yii;
  * @property double $slim
  * @property double $med
  * @property double $plus
- * @property string $slim_stripe
- * @property string $med_stripe
- * @property string $plus_stripe
+ * @property string $slim_paypal_id
+ * @property string $med_paypal_id
+ * @property string $plus_paypal_id
  */
 class Igualas extends \yii\db\ActiveRecord
 {
@@ -36,16 +36,16 @@ class Igualas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'slim', 'med', 'plus', 'slim_stripe', 'med_stripe', 'plus_stripe'], 'required'],
-            [['descripcion'], 'string'],
+            [['nombre', 'slim', 'med', 'plus'], 'required'],
+            [['descripcion', 'slim_paypal_id', 'med_paypal_id','plus_paypal_id'], 'string'],
             [['slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
             //[['slim', 'med', 'plus'], 'number'],
             [['nombre'], 'string', 'max' => 255],
-            [['slim_stripe', 'med_stripe', 'plus_stripe'], 'string', 'max' => 25],
-            [['med_stripe'], 'unique'],
+            // [['slim_stripe', 'med_stripe', 'plus_stripe'], 'string', 'max' => 25],
+            // [['med_stripe'], 'unique'],
             [['nombre'], 'unique'],
-            [['plus_stripe'], 'unique'],
-            [['slim_stripe'], 'unique'],
+            // [['plus_stripe'], 'unique'],
+            // [['slim_stripe'], 'unique'],
         ];
     }
 
@@ -64,9 +64,9 @@ class Igualas extends \yii\db\ActiveRecord
             'slim' => 'Slim',
             'med' => 'Med',
             'plus' => 'Plus',
-            'slim_stripe' => 'Slim Stripe',
-            'med_stripe' => 'Med Stripe',
-            'plus_stripe' => 'Plus Stripe',
+            'slim_paypal_id' => 'Slim PayPal id',
+            'med_paypal_id' => 'Med PayPal id',
+            'plus_paypal_id' => 'Plus PayPal id',
         ];
     }
 }
