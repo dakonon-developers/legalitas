@@ -102,6 +102,19 @@ class DudasController extends Controller
             $model->fk_consulta = $consulta;
             $model->save();
             Yii::$app->session->setFlash('success', 'Se publicó con éxito.');
+            //Se crea una notificación por correo
+            \Yii::$app->mailer->compose()
+                ->setTo($model->fkUser->email)
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                ->setSubject('Publicación de Duda')
+                ->setTextBody("
+                Se publicó una nueva duda para la consulta".$model->fkConsulta->pregunta
+                .", para ver más información da click en el siguiente enlace:  ".
+                Yii::$app->urlManager->createAbsoluteUrl(
+                    ['dudas/create','consulta'=>$consulta]
+                )
+                )
+                ->send();
             return $this->redirect(['index', 'consulta' => $consulta]);
         } /*else {
             return $this->render('create', [

@@ -17,7 +17,7 @@ class m170826_004307_drop_stripe_to_igualas_table extends Migration
         // $this->dropColumn('igualas', 'med_stripe');
         // $this->dropColumn('igualas', 'plus_stripe');
         // add tipo column
-        $this->addColumn('igualas', 'tipo', $this->string(25)->notNull());
+        // $this->addColumn('igualas', 'tipo', $this->string(25)->notNull());
         // alter column nombre (quit unique)
         // $this->alterColumn('igualas', 'nombre', $this->string(25)->notNull());
 

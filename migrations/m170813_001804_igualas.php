@@ -24,6 +24,7 @@ class m170813_001804_igualas extends Migration
             // 'slim_stripe' => $this->string(25)->notNull()->unique(),
             // 'med_stripe' => $this->string(25)->notNull()->unique(),
             // 'plus_stripe' => $this->string(25)->notNull()->unique(),
+            'tipo' => $this->string(25)->notNull(),
             ], $tableOptions);
 
     }

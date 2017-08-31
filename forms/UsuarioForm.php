@@ -184,7 +184,7 @@ class UsuarioForm extends Model
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
                 ->setSubject('Confirmacion de Registro')
                 ->setTextBody("
-                Persiona click en el enlace para confirma tu registro en la paltaforma Legalitas ".
+                Persiona click en el enlace para confirmar tu registro en la paltaforma Legalitas ".
                 Yii::$app->urlManager->createAbsoluteUrl(
                     ['site/confirm','key'=>$user->auth_key]
                 )
@@ -222,6 +222,22 @@ class UsuarioForm extends Model
         $pregunta->fk_user = $user->id;
         $pregunta->save();
         //Se guardan los servicios
+        if  ($this->otros != ''){
+                $otros_array = preg_split("/[,]+/", $this->otros);
+                foreach ($otros_array as $key => $value) {
+                    $descripcion = "Describe el tipo de especialidad para el servicio legal que identifica los aspectos del tipo $value";
+                    $nueva_especialidad =  new \app\models\Especializacion();
+                    $nueva_especialidad->nombre = $value;
+                    $nueva_especialidad->descripcion = $descripcion;
+                    $nueva_especialidad->activo = 0;
+                    $nueva_especialidad->save();
+                    
+                    $especializacion = new \app\models\PreguntaEspecializacion();
+                    $especializacion->fk_pregunta = $pregunta->id;
+                    $especializacion->fk_especialidad = $nueva_especialidad->id;
+                    $especializacion->save();
+                }
+            }
         foreach ($this->servicios as $key => $value) {
             $especializacion = new \app\models\PreguntaEspecializacion();
             $especializacion->fk_pregunta = $pregunta->id;

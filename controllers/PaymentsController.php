@@ -4,15 +4,16 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Payments;
-use app\models\PaymentSearch;
+use app\models\PaymentsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
- * PaymentController implements the CRUD actions for Payments model.
+ * PaymentsController implements the CRUD actions for Payments model.
  */
-class PaymentController extends Controller
+class PaymentsController extends Controller
 {
     /**
      * @inheritdoc
@@ -26,6 +27,16 @@ class PaymentController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                        'roles' => ['Admin'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -35,7 +46,7 @@ class PaymentController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new PaymentSearch();
+        $searchModel = new PaymentsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

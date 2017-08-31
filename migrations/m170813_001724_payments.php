@@ -17,7 +17,11 @@ class m170813_001724_payments extends Migration
             'charge_id' => $this->string(25)->notNull(),
             'monto' => $this->float()->notNull(),
             'fecha' =>$this->integer()->notNull(),
+            'fk_usuario' => $this->integer()->notNull(),
             ], $tableOptions);
+
+        $this->createIndex('i-fk_payment-usuario', 'payments', 'fk_usuario');
+        $this->addForeignKey('fk_payment-usuario', 'payments', 'fk_usuario','user','id','CASCADE','CASCADE');
 
     }
 

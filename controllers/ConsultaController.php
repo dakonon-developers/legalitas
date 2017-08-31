@@ -144,6 +144,20 @@ class ConsultaController extends Controller
             $consulta->fk_abogado_asignado = Yii::$app->request->post()['Abogados'];
             $consulta->save();
             Yii::$app->getSession()->setFlash('success',"Se asignó el abogado al caso con éxito.");
+            $abogado = \app\models\PerfilAbogado::findOne($consulta->fk_abogado_asignado);
+            //Se crea una notificación por correo
+            \Yii::$app->mailer->compose()
+                ->setTo($abogado->fkUsuario->email)
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                ->setSubject('Asignación a Consulta')
+                ->setTextBody("
+                Se te asignó a la consulta consulta".$consulta->pregunta
+                .", para ver más información da click en el siguiente enlace:  ".
+                Yii::$app->urlManager->createAbsoluteUrl(
+                    ['site/actuaciones']
+                )
+                )
+                ->send();
             return $this->redirect(['index']);
         } 
         

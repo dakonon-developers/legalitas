@@ -9,7 +9,7 @@ $categorias = $const['categories'];
 /* @var $this yii\web\View */
 /* @var $model app\models\PerfilUsuario */
 
-$this->title = $model->id;
+$this->title = $model->nombres.' '.$model->apellidos;
 $this->params['breadcrumbs'][] = ['label' => 'Perfil Usuarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

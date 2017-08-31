@@ -70,7 +70,7 @@ $categorias = $const['categories'];
 
                         <div class="row row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'documento_identidad')->textInput() ?>
+                                <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',])  ?>
                             </div>
                             <div class="col-md-6">
                                 <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
@@ -82,33 +82,33 @@ $categorias = $const['categories'];
                                 <?= $form->field($model, 'nombre_representante')->textInput() ?>
                             </div>
                             <div class="col-md-6">
-                                <?= $form->field($model, 'documento_identidad_representante')->textInput() ?>
+                                <?= $form->field($model, 'documento_identidad_representante')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',]) ?>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'telefono_oficina')->textInput() ?>
+                                <?= $form->field($model, 'telefono_oficina')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',])?>
                             </div>
                             <div class="col-md-6">
-                                <?= $form->field($model, 'celular')->textInput() ?>
+                                <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',])?>
                             </div>
                         </div>
                         <hr />
                         <div class="row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'tarjeta_credito')->textInput() ?>
+                                <?= $form->field($model, 'tarjeta_credito')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999999999',])?>
                             </div>
                             <div class="col-md-6">
-                                <?= $form->field($model, 'cvc')->textInput() ?>
+                                <?= $form->field($model, 'cvc')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999',])?>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <?= $form->field($model, 'exp_month')->textInput() ?>
+                                <?= $form->field($model, 'exp_month')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '99',]) ?>
                             </div>
                             <div class="col-md-6">
-                                <?= $form->field($model, 'exp_year')->textInput() ?>
+                                <?= $form->field($model, 'exp_year')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999',]) ?>
                             </div>
                         </div>
 
@@ -133,6 +133,9 @@ $categorias = $const['categories'];
                         <div>
                             <?= $form->field($model, 'servicios')->dropDownList(ArrayHelper::map($especializacion,'id','nombre'),
                                 ['multiple'=>True]) ?>
+                        </div>
+                        <div>
+                            <?= $form->field($model, 'otros')->textInput(["data-role"=>"tagsinput"]) ?>
                         </div>
                         <div>
                             <?= $form->field($model, 'demandado')->inline()->radioList([1 => 'Si', 0 => 'No'],
@@ -179,6 +182,13 @@ $categorias = $const['categories'];
     if($('#usuarioform-provincia').val()!=""){
         $('#usuarioform-fk_municipio').removeAttr('disabled');
     }
+    $('form').on('keyup keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) { 
+            e.preventDefault();
+            return false;
+        }
+    });
 JS;
 
     $this->registerJs($script);

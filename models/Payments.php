@@ -11,7 +11,9 @@ use Yii;
  * @property string $charge_id
  * @property double $monto
  * @property integer $fecha
+ * @property integer $fk_usuario
  *
+ * @property User $fkUsuario
  * @property ServicioPayments[] $servicioPayments
  */
 class Payments extends \yii\db\ActiveRecord
@@ -30,10 +32,11 @@ class Payments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['charge_id', 'monto', 'fecha'], 'required'],
+            [['charge_id', 'monto', 'fecha', 'fk_usuario'], 'required'],
             [['monto'], 'number'],
-            [['fecha'], 'integer'],
+            [['fecha', 'fk_usuario'], 'integer'],
             [['charge_id'], 'string', 'max' => 25],
+            [['fk_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['fk_usuario' => 'id']],
         ];
     }
 
@@ -44,10 +47,19 @@ class Payments extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'charge_id' => 'Charge ID',
+            'charge_id' => 'ID Cargo',
             'monto' => 'Monto',
             'fecha' => 'Fecha',
+            'fk_usuario' => 'Usuario',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkUsuario()
+    {
+        return $this->hasOne(User::className(), ['id' => 'fk_usuario']);
     }
 
     /**
