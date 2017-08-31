@@ -14,7 +14,7 @@ class m170813_001804_igualas extends Migration
         $this->createTable('{{%igualas}}',[
             'id' => $this->primaryKey(),
             'nombre' => $this->string(255)->notNull(),
-            'descripcion' => $this->text(),
+            // 'descripcion' => $this->text(),
             'slim_duracion' => $this->integer()->notNull()->defaultValue(3),
             'med_duracion' => $this->integer()->notNull()->defaultValue(7),
             'plus_duracion' => $this->integer()->notNull()->defaultValue(10),
@@ -24,7 +24,7 @@ class m170813_001804_igualas extends Migration
             // 'slim_stripe' => $this->string(25)->notNull()->unique(),
             // 'med_stripe' => $this->string(25)->notNull()->unique(),
             // 'plus_stripe' => $this->string(25)->notNull()->unique(),
-            'tipo' => $this->string(25)->notNull(),
+            // 'tipo' => $this->string(25)->notNull(),
             ], $tableOptions);
 
     }

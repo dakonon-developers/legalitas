@@ -61,4 +61,17 @@ INSERT INTO servicios(id, nombre, fk_materia, activo, costo) VALUES
 (60,'Solicitud de Certificaciones', 14, true, 1000),
 (61,'Registros Inmobiliarios', 14, true, 1000),
 (62,'Consulta General', 15, true, 800),
-(63,'Descarga Todos los Documentos Legales en Formato Editable, para que Le Sirvan de Modelo y Realizar Directamente su Gestión', 16, true, 500);
+(63,'Descarga Todos los Documentos Legales en Formato Editable, para que Le Sirvan de Modelo y Realizar Directamente su Gestión', 16, true, 500),
+
+-- SERVICIOS DE IGUALAS:
+(64,'Representación y Asistencia en Audiencias', 17, false, 0),
+(65,'Consultas y Opiniones Legales', 18, false, 0),
+(66,'Gestión Administrativo-Legal', 19, false, 0),
+(67,'Elaboración y Redacción de Contratos u otros Documentos Legales
+', 20, false, 0),
+
+(68,'Descarga Diversos Documentos Tipo para hacer Tus Trabajos', 16, false, 0),
+(69,'Averigua rápidamente la respuesta a tu pregunta legal', 18, false, 0),
+
+(70,'Representación y Asistencia Víal y con Aseguradoras', 21, false, 0)
+;

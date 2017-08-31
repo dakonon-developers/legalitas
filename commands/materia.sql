@@ -14,4 +14,12 @@ INSERT INTO materia(id, nombre) VALUES
 (13, 'Derecho Ambiental'),
 (14, 'Derecho Inmobiliario'),
 (15, 'Otras Materias'),
-(16, 'Descarga de Documentos Modelo');
+(16, 'Descarga de Documentos Modelo'),
+
+(17, 'Representación Legal'),
+(18, 'Consultoría'),
+(19, 'Diligencias Legales'),
+(20, 'Elaboración y Redacción'),
+
+(21, 'Representación Legal Vial y con Aseguradoras')
+;

@@ -9,7 +9,6 @@ use Yii;
  *
  * @property integer $id
  * @property string $nombre
- * @property string $descripcion
  * @property integer $slim_duracion
  * @property integer $med_duracion
  * @property integer $plus_duracion
@@ -37,7 +36,7 @@ class Igualas extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'slim', 'med', 'plus'], 'required'],
-            [['descripcion', 'slim_paypal_id', 'med_paypal_id','plus_paypal_id'], 'string'],
+            [['slim_paypal_id', 'med_paypal_id','plus_paypal_id'], 'string'],
             [['slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
             //[['slim', 'med', 'plus'], 'number'],
             [['nombre'], 'string', 'max' => 255],
@@ -57,7 +56,6 @@ class Igualas extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
             'slim_duracion' => 'Slim Duracion',
             'med_duracion' => 'Med Duracion',
             'plus_duracion' => 'Plus Duracion',
