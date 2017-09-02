@@ -3,9 +3,9 @@ namespace app\forms;
 
 use Yii;
 use yii\base\Model;
-use \app\widgets\stripe\stripeCreateCustomer;
-use \app\widgets\stripe\stripeChargeToCustomer;
-require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
+// use \app\widgets\paypalFunctions\chargeToCustomer;
+// use \app\widgets\paypalFunctions\paypalCreateCreditCard;
+require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
 header('Content-Type: application/json');
 /**
  * Usuario form
@@ -28,10 +28,15 @@ class UsuarioForm extends Model
     public $foto_documento_identidad_string;
     public $telefono_oficina;
     public $celular;
+    
+    public $card_type;
     public $tarjeta_credito;
     public $cvc;
     public $exp_month;
     public $exp_year;
+    public $first_name;
+    public $last_name;
+
     public $fk_nacionalidad;
     public $fk_municipio;
     public $provincia;
@@ -67,13 +72,15 @@ class UsuarioForm extends Model
             ['password_repeat', 'compare', 'compareAttribute'=>'password'],
 
             [['nombres', 'apellidos', 'documento_identidad', 'telefono_oficina',
-            'celular', 'tarjeta_credito', 'cvc', 'exp_month', 'exp_year', 'fk_nacionalidad', 'fk_municipio',
+            'celular', 'first_name', 'last_name', 'card_type', 'tarjeta_credito', 'cvc', 'exp_month', 'exp_year', 'fk_nacionalidad', 'fk_municipio',
              'categoria','provincia'], 'required'],
             [['fk_nacionalidad', 'fk_municipio', 'provincia'], 'integer'],
             [['nombres', 'apellidos','nombre_representante'], 'string', 'max' => 50],
             [['documento_identidad','documento_identidad_representante'], 'string', 'max' => 14],
             [['telefono_oficina', 'celular'], 'string', 'max' => 10],
-            [['tarjeta_credito'], 'string', 'max' => 16],
+            [['tarjeta_credito', 'card_type'], 'string', 'max' => 16],
+            [['first_name', 'last_name'], 'string', 'max' => 200],
+
             [['categoria'], 'string', 'max' => 2],
             [['nombre_representante','documento_identidad_representante'],'required', 'when' => function($model) {
                 return $model->categoria == 'OA' or $model->categoria == 'NE';},
@@ -119,10 +126,15 @@ class UsuarioForm extends Model
             'documento_identidad_representante' => 'Documento de Identidad del Representante',
             'telefono_oficina' => 'Telefono Oficina',
             'celular' => 'Celular',
+
+            'card_type' => 'Tipo de tarjeta (Visa, Mastercard, etc...)',
             'tarjeta_credito' => 'Tarjeta Crédito',
             'cvc'=> 'CVC (codigo al reverso de la tarjeta)',
             'exp_month'=> 'Mes de expiración de la tarjeta',
             'exp_year'=> 'Año de expiración de la tarjeta',
+            'first_name'=> 'Nombres del propietario de la tarjeta',
+            'last_name'=> 'Apellidos del propietario de la tarjeta',
+            
             'fk_nacionalidad' => 'Nacionalidad',
             'fk_municipio' => 'Municipio',
             'categoria' => 'Categoría',
@@ -148,26 +160,59 @@ class UsuarioForm extends Model
         // First make charge to credit card
         $precio = new \app\models\PagosConfig;
         $precio = $precio->find()->where(['definicion'=>'primer_pago'])->one()->monto;
-        $stripe_customer = stripeCreateCustomer(
-          $this->tarjeta_credito,
-          $this->exp_month,
-          $this->exp_year,
-          $this->cvc
+        $paypal_card = paypalCreateCreditCard(
+            $this->card_type,
+            $this->tarjeta_credito,
+            $this->exp_month,
+            $this->exp_year,
+            $this->cvc,
+            $this->first_name, 
+            $this->last_name
         );
-        if ($stripe_customer->id == null || $stripe_customer->id == '')
-          return false;
-        $stripe_customer_charge = stripeChargeToCustomer(
-          $stripe_customer->id,
-          $precio
+        $paypal_card_decoded = $paypal_card;
+        json_decode($paypal_card_decoded, true);
+// var_dump($paypal_card_decoded);
+// echo '<br><br>';
+// echo $paypal_card->id;
+// die();
+        if($paypal_card->id == null || $paypal_card->id=='')
+            return false;
+        // if ($paypal_card->status != "succeeded")
+        //       return false;
+        $paypal_charge = chargeToCustomer(
+            $paypal_card, 
+            $paypal_card->id,
+            $precio, 
+            "Subscripción de ". $this->first_name. " ". $this->last_name. " a legalitas."
         );
-
-        if ($stripe_customer_charge->status != "succeeded")
-          return false;
+        json_decode($paypal_charge, true);
         $charge = new \app\models\Payments();
-        $charge->charge_id = $stripe_customer_charge->id;
+        $charge->charge_id = $paypal_charge->id;
         $charge->monto = $precio;
         $charge->fecha = time();
         $charge->save();
+        /*
+            $stripe_customer = stripeCreateCustomer(
+              $this->tarjeta_credito,
+              $this->exp_month,
+              $this->exp_year,
+              $this->cvc
+            );
+            if ($stripe_customer->id == null || $stripe_customer->id == '')
+              return false;
+            $stripe_customer_charge = stripeChargeToCustomer(
+              $stripe_customer->id,
+              $precio
+            );
+
+            if ($stripe_customer_charge->status != "succeeded")
+              return false;
+            $charge = new \app\models\Payments();
+            $charge->charge_id = $stripe_customer_charge->id;
+            $charge->monto = $precio;
+            $charge->fecha = time();
+            $charge->save();
+        */
 
         // Model User
         $user = new \app\models\User();
@@ -192,7 +237,7 @@ class UsuarioForm extends Model
                 ->send();
         
         $perfil = new \app\models\PerfilUsuario();
-        $perfil->customer_id= $stripe_customer->id;
+        $perfil->customer_id= $paypal_card->id;
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;

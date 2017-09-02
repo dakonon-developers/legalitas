@@ -1,18 +1,19 @@
 <?php
 // require __DIR__  . '/../PayPal-PHP-SDK/autoload.php';
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'PayPal-PHP-SDK'.DIRECTORY_SEPARATOR.'autoload.php';
+include ('paypalApiContext.php');
 // source: https://gist.github.com/jaypatel512/3861355780aedd694b89
-use PayPal\Api\ChargeModel;
-use PayPal\Api\Currency;
-use PayPal\Api\MerchantPreferences;
-use PayPal\Api\PaymentDefinition;
-use PayPal\Api\Plan;
-use PayPal\Api\Patch;
-use PayPal\Api\PatchRequest;
-use PayPal\Common\PayPalModel;
+// use PayPal\Api\ChargeModel;
+// use PayPal\Api\Currency;
+// use PayPal\Api\MerchantPreferences;
+// use PayPal\Api\PaymentDefinition;
+// use PayPal\Api\Plan;
+// use PayPal\Api\Patch;
+// use PayPal\Api\PatchRequest;
+// use PayPal\Common\PayPalModel;
+header('Content-Type: application/json');
 
 // https://github.com/paypal/PayPal-PHP-SDK/wiki/Making-First-Call
-
 $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
         'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -21,6 +22,12 @@ $apiContext = new \PayPal\Rest\ApiContext(
 );
 
 function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc, $first_name, $last_name){
+    $apiContext = new \PayPal\Rest\ApiContext(
+        new \PayPal\Auth\OAuthTokenCredential(
+            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        )
+    );
   /* $creditCard->setType("visa")
       ->setNumber("4417119669820331")
       ->setExpireMonth("11")
@@ -41,6 +48,7 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
       ->setLastName($last_name);
   // 4. Make a Create Call and Print the Card
   try {
+      // global $apiContext;
       $creditCard->create($apiContext);
       // echo $creditCard;
       return $creditCard;
@@ -54,14 +62,85 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
 
 }
 
+function chargeToCustomer($card_obj, $card_id, $precio, $description){
+  $apiContext = new \PayPal\Rest\ApiContext(
+        new \PayPal\Auth\OAuthTokenCredential(
+            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        )
+    );
+  // precio en valor normal, ej. un dolar: 1.0
+  // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/lib/PayPal/Api/CreditCard.php
+  if (!$card_obj){
+    $creditCard = new \PayPal\Api\CreditCard();
+    $card = $creditCard->get($card_id, $apiContext);
+  }else{
+    $card = $card_obj;
+  }
+
+  // https://developer.paypal.com/docs/api/quickstart/payments-credit-card/
+  $fi = new \PayPal\Api\FundingInstrument();
+  $fi->setCreditCardToken($card);
+  // $fi->setCreditCardToken();
+  // Set payer to process credit card
+  $payer = new \PayPal\Api\Payer();
+  $payer->setPaymentMethod("credit_card")
+    ->setFundingInstruments(array($fi));
+
+  // Set payment detail breakdown
+  $details = new \PayPal\Api\Details();
+  $details->setShipping(0.03)
+    ->setTax(0.03)
+    ->setSubtotal($precio);
+  // Set total amount
+  $amount = new \PayPal\Api\Amount();
+  $amount->setCurrency("USD")
+    ->setTotal($precio)
+    ->setDetails($details);
+  // Create transaction object with required data
+  $transaction = new \PayPal\Api\Transaction();
+  $transaction->setAmount($amount)
+    ->setDescription("Payment description: ".$description);
+
+  $url = new \PayPal\Api\RedirectUrls();
+  $url->setReturnUrl("http://localhost/LEGALITAS/legalitas/web/" . '?success=true')
+      ->setCancelUrl("http://localhost/LEGALITAS/legalitas/web/" . '?success=false');
+
+  // Create payment object with required data
+  $payment = new \PayPal\Api\Payment();
+  $payment->setIntent("sale")
+    ->setPayer($payer)
+    ->setRedirectUrls($url)
+    ->setTransactions(array($transaction));
+  // Create payment
+  try {
+    $payment->create($apiContext);
+    // $execute = new \PayPal\Api\PaymentExecution();
+    // json_decode($payer, true);
+    // echo $payer["id"]."<";
+    // echo $payer->getId();
+    // die();
+    // $execute->setPayerId($payer->id);
+    // $payment->execute($execute, $apiContext);
+    // echo($payment);
+    return $payment;
+  } catch (PayPal\Exception\PayPalConnectionException $ex) {
+    echo $ex->getCode();
+    echo $ex->getData();
+    die($ex);
+  } catch (Exception $ex) {
+    die($ex);
+  }
+
+}
+
 function paypalCreatePlan($amount, $name, $description, $interval="Month"){
   $apiContext = new \PayPal\Rest\ApiContext(
-      new \PayPal\Auth\OAuthTokenCredential(
-          'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-          'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-      )
-  );
-
+        new \PayPal\Auth\OAuthTokenCredential(
+            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        )
+    );
   // Create a new billing plan
   $plan = new Plan();
   $plan->setName($name)
@@ -109,7 +188,7 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
       $patchRequest = new PatchRequest();
       $patchRequest->addPatch($patch);
       $createdPlan->update($patchRequest, $apiContext);
-      $plan = Plan::get($createdPlan->getId(), $apiContext);
+      $plan = Plan::get($createdPlan->id, $apiContext);
 
       
       // Output plan id
