@@ -212,5 +212,53 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
 }
 
+function createSubscription($card_id, $plan_id){
+  $apiContext = new \PayPal\Rest\ApiContext(
+    new \PayPal\Auth\OAuthTokenCredential(
+        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+    )
+  );
+  $creditCard = new \PayPal\Api\CreditCard();
+  $card = $creditCard->get($card_id, $apiContext);
 
+  $agreement = new Agreement();
+  $agreement->setName('Base Agreement for '.$name)
+    ->setDescription('Basic Agreement for '.$name)
+    ->setStartDate('2019-06-17T9:45:04Z');
+  // Set plan id
+  $plan = new Plan();
+  $plan->setId($plan_id);
+  $agreement->setPlan($plan);
+
+  $fi = new FundingInstrument();
+  $fi->setCreditCard($card);
+
+  // Set payer to process credit card
+  $payer = new Payer();
+  $payer->setPaymentMethod("credit_card")
+    ->setFundingInstruments(array($fi));
+  $agreement->setPayer($payer);
+
+  // Adding shipping details
+  // $shippingAddress = new ShippingAddress();
+  // $shippingAddress->setLine1('111 First Street')
+  //   ->setCity('Saratoga')
+  //   ->setState('CA')
+  //   ->setPostalCode('95070')
+  //   ->setCountryCode('US');
+  // $agreement->setShippingAddress($shippingAddress);
+
+  // $agreement = $agreement->create($apiContext);
+  try {
+    // Execute agreement
+    $agreement->execute($token, $apiContext);
+  } catch (PayPal\Exception\PayPalConnectionException $ex) {
+    // echo $ex->getCode();
+    // echo $ex->getData();
+    return $ex->getData();
+  } catch (Exception $ex) {
+    die($ex);
+  }
+}
 ?>
