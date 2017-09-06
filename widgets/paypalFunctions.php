@@ -2,16 +2,26 @@
 // require __DIR__  . '/../PayPal-PHP-SDK/autoload.php';
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'PayPal-PHP-SDK'.DIRECTORY_SEPARATOR.'autoload.php';
 include ('paypalApiContext.php');
+use PayPal\Api\Transaction;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Payment;
 // source: https://gist.github.com/jaypatel512/3861355780aedd694b89
-// use PayPal\Api\ChargeModel;
-// use PayPal\Api\Currency;
-// use PayPal\Api\MerchantPreferences;
-// use PayPal\Api\PaymentDefinition;
-// use PayPal\Api\Plan;
-// use PayPal\Api\Patch;
-// use PayPal\Api\PatchRequest;
-// use PayPal\Common\PayPalModel;
+use PayPal\Api\ChargeModel;
+use PayPal\Api\Currency;
+use PayPal\Api\MerchantPreferences;
+use PayPal\Api\PaymentDefinition;
+use PayPal\Api\Plan;
+use PayPal\Api\Patch;
+use PayPal\Api\PatchRequest;
+use PayPal\Common\PayPalModel;
 header('Content-Type: application/json');
+
+/*
+ * FALTA:
+ * colocar las Constantes como la api key
+ * hacer que el $apiContext lo lea cada funcion
+ * Agregar las urls bases y de success y error para colocarlas en las constantes
+*/
 
 // https://github.com/paypal/PayPal-PHP-SDK/wiki/Making-First-Call
 $apiContext = new \PayPal\Rest\ApiContext(
@@ -36,7 +46,6 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
       ->setFirstName("Joe")
       ->setLastName("Shopper");
   */
-  // 3. Lets try to save a credit card to Vault using Vault API mentioned here
   // https://developer.paypal.com/webapps/developer/docs/api/#store-a-credit-card
   $creditCard = new \PayPal\Api\CreditCard();
   $creditCard->setType($type)
@@ -46,16 +55,11 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
       ->setCvv2($cvc)
       ->setFirstName($first_name)
       ->setLastName($last_name);
-  // 4. Make a Create Call and Print the Card
   try {
-      // global $apiContext;
       $creditCard->create($apiContext);
-      // echo $creditCard;
       return $creditCard;
   }
   catch (\PayPal\Exception\PayPalConnectionException $ex) {
-      // This will print the detailed information on the exception. 
-      //REALLY HELPFUL FOR DEBUGGING
       echo $ex->getData();
       return $ex->getData();
   }
@@ -73,64 +77,54 @@ function chargeToCustomer($card_obj, $card_id, $precio, $description){
   // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/lib/PayPal/Api/CreditCard.php
   if (!$card_obj){
     $creditCard = new \PayPal\Api\CreditCard();
-    $card = $creditCard->get($card_id, $apiContext);
+    $creditCard = $creditCard->get($card_id, $apiContext);
   }else{
-    $card = $card_obj;
+    $creditCard = $card_obj;
   }
 
-  // https://developer.paypal.com/docs/api/quickstart/payments-credit-card/
-  $fi = new \PayPal\Api\FundingInstrument();
-  $fi->setCreditCardToken($card);
-  // $fi->setCreditCardToken();
-  // Set payer to process credit card
+  // $fi = new \PayPal\Api\FundingInstrument();
+  // $fi->setCreditCardToken($card);
+  // $payer->setPaymentMethod("credit_card")
+  // ->setFundingInstruments(array($fi));
   $payer = new \PayPal\Api\Payer();
-  $payer->setPaymentMethod("credit_card")
-    ->setFundingInstruments(array($fi));
-
-  // Set payment detail breakdown
+  $payer->setPaymentMethod("paypal");
   $details = new \PayPal\Api\Details();
-  $details->setShipping(0.03)
-    ->setTax(0.03)
-    ->setSubtotal($precio);
-  // Set total amount
+  $details->setSubtotal($precio);
   $amount = new \PayPal\Api\Amount();
   $amount->setCurrency("USD")
     ->setTotal($precio)
     ->setDetails($details);
-  // Create transaction object with required data
-  $transaction = new \PayPal\Api\Transaction();
+  $transaction = new Transaction();
   $transaction->setAmount($amount)
-    ->setDescription("Payment description: ".$description);
-
-  $url = new \PayPal\Api\RedirectUrls();
-  $url->setReturnUrl("http://localhost/LEGALITAS/legalitas/web/" . '?success=true')
-      ->setCancelUrl("http://localhost/LEGALITAS/legalitas/web/" . '?success=false');
-
-  // Create payment object with required data
-  $payment = new \PayPal\Api\Payment();
+  ->setDescription($description)
+  ->setInvoiceNumber(uniqid());
+  $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
+  $redirectUrls = new RedirectUrls();
+  $redirectUrls->setReturnUrl("$baseUrl/site/execute-payment?success=true")
+    ->setCancelUrl("$baseUrl/site/execute-payment?success=false");
+  $payment = new Payment();
   $payment->setIntent("sale")
     ->setPayer($payer)
-    ->setRedirectUrls($url)
+    ->setRedirectUrls($redirectUrls)
     ->setTransactions(array($transaction));
-  // Create payment
+  $request = clone $payment;
   try {
     $payment->create($apiContext);
-    // $execute = new \PayPal\Api\PaymentExecution();
-    // json_decode($payer, true);
-    // echo $payer["id"]."<";
-    // echo $payer->getId();
-    // die();
-    // $execute->setPayerId($payer->id);
-    // $payment->execute($execute, $apiContext);
-    // echo($payment);
-    return $payment;
+    
   } catch (PayPal\Exception\PayPalConnectionException $ex) {
-    echo $ex->getCode();
-    echo $ex->getData();
+      // echo $ex->getCode(); // Prints the Error Code
+      // echo $ex->getData(); // Prints the detailed error message 
+      echo "Error in Payment\n";
+      echo $ex->getCode(); // Prints the Error Code
+    echo $ex->getData(); // Prints the detailed error message 
+    echo "NOOOOOOOOOOOOOOO";
     die($ex);
   } catch (Exception $ex) {
-    die($ex);
+      die($ex);
   }
+  $approvalUrl = $payment->getApprovalLink();
+  echo "<h1>Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a></h2>";//, $request, $payment;
+  return $payment;
 
 }
 
@@ -260,5 +254,17 @@ function createSubscription($card_id, $plan_id){
   } catch (Exception $ex) {
     die($ex);
   }
+}
+
+function getPaymentInfo($id){
+  $apiContext = new \PayPal\Rest\ApiContext(
+    new \PayPal\Auth\OAuthTokenCredential(
+        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+    )
+  );
+
+  $payment = new \PayPal\Api\Payment();
+  return $payment->get($id, $apiContext);
 }
 ?>

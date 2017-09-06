@@ -52,10 +52,10 @@ $fi->setCreditCardToken($card);
 // $fi->setCreditCardToken();
 // Set payer to process credit card
 $payer = new \PayPal\Api\Payer();
-$payer->setPaymentMethod("credit_card")
-->setFundingInstruments(array($fi));
+// $payer->setPaymentMethod("credit_card")
+// ->setFundingInstruments(array($fi));
 // $payer = new Payer();
-// $payer->setPaymentMethod("paypal");
+$payer->setPaymentMethod("paypal");
 // // ### Itemized information
 // // (Optional) Lets you specify item wise
 // // information
@@ -83,13 +83,15 @@ $payer->setPaymentMethod("credit_card")
 //     ->setSubtotal(17.50);
 echo "d\n";
 $details = new \PayPal\Api\Details();
-$details->setShipping(0.03)
-->setTax(0.03)
+$details
+// ->setShipping(0.03)
+// ->setTax(0.03)
 ->setSubtotal($precio);
 // Set total amount
 $amount = new \PayPal\Api\Amount();
 $amount->setCurrency("USD")
 ->setTotal($precio)
+// ->setSubtotal($precio-0.03-0.03)
 ->setDetails($details);
 // ### Amount
 // Lets you specify a payment amount.
@@ -106,7 +108,7 @@ $amount->setCurrency("USD")
 echo "e\n";
 $transaction = new Transaction();
 $transaction->setAmount($amount)
-    ->setItemList($itemList)
+    // ->setItemList($itemList)
     ->setDescription("Payment description")
     ->setInvoiceNumber(uniqid());
 // ### Redirect urls
@@ -142,11 +144,15 @@ echo "f\n";
 try {
     $payment->create($apiContext);
 	echo "siiiiiiiiiiiiiiiiiiiiiiiiiii";
-} catch (Exception $ex) {
+} catch (PayPal\Exception\PayPalConnectionException $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
-    echo "Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", null, $request, $ex;
+    // echo "Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", null, $request, $ex;
+    echo $ex->getCode(); // Prints the Error Code
+    echo $ex->getData(); // Prints the detailed error message 
     echo "NOOOOOOOOOOOOOOO";
-    
+    die($ex);
+} catch (Exception $ex) {
+    die($ex);
 }
 // ### Get redirect url
 // The API response provides the url that you must redirect
@@ -156,5 +162,10 @@ $approvalUrl = $payment->getApprovalLink();
 // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
 echo "Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a>", $request, $payment;
 // return $payment;
+echo $payment->id;
 
 ?>
+
+
+
+<!-- REDIRECCIONA A: http://localhost/LEGALITAS/legalitas/web//ExecutePayment.php?success=true&paymentId=PAY-2WF935711N570193WLGXDKOI&token=EC-3L370223U5091892A&PayerID=3KC5E3758ZTJL -->

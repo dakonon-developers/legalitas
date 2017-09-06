@@ -14,6 +14,7 @@ use app\forms\UsuarioForm;
 use app\forms\AbogadoForm;
 use app\models\UploadModel;
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
+require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
 header('Content-Type: application/json');
 
 class SiteController extends Controller
@@ -318,5 +319,16 @@ class SiteController extends Controller
     public function actionContrata()
     {
         return $this->render('contrataInfo');
+    }
+    public function actionExecutePayment(){
+        $request = Yii::$app->request;
+        $payment_id = $request->get('paymentId');
+        $payment = getPaymentInfo($payment_id);
+        if ($request->get('success') == "true") {
+            Yii::$app->getSession()->setFlash('success','Pago realizado satisfactoriamente');
+        }else{
+            Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');            
+        }
+        return $this->render('executePayment', ['payment'=>$payment]);
     }
 }

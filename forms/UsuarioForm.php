@@ -180,7 +180,7 @@ class UsuarioForm extends Model
         // if ($paypal_card->status != "succeeded")
         //       return false;
         $paypal_charge = chargeToCustomer(
-            $paypal_card, 
+            $paypal_card,
             $paypal_card->id,
             $precio, 
             "Subscripción de ". $this->first_name. " ". $this->last_name. " a legalitas."
@@ -190,7 +190,7 @@ class UsuarioForm extends Model
         $charge->charge_id = $paypal_charge->id;
         $charge->monto = $precio;
         $charge->fecha = time();
-        $charge->save();
+        
         /*
             $stripe_customer = stripeCreateCustomer(
               $this->tarjeta_credito,
@@ -222,6 +222,8 @@ class UsuarioForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->save();
+        $charge->fk_usuario = $user->id;
+        $charge->save();
         // Model Perfil
 
          \Yii::$app->mailer->compose()

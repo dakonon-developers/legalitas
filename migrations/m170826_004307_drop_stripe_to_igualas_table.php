@@ -40,7 +40,7 @@ class m170826_004307_drop_stripe_to_igualas_table extends Migration
         $this->dropColumn('igualas', 'med_paypal_id');
         $this->dropColumn('igualas', 'plus_paypal_id');
         // drop tipo to igualas
-        $this->dropColumn('igualas', 'tipo');
+        // $this->dropColumn('igualas', 'tipo');
         // alter column nombre (add unique)
         // $this->alterColumn('igualas', 'nombre', $this->string(25)->notNull());
 
