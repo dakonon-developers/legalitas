@@ -190,6 +190,7 @@ class UsuarioForm extends Model
         $charge->charge_id = $paypal_charge->id;
         $charge->monto = $precio;
         $charge->fecha = time();
+        $charge->save();
         
         /*
             $stripe_customer = stripeCreateCustomer(

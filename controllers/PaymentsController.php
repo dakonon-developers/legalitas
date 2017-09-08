@@ -48,11 +48,22 @@ class PaymentsController extends Controller
     {
         $searchModel = new PaymentsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $categorias = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        $data = $this->getPayments($dataProvider->query->all());
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'data' => $data,
+            'categorias' => $categorias,
         ]);
+    }
+
+    public function getPayments($data){
+        $datos = [];
+        $datos['name'] = 'Pagos';
+        $datos['data'] = [214,1521,575.64,474.251,3463,2352,214,1521,575.64,474.251,3463,2352];
+        return $datos;
     }
 
     /**

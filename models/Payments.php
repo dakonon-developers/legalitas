@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "payments".
@@ -27,6 +28,21 @@ class Payments extends \yii\db\ActiveRecord
     }
 
     /**
+     * @behaviors
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    \yii\db\ActiveRecord::EVENT_BEFORE_INSERT => ['fecha'],
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -47,10 +63,11 @@ class Payments extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'charge_id' => 'ID Cargo',
+            'charge_id' => 'Cargo',
             'monto' => 'Monto',
             'fecha' => 'Fecha',
             'fk_usuario' => 'Usuario',
+            'username' => 'Usuario',
         ];
     }
 

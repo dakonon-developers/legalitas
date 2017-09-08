@@ -9,7 +9,7 @@ return [
     #'username' => 'snmkpbvjnhllin',
     //'dsn' => 'pgsql:host=localhost;port=5432;dbname=legalitas',
     //'username' => 'postgres',
-    'password' => '123',
+    'password' => '123456',
     #'password' => '243bef335b1ad5daf2c40b2dcf4bc44b7c47b719d478793f639ee1f3be8693e7',
     'charset' => 'utf8',
 ];

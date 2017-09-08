@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="payments-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -29,10 +29,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 return date('d-m-Y H:i:s',$model->fecha);
             }],
             //'fk_usuario',
-            ['attribute'=>'fk_usuario','value'=>'fkUsuario.username'],
+            ['attribute'=>'username','value'=>'fkUsuario.username'],
 
             ['class' => 'yii\grid\ActionColumn',
             'template'=>'{view}'],
         ],
     ]); ?>
+
+    <div id="grafico"></div>
+
+<?php
+    $this->registerJs(
+        "var data = ".\yii\helpers\Json::htmlEncode($data).";",
+        \yii\web\View::POS_HEAD,'data'
+    );
+    $this->registerJs(
+        "var categorias = ".\yii\helpers\Json::htmlEncode($categorias).";",
+        \yii\web\View::POS_HEAD,'categorias'
+    );
+
+
+    $script = <<< JS
+    line_graphic("grafico","Registro de Pagos - Legalitas",categorias,"Meses",data);
+JS;
+
+    $this->registerJs($script);
+
+?>
 </div>

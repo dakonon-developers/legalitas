@@ -25,6 +25,7 @@ class LegalitasAsset extends AssetBundle
         'plugins/bootstrap-star-rating/css/star-rating.min.css',
         'plugins/bootstrap-tagsinput/bootstrap-tagsinput.css',
         'plugins/font-awesome/css/font-awesome.min.css',
+        'plugins/highcharts/css/highcharts.css',
     ];
     public $js = [
         'js/ready.js',
@@ -34,6 +35,8 @@ class LegalitasAsset extends AssetBundle
         'plugins/bootstrap-fileinput/js/locales/es.js',
         'plugins/bootstrap-star-rating/js/star-rating.min.js',
         'plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js',
+        'plugins/highcharts/js/highcharts.js',
+        'plugins/highcharts/js/exporting.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

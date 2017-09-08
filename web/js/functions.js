@@ -146,3 +146,31 @@ function render_text_to_cents(field) {
     value = value.splice(value.length - 2, 0, ",");
     field.textContent = value;
 }
+
+function line_graphic(container,title,categories,y_axis,data){
+	Highcharts.chart(container, {
+	    chart: {
+	        type: 'line'
+	    },
+	    title: {
+	        text: title
+	    },
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        verticalAlign: 'middle'
+	    },
+	    tooltip: {
+	        valueSuffix: ' $',
+	    },
+	    xAxis: {
+	        categories: categories
+	    },
+	    yAxis: {
+	        title: {
+	            text: y_axis
+	        }
+	    },
+	    series: [data]
+	});
+}
