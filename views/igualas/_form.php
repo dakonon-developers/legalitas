@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
+    <?php //$form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'slim_duracion')->textInput() ?>
 

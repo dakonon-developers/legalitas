@@ -36,7 +36,7 @@ class AdminController extends Controller
                 $auth = Yii::$app->authManager;
                 $authorRole = $auth->getRole('Admin');
                 $auth->assign($authorRole, $user->id);
-                echo "Se creo el admin con exito";
+                echo "Se creo el admin con exito\n";
             }
             else
             {
@@ -46,7 +46,7 @@ class AdminController extends Controller
         }
         else
         {
-            echo "Debe pasar el parametro password";
+            echo "Debe pasar el parametro password\n";
         }
     }
 
@@ -56,11 +56,11 @@ class AdminController extends Controller
         {
             $admin = User::findByUsername('Admin');
             $admin->delete();
-            echo "Se elimino con exito el usuario admin";
+            echo "Se elimino con exito el usuario admin\n";
         }
         else
         {
-            echo "No se encontro el usuario Admin";
+            echo "No se encontro el usuario Admin\n";
         }        
     }
 

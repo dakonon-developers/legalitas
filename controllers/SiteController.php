@@ -140,12 +140,12 @@ class SiteController extends Controller
                 $model->save();
             
                 if($model->email){
-                Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
+                    Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
                 }
                 else{
-                Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                    Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
                 }
-                return $this->render('index'); 
+                return $this->render('index');
             }
 
             Yii::$app->session->setFlash('error', 'Debe adjuntar un documento.');
@@ -306,7 +306,7 @@ class SiteController extends Controller
         return $this->render('legalitasInfo');
     }
 
-/**
+    /**
      * Displays servicios info.
      *
      * @return string
@@ -315,6 +315,7 @@ class SiteController extends Controller
     {
         return $this->render('serviciosInfo');
     }
+
     /**
      * Displays contrata info.
      *
@@ -324,6 +325,12 @@ class SiteController extends Controller
     {
         return $this->render('contrataInfo');
     }
+
+    /**
+     * Ejecuta los pagos.
+     *
+     * @return string
+     */
     public function actionExecutePayment(){
         $request = Yii::$app->request;
         $payment_id = $request->get('paymentId');
@@ -334,5 +341,28 @@ class SiteController extends Controller
             Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');            
         }
         return $this->render('executePayment', ['payment'=>$payment]);
+    }
+
+
+    /**
+     * Muestra el listado de los servicios.
+     *
+     * @return render servicios
+     */
+    public function actionSolicita()
+    {
+
+        $model = new \app\forms\ServiciosSelectForm();
+        $servicios = \app\models\Servicios::find()->where(['activo'=>true])->all();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            return $this->redirect(['consulta/create', 'categoria' => $model->servicios]);
+        }
+
+        return $this->render('servicios', [
+            'model' => $model,
+            'servicios' => $servicios,
+        ]);
     }
 }

@@ -14,13 +14,13 @@ class NacionalidadController extends Controller
     {
         $sql = file_get_contents(Yii::getAlias('@app').'/commands/nacionalidad.sql');
         Yii::$app->db->createCommand($sql)->execute();
-        echo "Se migro con exito";
+        echo "Se migro con exito\n";
     }
 
     public function actionTruncate()
     {
         Yii::$app->db->createCommand("DELETE FROM nacionalidad")->execute();
         Yii::$app->db->createCommand("ALTER TABLE nacionalidad auto_increment = 1")->execute();
-        echo "Se vacio la tabla con exito";
+        echo "Se vacio la tabla con exito\n";
     }
 }

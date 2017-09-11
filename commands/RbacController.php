@@ -33,6 +33,6 @@ class RbacController extends Controller
         $invitado = $auth->createRole('Invitado');
         $invitado->description = 'Es el rol de invitado';
         $auth->add($invitado);
-        echo "Se crearon los roles con exito";
+        echo "Se crearon los roles con exito\n";
     }
 }

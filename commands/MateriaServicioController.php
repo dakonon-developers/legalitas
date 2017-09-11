@@ -16,7 +16,7 @@ class MateriaServicioController extends Controller
         Yii::$app->db->createCommand($sql)->execute();
         $sql = file_get_contents(Yii::getAlias('@app').'/commands/servicios.sql');
         Yii::$app->db->createCommand($sql)->execute();
-        echo "Se migro con exito";
+        echo "Se migro con exito\n";
     }
 
     public function actionTruncate()
@@ -24,6 +24,6 @@ class MateriaServicioController extends Controller
         Yii::$app->db->createCommand("DELETE FROM materia")->execute();
         Yii::$app->db->createCommand("ALTER TABLE materia auto_increment = 1")->execute();
         Yii::$app->db->createCommand("ALTER TABLE servicios auto_increment = 1")->execute();
-        echo "Se vacio la tabla con exito";
+        echo "Se vacio la tabla con exito\n";
     }
 }

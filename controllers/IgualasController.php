@@ -8,6 +8,7 @@ use app\models\IgualasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
 
 /**
@@ -25,6 +26,21 @@ class IgualasController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index','view','create','update','delete'],
+                        'allow' => true,
+                        'roles' => ['Admin'],
+                    ],
+                    [
+                        'actions' => ['list','detail','subscribe'],
+                        'allow' => true,
+                        'roles' => ['Usuario'],
+                    ],
                 ],
             ],
         ];
@@ -138,6 +154,87 @@ class IgualasController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Lista todas las igualas disponibles.
+     * @return mixed
+     */
+    public function actionList()
+    {
+        $searchModel = new IgualasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('list', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Despliega el detalle de una iguala.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDetail($id)
+    {
+        return $this->render('detail', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Suscribe el usuario a la iguala
+     * @param integer $id
+     * @param integer $plan
+     * @return mixed
+     */
+    public function actionSubscribe($id,$plan)
+    {
+        $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+        if($perfil){
+            $model = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
+            if($model){
+                $model->fk_iguala = $id;
+            }
+            else{
+                $model = new \app\models\IgualasUsers();
+                $model->fk_iguala = $id;
+                $model->fk_users_cliente = $perfil->id;
+            }
+            $this->setPlan($model,$plan);
+            if($model->validate() && $model->save()){
+                Yii::$app->session->setFlash('success', 'Se asignó a la iguala '.$model->fkIguala->nombre);
+                return $this->redirect(['list']);
+            }
+            else{
+                $html = '<ul>';
+                foreach ($model->getErrors() as $key => $value) {
+                    $html .= '<li>'.$value.'</li>';    
+                }
+                $html .= '</ul>';
+                Yii::$app->session->setFlash('error', $html);
+            }
+        }
+        else{
+            Yii::$app->session->setFlash('error', 'No existe este perfil de usuario');
+        }
+        return $this->redirect(['detail','id'=> $id ]);
+        
+    }
+
+    public function setPlan($model,$plan_number){
+        $model->slim = 0;
+        $model->med = 0;
+        $model->plus = 0;
+        if($plan_number==1){
+            $model->slim = 1;
+        }
+        else if($plan_number==2){
+            $model->med = 1;
+        }
+        else if($plan_number==3){
+            $model->plus = 1;
+        }
     }
 
     /**

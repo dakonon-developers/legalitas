@@ -85,8 +85,15 @@ class ConsultaController extends Controller
     {
         $model = new Consulta();
 
+        $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+        // Se búsca la iguala a la que esta suscrito el usuario
+        $igula_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
+        if($igula_usuario)
+        {
+            $this->validateParticipation($perfil,$categoria,$igula_usuario);
+        }
+
         if ($model->load(Yii::$app->request->post())) {
-            $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
             $model->fk_servicio = $categoria;
             $model->fk_cliente = $perfil->id;
             $model->save();
@@ -96,6 +103,41 @@ class ConsultaController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    private function validateParticipation($perfil,$categoria,$iguala)
+    {
+        // Se buscan los dias que tiene el mes, el mes actual y año en curso
+        $end_day = date('t');
+        $current_month = date('m');
+        $current_year = date('Y');
+        // Se hacen los formatos de la fecha inicio y fin
+        $inicio = strtotime($current_year.'-'.$current_month.'-01 00:00:00');
+        $fin = strtotime($current_year.'-'.$current_month.'-'.$end_day.' 00:00:00');
+        // Se evalua que el servicio solicitado este dentro de la iguala del usuario
+        if(!$iguala->fkIguala->getFkServicios()->where(['id'=>$categoria])->all()){
+            return false;
+        }
+        // Se hace la consulta de las consultas en el mes
+        $consultas = Consulta::find()->where(['between','creado_en',$inicio,$fin,
+            'fk_cliente'=>$perfil->id,'fk_servicio'=>$categoria])->count();
+        $duracion = 0;
+        if($iguala->slim==1){
+            $duracion = $iguala->fkIguala->slim_duracion;
+        }
+        else if($iguala->med==1){
+            $duracion = $iguala->fkIguala->med_duracion;
+        }
+        else{
+            $duracion = $iguala->fkIguala->plus_duracion;   
+        }
+        if($consultas < $duracion){
+            return true;
+        }
+        else{
+            return false;
+        }
+
     }
 
     /**
