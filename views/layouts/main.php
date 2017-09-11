@@ -81,7 +81,7 @@ LegalitasAsset::register($this);
             }
             $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
             $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
-            $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];
+            $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
         }
         $menuItems[] = ['label' => 'SALIR', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']];
     }
@@ -99,6 +99,9 @@ LegalitasAsset::register($this);
         ]) ?>
         <div class="row">
             <?= Alert::widget() ?>
+            <?php if(Yii::$app->user->can('Invitado')): ?>
+                <div class="alert alert-info">Pendiente de validación de legalitas.</div>
+            <?php endif; ?>
         </div>
         <?= $content ?>
     </div>

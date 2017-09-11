@@ -59,10 +59,19 @@ class PaymentsController extends Controller
         ]);
     }
 
+    /**
+     * Función para obtener los pagos en función de la query 
+     * del index
+     * @return datos en formato para higcharts
+     */
     public function getPayments($data){
+        $meses = [1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
+        foreach ($data as $key => $value) {
+            $meses[date('n',$value->fecha)] += $value->monto;
+        }
         $datos = [];
         $datos['name'] = 'Pagos';
-        $datos['data'] = [214,1521,575.64,474.251,3463,2352,214,1521,575.64,474.251,3463,2352];
+        $datos['data'] = array_values($meses);
         return $datos;
     }
 

@@ -9,7 +9,6 @@ INSERT INTO igualas(id, nombre, slim_duracion, med_duracion, plus_duracion, slim
 INSERT INTO igualas_servicios(fk_iguala, fk_servicio) VALUES
 (1, 64),
 (1, 65),
-(1, 65),
 (1, 67),
 (2, 68),
 (2, 69),

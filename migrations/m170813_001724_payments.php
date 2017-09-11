@@ -17,6 +17,7 @@ class m170813_001724_payments extends Migration
             'charge_id' => $this->string(25)->notNull(),
             'monto' => $this->float()->notNull(),
             'fecha' =>$this->integer()->notNull(),
+            'confirmado' =>$this->boolean()->defaultValue(false),
             'fk_usuario' => $this->integer()->notNull(),
             ], $tableOptions);
 

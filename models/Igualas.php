@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $nombre
+ * @property string $descripcion
  * @property integer $slim_duracion
  * @property integer $med_duracion
  * @property integer $plus_duracion
@@ -18,6 +19,12 @@ use Yii;
  * @property string $slim_paypal_id
  * @property string $med_paypal_id
  * @property string $plus_paypal_id
+ *
+ * @property IgualasPayments[] $igualasPayments
+ * @property IgualasServicios[] $igualasServicios
+ * @property Servicios[] $fkServicios
+ * @property IgualasUsers[] $igualasUsers
+ * @property PerfilUsuario[] $fkUsersClientes
  */
 class Igualas extends \yii\db\ActiveRecord
 {
@@ -35,16 +42,14 @@ class Igualas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'slim', 'med', 'plus'], 'required'],
-            [['slim_paypal_id', 'med_paypal_id','plus_paypal_id'], 'string'],
+            [['nombre', 'slim', 'med', 'plus', 'tipo'], 'required'],
+            [['descripcion'], 'string'],
             [['slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
-            //[['slim', 'med', 'plus'], 'number'],
-            [['nombre'], 'string', 'max' => 255],
-            // [['slim_stripe', 'med_stripe', 'plus_stripe'], 'string', 'max' => 25],
-            // [['med_stripe'], 'unique'],
-            [['nombre'], 'unique'],
-            // [['plus_stripe'], 'unique'],
-            // [['slim_stripe'], 'unique'],
+            [['slim', 'med', 'plus'], 'number'],
+            [['nombre', 'slim_paypal_id', 'med_paypal_id', 'plus_paypal_id'], 'string', 'max' => 255],
+            [['slim_paypal_id'], 'unique'],
+            [['med_paypal_id'], 'unique'],
+            [['plus_paypal_id'], 'unique'],
         ];
     }
 
@@ -56,15 +61,56 @@ class Igualas extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
+            'descripcion' => 'Descripcion',
             'slim_duracion' => 'Slim Duracion',
             'med_duracion' => 'Med Duracion',
             'plus_duracion' => 'Plus Duracion',
             'slim' => 'Slim',
             'med' => 'Med',
             'plus' => 'Plus',
-            'slim_paypal_id' => 'Slim PayPal id',
-            'med_paypal_id' => 'Med PayPal id',
-            'plus_paypal_id' => 'Plus PayPal id',
+            'slim_paypal_id' => 'Slim Paypal ID',
+            'med_paypal_id' => 'Med Paypal ID',
+            'plus_paypal_id' => 'Plus Paypal ID',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIgualasPayments()
+    {
+        return $this->hasMany(IgualasPayments::className(), ['fk_iguala' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIgualasServicios()
+    {
+        return $this->hasMany(IgualasServicios::className(), ['fk_iguala' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkServicios()
+    {
+        return $this->hasMany(Servicios::className(), ['id' => 'fk_servicio'])->viaTable('igualas_servicios', ['fk_iguala' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIgualasUsers()
+    {
+        return $this->hasMany(IgualasUsers::className(), ['fk_iguala' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFkUsersClientes()
+    {
+        return $this->hasMany(PerfilUsuario::className(), ['id' => 'fk_users_cliente'])->viaTable('igualas_users', ['fk_iguala' => 'id']);
     }
 }
