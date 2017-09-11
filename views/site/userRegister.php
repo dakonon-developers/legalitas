@@ -139,7 +139,7 @@ $categorias = $const['categories'];
                             </div>
                         </div>
                     </div>
-                    <div class="item">
+                    <div class="item" style="padding-bottom:20px;">
                         <h3>Cuestionario</h3>
                         <div>
                             <?= $form->field($model, 'servicios')->dropDownList(ArrayHelper::map($especializacion,'id','nombre'),
@@ -161,14 +161,14 @@ $categorias = $const['categories'];
                             ->label("3. ¿Desea Recibir Información de Nuestras Actividades?") ?>
                         </div>
                         <div class="row">
-                            <div class="col-lg-offset-1 col-lg-11">
+                            <div class="text-center">
                                 <?= Html::submitButton('Registrarse', ['class' => 'btn btn-primary']) ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <ol class="carousel-indicators" id="list" style="display:none;">
+            <ol class="carousel-indicators" id="list">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
             </ol>

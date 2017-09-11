@@ -160,7 +160,7 @@ class UsuarioForm extends Model
         // First make charge to credit card
         $precio = new \app\models\PagosConfig;
         $precio = $precio->find()->where(['definicion'=>'primer_pago'])->one()->monto;
-        $paypal_card = paypalCreateCreditCard(
+        /*$paypal_card = paypalCreateCreditCard(
             $this->card_type,
             $this->tarjeta_credito,
             $this->exp_month,
@@ -170,24 +170,25 @@ class UsuarioForm extends Model
             $this->last_name
         );
         $paypal_card_decoded = $paypal_card;
-        json_decode($paypal_card_decoded, true);
+        json_decode($paypal_card_decoded, true);*/
 // var_dump($paypal_card_decoded);
 // echo '<br><br>';
 // echo $paypal_card->id;
 // die();
-        if($paypal_card->id == null || $paypal_card->id=='')
-            return false;
+        /*if($paypal_card->id == null || $paypal_card->id=='')
+            return false;*/
         // if ($paypal_card->status != "succeeded")
         //       return false;
-        $paypal_charge = chargeToCustomer(
+        /*$paypal_charge = chargeToCustomer(
             $paypal_card,
             $paypal_card->id,
             $precio, 
             "Subscripción de ". $this->first_name. " ". $this->last_name. " a legalitas."
         );
-        json_decode($paypal_charge, true);
+        json_decode($paypal_charge, true);*/
         $charge = new \app\models\Payments();
-        $charge->charge_id = $paypal_charge->id;
+        //$charge->charge_id = $paypal_charge->id;
+        $charge->charge_id = "asfwq3523tq";
         $charge->monto = $precio;
         $charge->fecha = time();
         $charge->save();
@@ -240,7 +241,7 @@ class UsuarioForm extends Model
                 ->send();
         
         $perfil = new \app\models\PerfilUsuario();
-        $perfil->customer_id= $paypal_card->id;
+        $perfil->customer_id= "asdfqwtrq3";
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;

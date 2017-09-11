@@ -42,7 +42,7 @@ LegalitasAsset::register($this);
     if(Yii::$app->user->isGuest){
         $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
         $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
-        $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];
+        $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
         $menuItems[] = ['label' => 'REGISTRARSE', 'items' => [
            ['label' => 'Como Usuario', 'url' => ['/site/user-register']],
            ['label' => 'Como Abogado', 'url' => ['/site/abogado-register']], 

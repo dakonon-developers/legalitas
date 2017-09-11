@@ -36,7 +36,7 @@ class IgualasController extends Controller
             echo "plan_plus: ". $plan_plus->getId() . "\n";
             $iguala->save();
             echo "guardado? -> ".$iguala->save()."\n";
-            echo "Plan ". $row['nombre'] ." Id de PayPal guardada en base de datos exitosamente.\n\n";
+            echo "Plan ". $row['nombre'] ." Id de PayPal guardada en base de datos exito\nsamente.\n\n";
         }*/
 
 

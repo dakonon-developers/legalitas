@@ -190,3 +190,23 @@ vendor/bin/codecept run functional,unit -- --coverage-html --coverage-xml
 ```
 
 You can see code coverage output under the `tests/_output` directory.
+
+### To install
+
+1. php yii migrate
+2. php yii rbac/init
+3. php yii pais/migrate
+4. php yii provincia/migrate
+5. php yii municipio/migrate
+6. php yii nacionalidad/migrate
+7. php yii materia-servicio/migrate
+8. php yii promocion/init
+9. php yii igualas/migrate
+10. php yii especializacion/migrate
+11. php yii pagos-config/migrate
+
+## init admin
+
+```
+php yii admin/init --password="some pass here"
+```

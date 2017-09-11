@@ -43,7 +43,7 @@ class Igualas extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'slim', 'med', 'plus', 'tipo'], 'required'],
-            [['descripcion'], 'string'],
+            //[['descripcion'], 'string'],
             [['slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
             [['slim', 'med', 'plus'], 'number'],
             [['nombre', 'slim_paypal_id', 'med_paypal_id', 'plus_paypal_id'], 'string', 'max' => 255],

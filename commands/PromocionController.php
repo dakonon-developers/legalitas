@@ -26,7 +26,7 @@ class PromocionController extends Controller
             $serv_prom->fk_promocion = $promocion->id;
             $serv_prom->save();
         }
-        echo "Se establecieron las promociones con éxito";
+        echo "Se establecieron las promociones con exito\n";
     }
 
     /*public function actionTruncate()
