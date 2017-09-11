@@ -6,8 +6,8 @@
  */
  //Yii::import('application.vendors.*');
 
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'vendor'.DIRECTORY_SEPARATOR.'stripe'.DIRECTORY_SEPARATOR.'stripe-php'.DIRECTORY_SEPARATOR.'init.php';
-\Stripe\Stripe::setApiKey("sk_test_AHLcqAqtMbTOLWqjKHC64wkr");
+#require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'vendor'.DIRECTORY_SEPARATOR.'stripe'.DIRECTORY_SEPARATOR.'stripe-php'.DIRECTORY_SEPARATOR.'init.php';
+#\Stripe\Stripe::setApiKey("sk_test_AHLcqAqtMbTOLWqjKHC64wkr");
 
 /* Stripe info
  * card_number: 4242424242424242

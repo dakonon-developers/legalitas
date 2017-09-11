@@ -13,6 +13,8 @@ use app\forms\LoginForm;
 use app\forms\UsuarioForm;
 use app\forms\AbogadoForm;
 use app\models\UploadModel;
+use app\forms\PasswordResetRequestForm;
+use app\forms\ResetPasswordForm;
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
 header('Content-Type: application/json');
@@ -180,15 +182,17 @@ class SiteController extends Controller
                 $model->documento_identidad);
             $model->cv_adjunto_string = $uploads->upload(UploadedFile::getInstance($model, 'cv_adjunto'),
                 $model->documento_identidad);
-            $model->save();
-            if($model->email){
-                Yii::$app->session->setFlash('success', 'Se registró con éxito, verifique su correo.');
-                }
-                else{
-                Yii::$app->getSession()->setFlash('warning','Falló, contacte al administrador del sitio!');
-                }
-                
-            return $this->render('index');
+            if($model->foto_documento_identidad_string !='' and $model->foto_carnet_string !='' and $model->cv_adjunto_string !=''){
+                $model->save();
+                if($model->email){
+                    Yii::$app->session->setFlash('success', 'Se registró con éxito, verifique su correo.');
+                    }
+                    else{
+                    Yii::$app->getSession()->setFlash('warning','Falló, contacte al administrador del sitio!');
+                    }
+                return $this->render('index');
+            }
+            Yii::$app->session->setFlash('error', 'Debe adjuntar un documento.');
         }
 
         return $this->render('abogadoRegister', [

@@ -147,7 +147,7 @@ class AbogadoForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->save();
-        # Sedn Mail confirm
+        # Send Mail confirm
         \Yii::$app->mailer->compose()
                 ->setTo($user->email)
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
@@ -159,18 +159,18 @@ class AbogadoForm extends Model
                 )
                 )
                 ->send();
-         // Model Perfil
+        // Model Perfil
         $perfil = new \app\models\PerfilAbogado();
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;
-        $perfil->foto_documento_identidad = '$this->foto_documento_identidad_string';
+        $perfil->foto_documento_identidad = $this->foto_documento_identidad_string;
         $perfil->exequatur = $this->exequatur;
         $perfil->num_carnet = $this->num_carnet;
-        $perfil->foto_carnet = '$this->foto_carnet_string';
+        $perfil->foto_carnet = $this->foto_carnet_string;
         $perfil->telefono_oficina = $this->telefono_oficina;
         $perfil->celular = $this->celular;
-        $perfil->cv_adjunto = '$this->cv_adjunto_string';
+        $perfil->cv_adjunto = $this->cv_adjunto_string;
         $perfil->tipo_abogado = $this->tipo_abogado;
         $perfil->activo = 0;
         $perfil->fk_nacionalidad = $this->fk_nacionalidad;

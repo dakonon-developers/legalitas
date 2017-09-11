@@ -82,6 +82,14 @@ LegalitasAsset::register($this);
             $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
             $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
             $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/site/contrata']];
+            // Perfil para los usuarios
+            if(Yii::$app->user->can('Usuario')){
+                $menuItems[] = ['label' => 'PERFIL', 'url' => ['/perfil-usuario-update']];
+            }
+            // Perfil para los abogados
+            else if (Yii::$app->user->can('Abogado Interno') or Yii::$app->user->can('Abogado Externo')){
+                $menuItems[] = ['label' => 'PERFIl', 'url' => ['/perfil-abogado/update?id='.Yii::$app->user->id]];
+            }
         }
         $menuItems[] = ['label' => 'SALIR', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']];
     }
