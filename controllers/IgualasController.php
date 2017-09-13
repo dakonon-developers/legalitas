@@ -32,12 +32,17 @@ class IgualasController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
+                        'actions' => ['list'],
+                        'allow' => true,
+                        'roles' => ['@','?'],
+                    ],
+                    [
                         'actions' => ['index','view','create','update','delete'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],
                     [
-                        'actions' => ['list','detail','subscribe'],
+                        'actions' => ['detail','subscribe'],
                         'allow' => true,
                         'roles' => ['Usuario'],
                     ],
