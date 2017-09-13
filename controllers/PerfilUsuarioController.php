@@ -102,14 +102,49 @@ class PerfilUsuarioController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        
+        $nacionalidad = \app\models\Nacionalidad::find()->all();
+        $provincia = \app\models\Provincia::find()->all();
+        $municipio = \app\models\Municipio::find()->all();
+        $model = $this->findModelbyUser($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        $id = Yii::$app->user->id;
+ 
+        try {
+            $changed_pass = new \app\forms\ChangePasswordForm($id);
+        } catch (InvalidParamException $e) {
+            throw new \yii\web\BadRequestHttpException($e->getMessage());
+        }
+     
+        /*if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword()) {
+            \Yii::$app->session->setFlash('success', 'Password Changed!');
+        }*/
+    
+        /*if(Yii::$app->user->can('Admin'){        
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }*/
+        if (((Yii::$app->user->can('Usuario'))) and (Yii::$app->user->id  != $model->fk_usuario)) {
+                throw new  ForbiddenHttpException("No puede ingresar a este perfil");
+        }
+        else{
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } 
+            else {
+                return $this->render('update', [
+                    'model' => $model,
+                    'nacionalidad' => $nacionalidad,
+                    'provincia' => $provincia,
+                    'municipio' => $municipio,
+                    'changed_pass' => $changed_pass,
+                ]);
+            }
         }
     }
 
@@ -174,6 +209,14 @@ class PerfilUsuarioController extends Controller
     protected function findModel($id)
     {
         if (($model = PerfilUsuario::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+     protected function findModelbyUser($id)
+    {
+        if (($model = PerfilUsuario::findOne(['fk_usuario'=>$id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

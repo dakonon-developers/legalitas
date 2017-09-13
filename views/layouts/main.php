@@ -84,7 +84,7 @@ LegalitasAsset::register($this);
             $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
             // Perfil para los usuarios
             if(Yii::$app->user->can('Usuario')){
-                $menuItems[] = ['label' => 'PERFIL', 'url' => ['/perfil-usuario-update']];
+                $menuItems[] = ['label' => 'PERFIL', 'url' => ['/perfil-usuario/update?id='.Yii::$app->user->id]];
             }
             // Perfil para los abogados
             else if (Yii::$app->user->can('Abogado Interno') or Yii::$app->user->can('Abogado Externo')){
