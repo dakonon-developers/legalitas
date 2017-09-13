@@ -352,17 +352,11 @@ class SiteController extends Controller
     public function actionSolicita()
     {
 
-        $model = new \app\forms\ServiciosSelectForm();
-        $servicios = \app\models\Servicios::find()->where(['activo'=>true])->all();
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            return $this->redirect(['consulta/create', 'categoria' => $model->servicios]);
-        }
+        $searchModel = new \app\models\ServiciosSearch(['activo'=>true]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('servicios', [
-            'model' => $model,
-            'servicios' => $servicios,
+            'dataProvider' => $dataProvider,
         ]);
     }
 }
