@@ -157,7 +157,7 @@ class PerfilAbogadoController extends Controller
         else{
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 Yii::$app->session->setFlash('success', 'Se actualizo con éxito su perfil de usuario Abogado.');
-                return $this->redirect(['update', 'id' => $model->id]);
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
             } 
             else {
                 return $this->render('update', [

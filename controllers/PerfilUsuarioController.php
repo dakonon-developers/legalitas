@@ -154,7 +154,7 @@ class PerfilUsuarioController extends Controller
         }
         else{
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
             } 
             else {
                 return $this->render('update', [

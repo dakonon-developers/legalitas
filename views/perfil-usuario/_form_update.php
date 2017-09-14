@@ -34,22 +34,24 @@ $categorias = $const['categories'];
                         <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',])  ?>
                     </div>
                     <div class="col-md-6">
-                        <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
                         <?= $form->field($model, 'telefono_oficina')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',]) ?>
                     </div>
+                    <!--<div class="col-md-6">
+                        <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
+                    </div>-->
+                </div>
+                <div class="row">
+                    
                     <div class="col-md-6">
                         <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',] ) ?>
+                    </div>
+                    <div class="col-md-6">
+                                <?= $form->field($model, 'activo')->checkbox(['data-toggle'=>'toggle', 'data-on'=>'Si','data-off'=> 'No', ]) ?>
                     </div>
                 </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                                <?= $form->field($model, 'activo')->checkbox(['data-toggle'=>'toggle', 'data-on'=>'Si','data-off'=> 'No', ]) ?>
-                        </div>
+                        
                     </div>
                     <div class="row">
                         <div class="col-md-4">

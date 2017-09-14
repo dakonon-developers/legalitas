@@ -27,9 +27,9 @@ use yii\web\View;
                     <div class="col-md-6">
                         <?= $form->field($model, 'documento_identidad')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',])  ?>
                     </div>
-                    <div class="col-md-6">
+                    <!--<div class="col-md-6">
                         <?= $form->field($model, 'foto_documento_identidad')->fileInput() ?>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="row">
@@ -39,9 +39,10 @@ use yii\web\View;
                     <div class="col-md-3">
                         <?= $form->field($model, 'num_carnet')->textInput() ?>
                     </div>
+                    <!--
                     <div class="col-md-3">
                         <?= $form->field($model, 'foto_carnet')->fileInput() ?>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="row">
@@ -54,9 +55,10 @@ use yii\web\View;
                 </div>
 
                     <div class="row">
+                    <!--
                         <div class="col-md-6">
                                 <?= $form->field($model, 'cv_adjunto')->fileInput() ?>
-                        </div>
+                        </div>-->
                         <div class="col-md-6">
                                 <?= $form->field($model, 'tipo_abogado')->checkbox(['data-toggle'=>'toggle', 'data-on'=>'Interno','data-off'=> 'Externo', 'onchange'=>'checkbox_abogado(this,".field-abogadoform-consulta_info>label");']) ?>
                         </div>
