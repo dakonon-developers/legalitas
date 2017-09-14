@@ -35,12 +35,12 @@ class PerfilUsuarioController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create','view','update'],
+                        'actions' => ['create','view','update', 'change-password'],
                         'allow' => true,
                         'roles' => ['Usuario'],
                     ],
                     [
-                        'actions' => ['index','activar','view'],
+                        'actions' => ['index','activar','view', 'change-password'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],
@@ -94,6 +94,30 @@ class PerfilUsuarioController extends Controller
         }
     }
 
+    public function actionChangePassword($id)
+    {
+        if (Yii::$app->user->id == $id){
+            try {
+                $changed_pass = new \app\forms\ChangePasswordForm($id);
+            } catch (InvalidParamException $e) {
+                throw new \yii\web\BadRequestHttpException($e->getMessage());
+            }
+            if ($changed_pass->load(Yii::$app->request->post()) && $changed_pass->validate() && $changed_pass->changePassword()) {
+                Yii::$app->session->setFlash('success', 'Password Cambiada!');
+                $model = $this->findModelbyUser($id);
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
+            }
+            else{
+                $model = $this->findModelbyUser($id);
+                Yii::$app->session->setFlash('error', 'Password antigua incorrecta!');
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
+            }
+        }
+        else{
+            throw new  ForbiddenHttpException("No puede ingresar a este perfil");
+        }
+    }
+
     /**
      * Updates an existing PerfilUsuario model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -115,10 +139,6 @@ class PerfilUsuarioController extends Controller
         } catch (InvalidParamException $e) {
             throw new \yii\web\BadRequestHttpException($e->getMessage());
         }
-     
-        /*if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword()) {
-            \Yii::$app->session->setFlash('success', 'Password Changed!');
-        }*/
     
         /*if(Yii::$app->user->can('Admin'){        
             if ($model->load(Yii::$app->request->post()) && $model->save()) {

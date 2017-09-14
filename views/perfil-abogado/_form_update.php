@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\web\View;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\PerfilAbogado */
@@ -63,16 +64,16 @@ use yii\helpers\ArrayHelper;
                     <div class="row">
                         <div class="col-md-4">
                             <?= $form->field($model, 'fk_nacionalidad')->dropDownList(ArrayHelper::map($nacionalidad,'id','nombre'),
-                            ['prompt'=> 'Seleccione su nacionalidad','onchange'=>'habilitar_campo(this,"#abogadoform-provincia")']) ?>
+                            ['prompt'=> 'Seleccione su nacionalidad']) ?>
                         </div>
                         <div class="col-md-4">
                             <label>Provincia</label>
                             <?= Html::dropDownList('provincia','',ArrayHelper::map($provincia, 'id', 'nombre'), 
-                             ['prompt'=>'-Elige la Nacionalidad-','class'=>'form-control','id'=>'provincia', 'disabled'=>True]) ?>
+                             ['prompt'=>'Seleccione Provicia','class'=>'form-control','id'=>'provincia', 'onchange'=>'cargar_municipio(this,"#perfilabogado-fk_municipio");habilitar_campo(this,"#perfilabogado-fk_municipio");']) ?>
                         </div>
                         <div class="col-md-4">
                             <?= $form->field($model, 'fk_municipio')->dropDownList(ArrayHelper::map($municipio,'id','nombre'),
-                            ['prompt'=>'Seleccione el municipio','disabled'=>True]) ?>
+                            ['prompt'=>'Seleccione el municipio', 'disabled'=>True]) ?>
                         </div>
                     </div>
 
@@ -91,8 +92,11 @@ use yii\helpers\ArrayHelper;
     <div id="cambiar" class="panel-collapse collapse">
       <ul class="list-group">
         <li class="list-group-item">
-          <?php $form = ActiveForm::begin(); ?>
-     
+          <?php $form = ActiveForm::begin([
+          'action' => ['perfil-abogado/change-password', 'id'=> Yii::$app->user->id],
+          'method' => 'post',
+          ]); ?>
+            <?= $form->field($changed_pass, 'old_password')->passwordInput() ?>
             <?= $form->field($changed_pass, 'password')->passwordInput() ?>
             <?= $form->field($changed_pass, 'confirm_password')->passwordInput() ?>
      
@@ -105,6 +109,25 @@ use yii\helpers\ArrayHelper;
     </div>
   </div>
 </div>
-    
 
 </div>
+<?php
+    $this->registerJs(
+        "var municipio = ".\yii\helpers\Json::htmlEncode($municipio).";",
+        View::POS_HEAD,'municipio'
+    );
+    $script = <<< JS
+    if($('#provincia').val()!=""){
+        $('#perfilabogado-fk_municipio').removeAttr('disabled');
+    }
+    $('form').on('keyup keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) { 
+            e.preventDefault();
+            return false;
+        }
+    });
+JS;
+
+    $this->registerJs($script);
+?>

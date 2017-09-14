@@ -12,6 +12,7 @@ use app\models\User;
 class ChangePasswordForm extends Model
 {
     public $id;
+    public $old_password;
     public $password;
     public $confirm_password;
  
@@ -45,12 +46,22 @@ class ChangePasswordForm extends Model
     public function rules()
     {
         return [
-            [['password','confirm_password'], 'required'],
+            [['old_password', 'password','confirm_password'], 'required'],
             [['password','confirm_password'], 'string', 'min' => 6],
             ['confirm_password', 'compare', 'compareAttribute' => 'password'],
+            ['old_password', 'validatePassword'],
         ];
     }
- 
+    
+    public function validatePassword()
+    {
+        /* @var $user User */
+        $user = Yii::$app->user->identity;
+        if (!$user || !$user->validatePassword($this->old_password)) {
+            $this->addError('old_password', 'Password antigua incorrecta.');
+        }
+    }
+
     /**
      * Changes password.
      *
