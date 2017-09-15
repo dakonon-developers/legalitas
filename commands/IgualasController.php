@@ -13,10 +13,10 @@ class IgualasController extends Controller
         Yii::$app->db->createCommand($sql)->execute();
         echo "***Se migro con exito igualas***\n";
 
-        $rows = (new \yii\db\Query())
+        /*$rows = (new \yii\db\Query())
             ->select(['nombre', 'slim', 'med', 'plus', 'id'])
             ->from('igualas')
-            ->all();
+            ->all();*/
         /*echo "creando plan en paypal...\n";
         foreach ($rows as $row) {
             echo "creando plan en paypal para ". $row['nombre']."...\n";
