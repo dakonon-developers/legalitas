@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\User;
 use app\models\PerfilAbogado;
 use app\models\PerfilAbogadoSearch;
 use yii\web\Controller;
@@ -36,12 +37,12 @@ class PerfilAbogadoController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create','view','update'],
+                        'actions' => ['create','view','update', 'change-password'],
                         'allow' => true,
                         'roles' => ['Abogado Interno','Abogado Externo'],
                     ],
                     [
-                        'actions' => ['index','activar','view'],
+                        'actions' => ['index','activar','view', 'change-password'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],
@@ -95,6 +96,30 @@ class PerfilAbogadoController extends Controller
         }
     }
 
+
+    public function actionChangePassword($id)
+    {
+        if (Yii::$app->user->id == $id){
+            try {
+                $changed_pass = new \app\forms\ChangePasswordForm($id);
+            } catch (InvalidParamException $e) {
+                throw new \yii\web\BadRequestHttpException($e->getMessage());
+            }
+            if ($changed_pass->load(Yii::$app->request->post()) && $changed_pass->validate() && $changed_pass->changePassword()) {
+                Yii::$app->session->setFlash('success', 'Password Cambiada!');
+                $model = $this->findModelbyUser($id);
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
+            }
+            else{
+                $model = $this->findModelbyUser($id);
+                Yii::$app->session->setFlash('error', 'Password antigua incorrecta!');
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
+            }
+        }
+        else{
+            throw new  ForbiddenHttpException("No puede ingresar a este perfil");
+        }
+    }
     /**
      * Updates an existing PerfilAbogado model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -116,26 +141,14 @@ class PerfilAbogadoController extends Controller
         } catch (InvalidParamException $e) {
             throw new \yii\web\BadRequestHttpException($e->getMessage());
         }
-     
-        /*if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->changePassword()) {
-            \Yii::$app->session->setFlash('success', 'Password Changed!');
-        }*/
     
-        /*if(Yii::$app->user->can('Admin'){        
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
-        }*/
         if (((Yii::$app->user->can('Abogado Interno')) or (Yii::$app->user->can('Abogado Externo'))) and (Yii::$app->user->id  != $model->fk_usuario)) {
                 throw new  ForbiddenHttpException("No puede ingresar a este perfil");
         }
         else{
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                Yii::$app->session->setFlash('success', 'Se actualizo con éxito su perfil de usuario Abogado.');
+                return $this->redirect(['update', 'id' => $model->fk_usuario]);
             } 
             else {
                 return $this->render('update', [

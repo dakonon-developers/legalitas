@@ -16,6 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php $form = ActiveForm::begin(['options' => ['enctype'=>'multipart/form-data']]); ?>
+
+    <div class="form-group">
+        <?= $form->errorSummary($model); ?>
+    </div>
+    
     <div id="myCarousel" class="carousel slide">
         <div class="carousel-inner">
             <div class="item active">
@@ -141,6 +146,12 @@ $this->params['breadcrumbs'][] = $this->title;
         View::POS_HEAD,'municipio'
     );
     $script = <<< JS
+    if($('#abogadoform-fk_nacionalidad').val()!=""){
+        $('#abogadoform-provincia').removeAttr('disabled');
+    }
+    if($('#abogadoform-provincia').val()!=""){
+        $('#abogadoform-fk_municipio').removeAttr('disabled');
+    }
     $('form').on('keyup keypress', function(e) {
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) { 

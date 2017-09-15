@@ -227,3 +227,18 @@ aside{
 .navbar-toggle .icon-bar{
   background-color: #69a48e;
 }
+
+.pagination > .active > a{
+  background-color: #69a48e;
+  border-color: #69a48e;
+}
+
+.pagination > .active > a:hover{
+  background-color: #5b8b79;
+  border-color: #5b8b79;
+}
+
+.pagination > li > a,
+.pagination > li > a:hover{
+  color: #69a48e;
+}
