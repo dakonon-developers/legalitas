@@ -140,20 +140,12 @@ class PerfilUsuarioController extends Controller
             throw new \yii\web\BadRequestHttpException($e->getMessage());
         }
     
-        /*if(Yii::$app->user->can('Admin'){        
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
-        }*/
         if (((Yii::$app->user->can('Usuario'))) and (Yii::$app->user->id  != $model->fk_usuario)) {
                 throw new  ForbiddenHttpException("No puede ingresar a este perfil");
         }
         else{
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Se actualizo con éxito su perfil.');
                 return $this->redirect(['update', 'id' => $model->fk_usuario]);
             } 
             else {

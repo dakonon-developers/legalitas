@@ -70,7 +70,7 @@ use yii\web\View;
                         </div>
                         <div class="col-md-4">
                             <label>Provincia</label>
-                            <?= Html::dropDownList('provincia','',ArrayHelper::map($provincia, 'id', 'nombre'), 
+                            <?= Html::dropDownList('provincia',$model->fkMunicipio->fk_provincia,ArrayHelper::map($provincia, 'id', 'nombre'), 
                              ['prompt'=>'Seleccione Provicia','class'=>'form-control','id'=>'provincia', 'onchange'=>'cargar_municipio(this,"#perfilabogado-fk_municipio");habilitar_campo(this,"#perfilabogado-fk_municipio");']) ?>
                         </div>
                         <div class="col-md-4">

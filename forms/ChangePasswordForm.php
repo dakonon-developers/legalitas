@@ -33,7 +33,7 @@ class ChangePasswordForm extends Model
         $this->_user = User::findIdentity($id);
         
         if (!$this->_user) {
-            throw new InvalidParamException('Unable to find user!');
+            throw new InvalidParamException('No se encontró el usuario');
         }
         
         $this->id = $this->_user->id;
@@ -58,8 +58,21 @@ class ChangePasswordForm extends Model
         /* @var $user User */
         $user = Yii::$app->user->identity;
         if (!$user || !$user->validatePassword($this->old_password)) {
-            $this->addError('old_password', 'Password antigua incorrecta.');
+            $this->addError('old_password', 'Contraseña actual incorrecta.');
         }
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'old_password' => 'Contraseña Actual',
+            'password' => 'Nueva Contraseña',
+            'confirm_password' => 'Confirmar Nueva Contraseña',
+        ];
     }
 
     /**

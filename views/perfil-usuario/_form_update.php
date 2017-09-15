@@ -45,9 +45,6 @@ $categorias = $const['categories'];
                     <div class="col-md-6">
                         <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',] ) ?>
                     </div>
-                    <div class="col-md-6">
-                                <?= $form->field($model, 'activo')->checkbox(['data-toggle'=>'toggle', 'data-on'=>'Si','data-off'=> 'No', ]) ?>
-                    </div>
                 </div>
 
                     <div class="row">
@@ -60,7 +57,7 @@ $categorias = $const['categories'];
                         </div>
                         <div class="col-md-4">
                             <label>Provincia</label>
-                            <?= Html::dropDownList('provincia','',ArrayHelper::map($provincia, 'id', 'nombre'), 
+                            <?= Html::dropDownList('provincia',$model->fkMunicipio->fk_provincia,ArrayHelper::map($provincia, 'id', 'nombre'), 
                              ['prompt'=>'Seleccione la provincia','class'=>'form-control','id'=>'provincia', 'onchange'=>'cargar_municipio(this,"#perfilusuario-fk_municipio");habilitar_campo(this,"#perfilusuario-fk_municipio");']) ?>
                         </div>
                         <div class="col-md-4">
