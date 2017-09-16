@@ -206,7 +206,7 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
 }
 
-function createSubscription($card_id, $plan_id){
+function createSubscriptionStepOne($card_id, $plan_id){
   $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
         'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -215,41 +215,33 @@ function createSubscription($card_id, $plan_id){
   );
   $creditCard = new \PayPal\Api\CreditCard();
   $card = $creditCard->get($card_id, $apiContext);
-
+  $now = new DateTime('now', new DateTimeZone('Europe/Zurich'));
+  $now->modify('+5 minutes');
   $agreement = new Agreement();
-  $agreement->setName('Base Agreement for '.$name)
-    ->setDescription('Basic Agreement for '.$name)
-    ->setStartDate('2019-06-17T9:45:04Z');
-  // Set plan id
+  $agreement->setName('Subscription for '.$name)
+    ->setDescription('Subscription for '.$name)
+    ->setStartDate($now->format(DateTime::ATOM));
+
   $plan = new Plan();
   $plan->setId($plan_id);
   $agreement->setPlan($plan);
 
+  $creditCardToken = new CreditCardToken();
+  $creditCardToken->setCreditCardId($card->getId());
   $fi = new FundingInstrument();
+  $fi->setCreditCardToken($creditCardToken);
   $fi->setCreditCard($card);
-
   // Set payer to process credit card
   $payer = new Payer();
-  $payer->setPaymentMethod("credit_card")
-    ->setFundingInstruments(array($fi));
+  $payer->setPaymentMethod("paypal");
+  // $payer->setPaymentMethod("credit_card")
+  //   ->setFundingInstruments(array($fi));
   $agreement->setPayer($payer);
-
-  // Adding shipping details
-  // $shippingAddress = new ShippingAddress();
-  // $shippingAddress->setLine1('111 First Street')
-  //   ->setCity('Saratoga')
-  //   ->setState('CA')
-  //   ->setPostalCode('95070')
-  //   ->setCountryCode('US');
-  // $agreement->setShippingAddress($shippingAddress);
-
-  // $agreement = $agreement->create($apiContext);
   try {
-    // Execute agreement
-    $agreement->execute($token, $apiContext);
+    $agreement = $agreement->create($apiContext);
+    $approvalUrl = $agreement->getApprovalLink();
+    return $agreement;
   } catch (PayPal\Exception\PayPalConnectionException $ex) {
-    // echo $ex->getCode();
-    // echo $ex->getData();
     return $ex->getData();
   } catch (Exception $ex) {
     die($ex);

@@ -90,12 +90,12 @@ class IgualasController extends Controller
             $model->slim = str_replace(',', '', $model->slim);
             $model->med = str_replace(',', '', $model->med);
             $model->plus = str_replace(',', '', $model->plus);
-            $plan_slim = stripeCreatePlan($model->slim, $model->nombre."-slim", $model->nombre."-slim");
-            $plan_med = stripeCreatePlan($model->med, $model->nombre."-med", $model->nombre."-med");
-            $plan_plus = stripeCreatePlan($model->plus, $model->nombre."-plus", $model->nombre."-plus");
-            $model->slim_stripe = $plan_slim->id;
-            $model->med_stripe = $plan_med->id;
-            $model->plus_stripe = $plan_plus->id;
+            // $plan_slim = stripeCreatePlan($model->slim, $model->nombre."-slim", $model->nombre."-slim");
+            // $plan_med = stripeCreatePlan($model->med, $model->nombre."-med", $model->nombre."-med");
+            // $plan_plus = stripeCreatePlan($model->plus, $model->nombre."-plus", $model->nombre."-plus");
+            // $model->slim_stripe = $plan_slim->id;
+            // $model->med_stripe = $plan_med->id;
+            // $model->plus_stripe = $plan_plus->id;
 
             if ($model && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -128,13 +128,13 @@ class IgualasController extends Controller
             $model->med = str_replace(',', '', $model->med);
             $model->plus = str_replace(',', '', $model->plus);
             if ($model->slim != $iguala->slim){
-                stripeUpdatePlan($model->slim_stripe, $model->slim);
+                // stripeUpdatePlan($model->slim_stripe, $model->slim);
             }
             if ($model->med != $iguala->med){
-                stripeUpdatePlan($model->med_stripe, $model->med);
+                // stripeUpdatePlan($model->med_stripe, $model->med);
             }
             if ($model->plus != $iguala->plus){
-                stripeUpdatePlan($model->plus_stripe, $model->plus);
+                // stripeUpdatePlan($model->plus_stripe, $model->plus);
             }
 
             if ($model->save()) {
