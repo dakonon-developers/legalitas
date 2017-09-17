@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 </tr>
                 <tr>
                     <td>Suscribirse</td>
-                    <td><?= Html::a('Suscribirse', ['subscribe', 'id' => $model->id, 'plan' => $model->slim_paypal_id], ['class' => 'btn btn-primary']) ?></td>
-                    <td><?= Html::a('Suscribirse', ['subscribe', 'id' => $model->id, 'plan' => $model->med_paypal_id], ['class' => 'btn btn-primary']) ?></td>
-                    <td><?= Html::a('Suscribirse', ['subscribe', 'id' => $model->id, 'plan' => $model->plus_paypal_id], ['class' => 'btn btn-primary']) ?></td>
+                    <td><?= Html::a('Suscribirse', ['subscribe', 'id' => $model->id, 'plan' => $model->slim_paypal_id, 'plan_number'=>1], ['class' => 'btn btn-primary']) ?></td>
+                    <td><?= Html::a('Suscribirse', ['subscribe', 'id' => $model->id, 'plan' => $model->med_paypal_id, 'plan_number'=>2], ['class' => 'btn btn-primary']) ?></td>
+                    <td><?= Html::a('Suscribirse', ['subscribe', 'id' => $model->id, 'plan' => $model->plus_paypal_id, 'plan_number'=>3], ['class' => 'btn btn-primary']) ?></td>
                 </tr>
             </tbody>
         </table>

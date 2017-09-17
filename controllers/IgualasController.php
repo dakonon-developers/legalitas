@@ -196,7 +196,7 @@ class IgualasController extends Controller
      * @param integer $plan
      * @return mixed
      */
-    public function actionSubscribe($id,$plan)
+    public function actionSubscribe($id,$plan, $plan_number)
     {
         $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
         if($perfil){
@@ -215,7 +215,7 @@ class IgualasController extends Controller
                 $model->estatus = "solicitado";
                 $model->fk_users_cliente = $perfil->id;
             }
-            $this->setPlan($model,$plan);
+            $this->setPlan($model,$plan_number);
             
             
             $agreement = createSubscriptionStepOne($plan, $perfil->nombres . ' '. $perfil->apellidos);
