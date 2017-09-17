@@ -22,14 +22,15 @@ $apiContext = new \PayPal\Rest\ApiContext(
     );
   $createdPlan = new \PayPal\Api\Plan();
   try {
-  	$createdPlan->get("P-8GT68861ER278184NHFYX7VA", $apiContext);
-  	echo $createdPlan;
+  	$createdPlan=$createdPlan->get("P-8GT68861ER278184NHFYX7VA", $apiContext);
+  	echo $createdPlan."<--------";
   } catch (\PayPal\Exception\PayPalConnectionException $ex) {
   	echo $ex;die();
   }
   try {
     $result = $createdPlan->delete($apiContext);
     return $result;
+    echo "\nRESULT:\n".$result;
   } catch (\PayPal\Exception\PayPalConnectionException $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
     echo "Deleted a Plan", "Plan", $createdPlan->getId(), null, $ex;

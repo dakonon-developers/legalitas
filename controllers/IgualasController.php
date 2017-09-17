@@ -280,7 +280,9 @@ class IgualasController extends Controller
             if ($igualas_user_viejo){
                 $plan_viejo = \app\models\Igualas::find()->where(['id'=>$igualas_user_viejo->fk_iguala])->one();
                 $agreement_viejo = paypalSuspendPlanToUser($igualas_user_viejo->subscription_id);
-                $igualas_user_viejo->delete();
+                // $igualas_user_viejo->delete();
+                $igualas_user_viejo->estatus = "cancelado";
+                $igualas_user_viejo->save();
             }
             $igualas_user->estatus="concretado";
             $igualas_user->subscription_id=$agreement->id;

@@ -158,7 +158,6 @@ function paypalSuspendPlanToUser($agreement_id){
 }
 
 function paypalDeletePlan($plan_id){
-  echo $plan_id."\n";
   $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
             'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -166,9 +165,7 @@ function paypalDeletePlan($plan_id){
         )
     );
   $createdPlan = new \PayPal\Api\Plan();
-  $createdPlan->get($plan_id, $apiContext);
-  echo "PLAN: $createdPlan, id: $plan_id";
-  die();
+  $createdPlan=$createdPlan->get($plan_id, $apiContext);
   try {
     $result = $createdPlan->delete($apiContext);
   } catch (\PayPal\Exception\PayPalConnectionException $ex) {
