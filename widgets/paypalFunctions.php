@@ -69,7 +69,8 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
 
 }
 
-function chargeToCustomer($card_obj, $card_id, $precio, $description){
+// function chargeToCustomer($card_obj, $card_id, $precio, $description){
+function chargeToCustomer($precio, $description){
   $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
             'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -78,12 +79,12 @@ function chargeToCustomer($card_obj, $card_id, $precio, $description){
     );
   // precio en valor normal, ej. un dolar: 1.0
   // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/lib/PayPal/Api/CreditCard.php
-  if (!$card_obj){
-    $creditCard = new \PayPal\Api\CreditCard();
-    $creditCard = $creditCard->get($card_id, $apiContext);
-  }else{
-    $creditCard = $card_obj;
-  }
+  // if (!$card_obj){
+  //   $creditCard = new \PayPal\Api\CreditCard();
+  //   $creditCard = $creditCard->get($card_id, $apiContext);
+  // }else{
+  //   $creditCard = $card_obj;
+  // }
 
   // $fi = new \PayPal\Api\FundingInstrument();
   // $fi->setCreditCardToken($card);
@@ -126,7 +127,7 @@ function chargeToCustomer($card_obj, $card_id, $precio, $description){
       die($ex);
   }
   $approvalUrl = $payment->getApprovalLink();
-  echo "<h1>Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a></h2>";//, $request, $payment;
+  // echo "<h1>Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a></h2>";//, $request, $payment;
   return $payment;
 
 }

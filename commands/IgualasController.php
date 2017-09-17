@@ -17,7 +17,7 @@ class IgualasController extends Controller
             ->select(['nombre', 'slim', 'med', 'plus', 'id'])
             ->from('igualas')
             ->all();
-        /*echo "creando plan en paypal...\n";
+        echo "creando plan en paypal...\n";
         foreach ($rows as $row) {
             echo "creando plan en paypal para ". $row['nombre']."...\n";
 
@@ -37,7 +37,7 @@ class IgualasController extends Controller
             $iguala->save();
             echo "guardado? -> ".$iguala->save()."\n";
             echo "Plan ". $row['nombre'] ." Id de PayPal guardada en base de datos exito\nsamente.\n\n";
-        }*/
+        }
 
 
     }

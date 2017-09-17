@@ -17,10 +17,11 @@ $request = Yii::$app->request;
     		echo "<p>Error al procesar el pago</p>";
     	}
     	$pay = $payment;
-    	var_dump($payment);
+    	// var_dump($payment);
     	// echo $json['details'];
 	?>
-	<table>
+	<div class="table-responsive">
+      <table class="table table-hover">
 		<thead>
 			<tr>
 				<td>Estado</td>
@@ -35,15 +36,16 @@ $request = Yii::$app->request;
 		<tbody>
 			<tr>
 				<td><?php echo $payment->state; ?></td>
-				<td><?php echo $payment->amount['subtotal']; ?></td>
-				<td><?php echo $payment->amount['total']; ?></td>
-				<td><?php echo $payment->amount['currency']; ?></td>
-				<td><?php echo $payment->details['description']; ?></td>
-				<td><?php echo $payment->details['email']; ?></td>
-				<td><?php echo $payment->details['recipient_name']; ?></td>
+				<td><?php echo $payment->transactions[0]->amount->details->subtotal; ?></td>
+				<td><?php echo $payment->transactions[0]->amount->total ?></td>
+				<td><?php echo $payment->transactions[0]->amount->currency ?></td>
+				<td><?php echo $payment->transactions[0]->description ?></td>
+				<td><?php echo $payment->transactions[0]->payee->email ?></td>
+				<td><?php echo $payment->transactions[0]->item_list->shipping_address->recipient_name ?></td>
 
 			</tr>
 		</tbody>
-	</table>
+	  </table>
+	</div>
     <code><?= __FILE__ ?></code>
 </div>

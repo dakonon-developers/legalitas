@@ -10,6 +10,8 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property string $charge_id
+ * @property string $estatus 
+ * @property string $approval_link
  * @property double $monto
  * @property integer $fecha
  * @property integer $fk_usuario
@@ -48,10 +50,12 @@ class Payments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['charge_id', 'monto', 'fecha', 'fk_usuario'], 'required'],
+            [['charge_id', 'estatus', 'monto', 'fecha', 'fk_usuario'], 'required'],
             [['monto'], 'number'],
             [['fecha', 'fk_usuario'], 'integer'],
-            [['charge_id'], 'string', 'max' => 25],
+            [['estatus'], 'string', 'max' => 25],
+            [['charge_id'], 'string', 'max' => 255],
+            [['approval_link'], 'string', 'max' => 255],
             [['fk_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['fk_usuario' => 'id']],
         ];
     }
@@ -64,6 +68,8 @@ class Payments extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'charge_id' => 'Cargo',
+            'estatus' => 'Estado (solicitado, concretado)',
+            'approval_link' => 'Link aprovatorio',
             'monto' => 'Monto',
             'fecha' => 'Fecha',
             'fk_usuario' => 'Usuario',
