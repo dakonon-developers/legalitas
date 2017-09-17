@@ -13,6 +13,8 @@ use Yii;
  * @property integer $slim
  * @property integer $med
  * @property integer $plus
+ * @property integer $estatus
+ * @property integer $subscription_id
  *
  * @property Igualas $fkIguala
  * @property PerfilUsuario $fkUsersCliente
@@ -35,7 +37,7 @@ class IgualasUsers extends \yii\db\ActiveRecord
         return [
             [['fk_iguala', 'fk_users_cliente'], 'required'],
             [['fk_iguala', 'fk_users_cliente', 'slim', 'med', 'plus'], 'integer'],
-            [['fk_iguala', 'fk_users_cliente'], 'unique', 'targetAttribute' => ['fk_iguala', 'fk_users_cliente'], 'message' => 'The combination of Fk Iguala and Fk Users Cliente has already been taken.'],
+            // [['fk_iguala', 'fk_users_cliente'], 'unique', 'targetAttribute' => ['fk_iguala', 'fk_users_cliente'], 'message' => 'The combination of Fk Iguala and Fk Users Cliente has already been taken.'],
             [['fk_iguala'], 'exist', 'skipOnError' => true, 'targetClass' => Igualas::className(), 'targetAttribute' => ['fk_iguala' => 'id']],
             [['fk_users_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => PerfilUsuario::className(), 'targetAttribute' => ['fk_users_cliente' => 'id']],
         ];
@@ -52,6 +54,8 @@ class IgualasUsers extends \yii\db\ActiveRecord
             'fk_users_cliente' => 'Fk Users Cliente',
             'slim' => 'Slim',
             'med' => 'Med',
+            'plus' => 'Plus',
+            'estatus' => 'Estatus (solicitado, concretado)',
             'plus' => 'Plus',
         ];
     }

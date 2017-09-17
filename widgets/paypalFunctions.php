@@ -14,6 +14,9 @@ use PayPal\Api\Plan;
 use PayPal\Api\Patch;
 use PayPal\Api\PatchRequest;
 use PayPal\Common\PayPalModel;
+use \PayPal\Api\Agreement;
+use \PayPal\Api\Payer;
+use PayPal\Api\AgreementStateDescriptor;
 header('Content-Type: application/json');
 
 /*
@@ -128,7 +131,33 @@ function chargeToCustomer($card_obj, $card_id, $precio, $description){
 
 }
 
-function paypalCreatePlan($amount, $name, $description, $interval="Month"){
+function paypalSuspendPlanToUser($agreement_id){
+  // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/sample/billing/SuspendBillingAgreement.php
+  $apiContext = new \PayPal\Rest\ApiContext(
+      new \PayPal\Auth\OAuthTokenCredential(
+          'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+          'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+      )
+  );
+  
+  $createdAgreement = new Agreement();
+  $createdAgreement = $createdAgreement->get($agreement_id, $apiContext);
+  $agreementStateDescriptor = new AgreementStateDescriptor();
+  $agreementStateDescriptor->setNote("Suspending the agreement");
+  try {
+    $createdAgreement->suspend($agreementStateDescriptor, $apiContext);
+    // Lets get the updated Agreement Object
+    $agreement = Agreement::get($createdAgreement->getId(), $apiContext);
+  } catch (Exception $ex) {
+      // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+      echo "Suspended the Agreement", "Agreement", null, $agreementStateDescriptor, $ex;
+      exit(1);
+  }
+  return $agreement;
+
+}
+
+function paypalCreatePlan($amount, $name, $description, $interval="Month", $iguala_id){
   $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
             'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -158,8 +187,9 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
   // Set merchant preferences
   $merchantPreferences = new MerchantPreferences();
-  $merchantPreferences->setReturnUrl('http://localhost:3000/processagreement')
-    ->setCancelUrl('http://localhost:3000/cancel')
+  $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
+  $merchantPreferences->setReturnUrl('$baseUrl/igualas/processagreement')
+    ->setCancelUrl('$baseUrl/igualas/cancel')
     ->setAutoBillAmount('yes')
     ->setInitialFailAmountAction('CONTINUE')
     ->setMaxFailAttempts('0')
@@ -205,16 +235,36 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
   }
 
 }
-
-function createSubscriptionStepOne($card_id, $plan_id){
+function createSubscriptionStepTwo($token){
   $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
         'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
         'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
     )
   );
-  $creditCard = new \PayPal\Api\CreditCard();
-  $card = $creditCard->get($card_id, $apiContext);
+
+  $agreement = new \PayPal\Api\Agreement();
+  try {
+    // ## Execute Agreement
+    // Execute the agreement by passing in the token
+    $agreement->execute($token, $apiContext);
+  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+    // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+    echo "Executed an Agreement", "Agreement", $agreement->getId(), $token, $ex;
+    exit(1);
+  }
+  return $agreement;
+}
+
+function createSubscriptionStepOne($plan_id, $name){ //$card_id, 
+  $apiContext = new \PayPal\Rest\ApiContext(
+    new \PayPal\Auth\OAuthTokenCredential(
+        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+    )
+  );
+  // $creditCard = new \PayPal\Api\CreditCard();
+  // $card = $creditCard->get($card_id, $apiContext);
   $now = new DateTime('now', new DateTimeZone('Europe/Zurich'));
   $now->modify('+5 minutes');
   $agreement = new Agreement();
@@ -226,17 +276,19 @@ function createSubscriptionStepOne($card_id, $plan_id){
   $plan->setId($plan_id);
   $agreement->setPlan($plan);
 
-  $creditCardToken = new CreditCardToken();
-  $creditCardToken->setCreditCardId($card->getId());
-  $fi = new FundingInstrument();
-  $fi->setCreditCardToken($creditCardToken);
-  $fi->setCreditCard($card);
+  // $creditCardToken = new CreditCardToken();
+  // $creditCardToken->setCreditCardId($card->getId());
+  // $fi = new FundingInstrument();
+  // $fi->setCreditCardToken($creditCardToken);
+  // $fi->setCreditCard($card);
   // Set payer to process credit card
   $payer = new Payer();
   $payer->setPaymentMethod("paypal");
   // $payer->setPaymentMethod("credit_card")
   //   ->setFundingInstruments(array($fi));
+
   $agreement->setPayer($payer);
+    // ->setReturnUrls($redirectUrls);
   try {
     $agreement = $agreement->create($apiContext);
     $approvalUrl = $agreement->getApprovalLink();
