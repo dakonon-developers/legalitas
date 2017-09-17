@@ -40,7 +40,7 @@ class IgualasController extends Controller
                         'roles' => ['@','?'],
                     ],
                     [
-                        'actions' => ['index','view','create','update','delete'],
+                        'actions' => ['index','view','create','delete'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],
@@ -99,6 +99,13 @@ class IgualasController extends Controller
             // $model->slim_stripe = $plan_slim->id;
             // $model->med_stripe = $plan_med->id;
             // $model->plus_stripe = $plan_plus->id;
+
+            $plan_slim = paypalCreatePlan($model->slim, $model->nombre, $model->nombre."-slim", "Month");
+            $plan_med = paypalCreatePlan($model->med, $model->nombre, $model->nombre."-med", "Month");
+            $plan_plus = paypalCreatePlan($model->plus, $model->nombre, $model->nombre."-plus", "Month");
+            $model->slim_paypal_id = $plan_slim->getId();
+            $model->med_paypal_id = $plan_med->getId();
+            $model->plus_paypal_id = $plan_plus->getId();
 
             if ($model && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -159,7 +166,11 @@ class IgualasController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = \app\models\Igualas::find()->where(['id'=>$id])->one();
+        paypalDeletePlan($model->slim_paypal_id);
+        paypalDeletePlan($model->med_paypal_id);
+        paypalDeletePlan($model->plus_paypal_id);
+        $model->delete();
 
         return $this->redirect(['index']);
     }

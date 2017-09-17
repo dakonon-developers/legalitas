@@ -1,5 +1,9 @@
 en paypalFunctions hay que acomodar las variables de base_url y las api key por variables de entorno
 
+cambiar la base_url en el create_plan
+
+QUITAR LAS COMAS DE LA INTERFAZ DEL FORMULARIO DE LOS PLANES
+
 OJO:
 si un usuario se subscribe a un plan se agregará un nuevo registro con estatus solicitado.
 Si el estatus pasa a ser concretado y el usuario quiere subscribirse a un nuevo plan entonces se crea un nuevo registro del mismo modo con estatus solicitado y se mantiene el plan anterior con estatus concretado, si el nuevo registro pasa a ser concretado entonces se desubscibe del plan anterior

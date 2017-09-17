@@ -157,7 +157,29 @@ function paypalSuspendPlanToUser($agreement_id){
 
 }
 
-function paypalCreatePlan($amount, $name, $description, $interval="Month", $iguala_id){
+function paypalDeletePlan($plan_id){
+  echo $plan_id."\n";
+  $apiContext = new \PayPal\Rest\ApiContext(
+        new \PayPal\Auth\OAuthTokenCredential(
+            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        )
+    );
+  $createdPlan = new \PayPal\Api\Plan();
+  $createdPlan->get($plan_id, $apiContext);
+  echo "PLAN: $createdPlan, id: $plan_id";
+  die();
+  try {
+    $result = $createdPlan->delete($apiContext);
+  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+    // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+    echo $createdPlan->getId(), null, $ex;
+    exit(1);
+  }
+  return $result;
+}
+
+function paypalCreatePlan($amount, $name, $description, $interval="Month"){
   $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
             'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -188,8 +210,9 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month", $igua
   // Set merchant preferences
   $merchantPreferences = new MerchantPreferences();
   $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
-  $merchantPreferences->setReturnUrl('$baseUrl/igualas/processagreement')
-    ->setCancelUrl('$baseUrl/igualas/cancel')
+
+  $merchantPreferences->setReturnUrl($baseUrl.'/igualas/processagreement')
+    ->setCancelUrl($baseUrl.'/igualas/cancel')
     ->setAutoBillAmount('yes')
     ->setInitialFailAmountAction('CONTINUE')
     ->setMaxFailAttempts('0')

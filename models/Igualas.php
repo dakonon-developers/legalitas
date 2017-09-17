@@ -42,10 +42,10 @@ class Igualas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'slim', 'med', 'plus', 'tipo'], 'required'],
+            [['nombre', 'slim', 'med', 'plus'], 'required'],
             //[['descripcion'], 'string'],
             [['slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
-            [['slim', 'med', 'plus'], 'number'],
+            // [['slim', 'med', 'plus'], 'number'],
             [['nombre', 'slim_paypal_id', 'med_paypal_id', 'plus_paypal_id'], 'string', 'max' => 255],
             [['slim_paypal_id'], 'unique'],
             [['med_paypal_id'], 'unique'],
