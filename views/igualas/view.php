@@ -37,9 +37,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'slim',
             'med',
             'plus',
-            'slim_stripe',
-            'med_stripe',
-            'plus_stripe',
+            // 'slim_stripe',
+            // 'med_stripe',
+            // 'plus_stripe',
         ],
     ]) ?>
 

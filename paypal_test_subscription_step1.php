@@ -26,7 +26,8 @@ $apiContext = new \PayPal\Rest\ApiContext(
     )
 );
 echo "2\n";
-
+$now = new DateTime('now', new DateTimeZone('Europe/Zurich'));
+$now->modify('+5 minutes');
 $creditCard = new \PayPal\Api\CreditCard();
 echo "3\n";
 $card = $creditCard->get('CARD-30L1581339390110YLG55XNA', $apiContext);
@@ -35,7 +36,9 @@ $agreement = new \PayPal\Api\Agreement();
 echo "b\n";
 $agreement->setName('Base Agreement for ')
   ->setDescription('Basic Agreement for ')
-  ->setStartDate('2019-06-17T9:45:04Z');
+  // ->setStartDate('2019-06-17T9:45:04Z');
+  ->setStartDate($now->format(DateTime::ATOM));
+
 
 echo "c\n";
 $plan = new Plan();
@@ -57,9 +60,9 @@ echo "h\n";
 // Set payer to process credit card
 $payer = new Payer();
 echo "i\n";
-// $payer->setPaymentMethod("paypal");
-$payer->setPaymentMethod("credit_card")
-  ->setFundingInstruments(array($fi));
+$payer->setPaymentMethod("paypal");
+// $payer->setPaymentMethod("credit_card")
+  // ->setFundingInstruments(array($fi));
 echo "j\n";
 $agreement->setPayer($payer);
 echo "k\n";

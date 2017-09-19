@@ -137,7 +137,9 @@ class SiteController extends Controller
             $model->foto_documento_identidad_string = $uploads->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
                 $model->documento_identidad);
             if($model->foto_documento_identidad_string!=''){
+                
                 $model->save();
+                $charge = \app\models\Payments::find()->where(['fk_usuario'=>$model->id])->one();
             
                 if($model->email){
                     Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
@@ -145,7 +147,7 @@ class SiteController extends Controller
                 else{
                     Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
                 }
-                return $this->render('index');
+                return $this->render('userRegisterStepTwo',['charge'=>$charge]);
             }
 
             Yii::$app->session->setFlash('error', 'Debe adjuntar un documento.');
@@ -335,10 +337,19 @@ class SiteController extends Controller
         $request = Yii::$app->request;
         $payment_id = $request->get('paymentId');
         $payment = getPaymentInfo($payment_id);
-        if ($request->get('success') == "true") {
-            Yii::$app->getSession()->setFlash('success','Pago realizado satisfactoriamente');
-        }else{
-            Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');            
+        // echo($payment->transactions[0]);die();
+        if ($payment->state == "created"){
+            $charge = \app\models\Payments::find()->where(['charge_id'=> $payment->id])->one();
+            $charge->estatus="concretado";
+            $charge->save();
+            if ($request->get('success') == "true") {
+                Yii::$app->getSession()->setFlash('success','Pago realizado satisfactoriamente');
+            }else{
+                Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');
+            }
+        }
+        else{
+            Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');
         }
         return $this->render('executePayment', ['payment'=>$payment]);
     }

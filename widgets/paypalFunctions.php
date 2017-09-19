@@ -14,6 +14,9 @@ use PayPal\Api\Plan;
 use PayPal\Api\Patch;
 use PayPal\Api\PatchRequest;
 use PayPal\Common\PayPalModel;
+use \PayPal\Api\Agreement;
+use \PayPal\Api\Payer;
+use PayPal\Api\AgreementStateDescriptor;
 header('Content-Type: application/json');
 
 /*
@@ -66,7 +69,8 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
 
 }
 
-function chargeToCustomer($card_obj, $card_id, $precio, $description){
+// function chargeToCustomer($card_obj, $card_id, $precio, $description){
+function chargeToCustomer($precio, $description){
   $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
             'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
@@ -75,12 +79,12 @@ function chargeToCustomer($card_obj, $card_id, $precio, $description){
     );
   // precio en valor normal, ej. un dolar: 1.0
   // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/lib/PayPal/Api/CreditCard.php
-  if (!$card_obj){
-    $creditCard = new \PayPal\Api\CreditCard();
-    $creditCard = $creditCard->get($card_id, $apiContext);
-  }else{
-    $creditCard = $card_obj;
-  }
+  // if (!$card_obj){
+  //   $creditCard = new \PayPal\Api\CreditCard();
+  //   $creditCard = $creditCard->get($card_id, $apiContext);
+  // }else{
+  //   $creditCard = $card_obj;
+  // }
 
   // $fi = new \PayPal\Api\FundingInstrument();
   // $fi->setCreditCardToken($card);
@@ -123,9 +127,54 @@ function chargeToCustomer($card_obj, $card_id, $precio, $description){
       die($ex);
   }
   $approvalUrl = $payment->getApprovalLink();
-  echo "<h1>Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a></h2>";//, $request, $payment;
+  // echo "<h1>Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a></h2>";//, $request, $payment;
   return $payment;
 
+}
+
+function paypalSuspendPlanToUser($agreement_id){
+  // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/sample/billing/SuspendBillingAgreement.php
+  $apiContext = new \PayPal\Rest\ApiContext(
+      new \PayPal\Auth\OAuthTokenCredential(
+          'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+          'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+      )
+  );
+  
+  $createdAgreement = new Agreement();
+  $createdAgreement = $createdAgreement->get($agreement_id, $apiContext);
+  $agreementStateDescriptor = new AgreementStateDescriptor();
+  $agreementStateDescriptor->setNote("Suspending the agreement");
+  try {
+    $createdAgreement->suspend($agreementStateDescriptor, $apiContext);
+    // Lets get the updated Agreement Object
+    $agreement = Agreement::get($createdAgreement->getId(), $apiContext);
+  } catch (Exception $ex) {
+      // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+      echo "Suspended the Agreement", "Agreement", null, $agreementStateDescriptor, $ex;
+      exit(1);
+  }
+  return $agreement;
+
+}
+
+function paypalDeletePlan($plan_id){
+  $apiContext = new \PayPal\Rest\ApiContext(
+        new \PayPal\Auth\OAuthTokenCredential(
+            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        )
+    );
+  $createdPlan = new \PayPal\Api\Plan();
+  $createdPlan=$createdPlan->get($plan_id, $apiContext);
+  try {
+    $result = $createdPlan->delete($apiContext);
+  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+    // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+    echo $createdPlan->getId(), null, $ex;
+    exit(1);
+  }
+  return $result;
 }
 
 function paypalCreatePlan($amount, $name, $description, $interval="Month"){
@@ -158,8 +207,10 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
   // Set merchant preferences
   $merchantPreferences = new MerchantPreferences();
-  $merchantPreferences->setReturnUrl('http://localhost:3000/processagreement')
-    ->setCancelUrl('http://localhost:3000/cancel')
+  $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
+
+  $merchantPreferences->setReturnUrl($baseUrl.'/igualas/processagreement')
+    ->setCancelUrl($baseUrl.'/igualas/cancel')
     ->setAutoBillAmount('yes')
     ->setInitialFailAmountAction('CONTINUE')
     ->setMaxFailAttempts('0')
@@ -205,51 +256,65 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
   }
 
 }
-
-function createSubscription($card_id, $plan_id){
+function createSubscriptionStepTwo($token){
   $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
         'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
         'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
     )
   );
-  $creditCard = new \PayPal\Api\CreditCard();
-  $card = $creditCard->get($card_id, $apiContext);
 
+  $agreement = new \PayPal\Api\Agreement();
+  try {
+    // ## Execute Agreement
+    // Execute the agreement by passing in the token
+    $agreement->execute($token, $apiContext);
+  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+    // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+    echo "Executed an Agreement", "Agreement", $agreement->getId(), $token, $ex;
+    exit(1);
+  }
+  return $agreement;
+}
+
+function createSubscriptionStepOne($plan_id, $name){ //$card_id, 
+  $apiContext = new \PayPal\Rest\ApiContext(
+    new \PayPal\Auth\OAuthTokenCredential(
+        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
+        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+    )
+  );
+  // $creditCard = new \PayPal\Api\CreditCard();
+  // $card = $creditCard->get($card_id, $apiContext);
+  $now = new DateTime('now', new DateTimeZone('Europe/Zurich'));
+  $now->modify('+5 minutes');
   $agreement = new Agreement();
-  $agreement->setName('Base Agreement for '.$name)
-    ->setDescription('Basic Agreement for '.$name)
-    ->setStartDate('2019-06-17T9:45:04Z');
-  // Set plan id
+  $agreement->setName('Subscription for '.$name)
+    ->setDescription('Subscription for '.$name)
+    ->setStartDate($now->format(DateTime::ATOM));
+
   $plan = new Plan();
   $plan->setId($plan_id);
   $agreement->setPlan($plan);
 
-  $fi = new FundingInstrument();
-  $fi->setCreditCard($card);
-
+  // $creditCardToken = new CreditCardToken();
+  // $creditCardToken->setCreditCardId($card->getId());
+  // $fi = new FundingInstrument();
+  // $fi->setCreditCardToken($creditCardToken);
+  // $fi->setCreditCard($card);
   // Set payer to process credit card
   $payer = new Payer();
-  $payer->setPaymentMethod("credit_card")
-    ->setFundingInstruments(array($fi));
+  $payer->setPaymentMethod("paypal");
+  // $payer->setPaymentMethod("credit_card")
+  //   ->setFundingInstruments(array($fi));
+
   $agreement->setPayer($payer);
-
-  // Adding shipping details
-  // $shippingAddress = new ShippingAddress();
-  // $shippingAddress->setLine1('111 First Street')
-  //   ->setCity('Saratoga')
-  //   ->setState('CA')
-  //   ->setPostalCode('95070')
-  //   ->setCountryCode('US');
-  // $agreement->setShippingAddress($shippingAddress);
-
-  // $agreement = $agreement->create($apiContext);
+    // ->setReturnUrls($redirectUrls);
   try {
-    // Execute agreement
-    $agreement->execute($token, $apiContext);
+    $agreement = $agreement->create($apiContext);
+    $approvalUrl = $agreement->getApprovalLink();
+    return $agreement;
   } catch (PayPal\Exception\PayPalConnectionException $ex) {
-    // echo $ex->getCode();
-    // echo $ex->getData();
     return $ex->getData();
   } catch (Exception $ex) {
     die($ex);

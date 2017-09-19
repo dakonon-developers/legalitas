@@ -18,7 +18,9 @@ class m170813_010544_igualas_users extends Migration
             'slim'  => $this->boolean(),
             'med' => $this->boolean(),
             'plus' => $this->boolean(),
-            'UNIQUE(fk_iguala, fk_users_cliente)',
+            'subscription_id' => $this->string(55),
+            'estatus' => $this->string(55),
+            // 'UNIQUE(fk_iguala, fk_users_cliente)',
             ], $tableOptions);
 
         $this->createIndex('i-fk_iguala_us','igualas_users','fk_iguala');

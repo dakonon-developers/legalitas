@@ -14,7 +14,9 @@ class m170813_001724_payments extends Migration
 
         $this->createTable('{{%payments}}',[
             'id' => $this->primaryKey(),
-            'charge_id' => $this->string(25)->notNull(),
+            'charge_id' => $this->string()->notNull(),
+            'estatus' => $this->string(25),
+            'approval_link' => $this->string(),
             'monto' => $this->float()->notNull(),
             'fecha' =>$this->integer()->notNull(),
             'confirmado' =>$this->boolean()->defaultValue(false),
