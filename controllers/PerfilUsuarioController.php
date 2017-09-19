@@ -9,7 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
+require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
+header('Content-Type: application/json');
 /**
  * PerfilUsuarioController implements the CRUD actions for PerfilUsuario model.
  */
@@ -35,7 +36,7 @@ class PerfilUsuarioController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create','view','update', 'change-password'],
+                        'actions' => ['create','view','update', 'change-password','unsubscribe'],
                         'allow' => true,
                         'roles' => ['Usuario'],
                     ],
@@ -124,6 +125,24 @@ class PerfilUsuarioController extends Controller
      * @param integer $id
      * @return mixed
      */
+    public function actionUnsubscribe(){
+        $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+        $igualas_user_viejo = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id, 'estatus'=>'concretado'])->one();
+        if ($igualas_user_viejo){
+            $plan_viejo = \app\models\Igualas::find()->where(['id'=>$igualas_user_viejo->fk_iguala])->one();
+            $agreement_viejo = paypalSuspendPlanToUser($igualas_user_viejo->subscription_id);
+            // $igualas_user_viejo->delete();
+            if ($agreement_viejo){
+                $igualas_user_viejo->estatus = "cancelado";
+                $igualas_user_viejo->save();
+                Yii::$app->session->setFlash('success', 'Usted ha cancelado la subscripción correctamente.');
+            }
+            else{
+                Yii::$app->session->setFlash('error', 'Problemas al cancelar la subscripción');
+            }
+        }
+        return $this->redirect(['update', 'id' => Yii::$app->user->id]);
+    }
     public function actionUpdate($id)
     {
         
@@ -131,6 +150,11 @@ class PerfilUsuarioController extends Controller
         $provincia = \app\models\Provincia::find()->all();
         $municipio = \app\models\Municipio::find()->all();
         $model = $this->findModelbyUser($id);
+        $iguala_user = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$id, 'estatus'=>'concretado'])->one();
+        $plan = false;
+        if ($iguala_user) {
+            $plan = \app\models\Igualas::find()->where(['id'=>$iguala_user->fk_iguala])->one();
+        }
 
         $id = Yii::$app->user->id;
  
@@ -155,6 +179,8 @@ class PerfilUsuarioController extends Controller
                     'provincia' => $provincia,
                     'municipio' => $municipio,
                     'changed_pass' => $changed_pass,
+                    'plan' => $plan,
+                    'iguala_user' => $iguala_user,
                 ]);
             }
         }
