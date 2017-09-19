@@ -17,6 +17,7 @@ use PayPal\Common\PayPalModel;
 use \PayPal\Api\Agreement;
 use \PayPal\Api\Payer;
 use PayPal\Api\AgreementStateDescriptor;
+use app\models\PaypalKey;
 header('Content-Type: application/json');
 
 /*
@@ -27,18 +28,13 @@ header('Content-Type: application/json');
 */
 
 // https://github.com/paypal/PayPal-PHP-SDK/wiki/Making-First-Call
-$apiContext = new \PayPal\Rest\ApiContext(
-    new \PayPal\Auth\OAuthTokenCredential(
-        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-    )
-);
 
 function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc, $first_name, $last_name){
+    $paypal_key = \app\models\PaypalKey::findOne(1);
     $apiContext = new \PayPal\Rest\ApiContext(
         new \PayPal\Auth\OAuthTokenCredential(
-            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+            $paypal_key->client_id,     // ClientID
+            $paypal_key->client_secret// ClientSecret
         )
     );
   /* $creditCard->setType("visa")
@@ -71,12 +67,13 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
 
 // function chargeToCustomer($card_obj, $card_id, $precio, $description){
 function chargeToCustomer($precio, $description){
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
-        new \PayPal\Auth\OAuthTokenCredential(
-            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-        )
-    );
+      new \PayPal\Auth\OAuthTokenCredential(
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
+      )
+  );
   // precio en valor normal, ej. un dolar: 1.0
   // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/lib/PayPal/Api/CreditCard.php
   // if (!$card_obj){
@@ -134,10 +131,11 @@ function chargeToCustomer($precio, $description){
 
 function paypalSuspendPlanToUser($agreement_id){
   // source: https://github.com/paypal/PayPal-PHP-SDK/blob/master/sample/billing/SuspendBillingAgreement.php
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
       new \PayPal\Auth\OAuthTokenCredential(
-          'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-          'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
       )
   );
   
@@ -159,12 +157,13 @@ function paypalSuspendPlanToUser($agreement_id){
 }
 
 function paypalDeletePlan($plan_id){
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
-        new \PayPal\Auth\OAuthTokenCredential(
-            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-        )
-    );
+      new \PayPal\Auth\OAuthTokenCredential(
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
+      )
+  );
   $createdPlan = new \PayPal\Api\Plan();
   $createdPlan=$createdPlan->get($plan_id, $apiContext);
   try {
@@ -178,12 +177,13 @@ function paypalDeletePlan($plan_id){
 }
 
 function paypalCreatePlan($amount, $name, $description, $interval="Month"){
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
-        new \PayPal\Auth\OAuthTokenCredential(
-            'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-            'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-        )
-    );
+      new \PayPal\Auth\OAuthTokenCredential(
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
+      )
+  );
   // Create a new billing plan
   $plan = new Plan();
   $plan->setName($name)
@@ -257,11 +257,12 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
 }
 function createSubscriptionStepTwo($token){
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
-    new \PayPal\Auth\OAuthTokenCredential(
-        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-    )
+      new \PayPal\Auth\OAuthTokenCredential(
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
+      )
   );
 
   $agreement = new \PayPal\Api\Agreement();
@@ -278,11 +279,12 @@ function createSubscriptionStepTwo($token){
 }
 
 function createSubscriptionStepOne($plan_id, $name){ //$card_id, 
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
-    new \PayPal\Auth\OAuthTokenCredential(
-        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-    )
+      new \PayPal\Auth\OAuthTokenCredential(
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
+      )
   );
   // $creditCard = new \PayPal\Api\CreditCard();
   // $card = $creditCard->get($card_id, $apiContext);
@@ -322,11 +324,12 @@ function createSubscriptionStepOne($plan_id, $name){ //$card_id,
 }
 
 function getPaymentInfo($id){
+  $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
-    new \PayPal\Auth\OAuthTokenCredential(
-        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
-    )
+      new \PayPal\Auth\OAuthTokenCredential(
+          $paypal_key->client_id,     // ClientID
+          $paypal_key->client_secret// ClientSecret
+      )
   );
 
   $payment = new \PayPal\Api\Payment();

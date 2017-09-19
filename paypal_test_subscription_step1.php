@@ -21,8 +21,8 @@ echo "1\n";
 
 $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
-        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        'client_id',     // ClientID
+        'client_secret'      // ClientSecret
     )
 );
 echo "2\n";
@@ -74,7 +74,7 @@ echo "l\n";
 // print_r( get_object_vars($agreement) );
 // print_r($agreement->payer->funding_instruments);
 // $token = $agreement->payer;///["funding_instruments"]["links"][0];
-// $authorizationCode = "EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F";
+// $authorizationCode = "client_secret";
 // $refreshToken = \PayPal\Api\FuturePayment::getRefreshToken($authorizationCode, $apiContext);
 // echo "$refreshToken:\n ".$refreshToken."\n";
 $request = clone $agreement;

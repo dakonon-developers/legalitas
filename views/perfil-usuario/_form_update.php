@@ -102,7 +102,25 @@ $categorias = $const['categories'];
     </div>
   </div>
 </div>
-    
+<?php 
+    if ($plan){
+?>
+            <h3>
+                Plan actual: 
+                <?= $plan->nombre ?>
+                <?php if ($iguala_user->slim){ echo "- slim"; } ?>
+                <?php if ($iguala_user->med =="1"){ echo "- med"; } ?>
+                <?php if ($iguala_user->plus =="1"){ echo "- plus"; } ?>
+                </h3>
+            <div class="form-group">
+                <?= Html::a('Cancelar subscripción', ['/perfil-usuario/unsubscribe'], [
+    'class' => 'btn btn-warning',
+    'data' => ['confirm' => 'Seguro que desea Cancelar su subscripción de "'.$plan->nombre.'"? ', 'method' => 'post',],
+]) ?>
+            </div>
+<?php 
+    }
+?>
 
 </div>
 <?php

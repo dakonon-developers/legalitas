@@ -6,8 +6,8 @@ require __DIR__ .'/PayPal-PHP-SDK/autoload.php';
 // https://developer.paypal.com/webapps/developer/applications/myapps
 $apiContext = new \PayPal\Rest\ApiContext(
     new \PayPal\Auth\OAuthTokenCredential(
-        'AZl3I48baDm4BGsILA05icnn5UauIObxmUPJkRYzNBOIUwuFoJJEjswiFTSnc90yJPEVPdDioNp0-izK',     // ClientID
-        'EG1WryIO0cTSgFTT9bY0Y2Sm63r7tjtR4igKogqvsqFulOxutoO9SDEfVd-nw9j4qKpgJk9dkqqtFw3F'      // ClientSecret
+        'client_id',     // ClientID
+        'client_secret'      // ClientSecret
     )
 );
 // 3. Lets try to save a credit card to Vault using Vault API mentioned here
