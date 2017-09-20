@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -22,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'charge_id',
             'monto',
             'fecha',
-            'fk_usuario',
+            ['attribute' => 'fk_usuario', 'value'=>$model->fkUsuario->username],
         ],
     ]) ?>
 

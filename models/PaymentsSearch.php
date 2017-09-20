@@ -21,7 +21,7 @@ class PaymentsSearch extends Payments
     {
         return [
             [['id', 'fk_usuario'], 'integer'],
-            [['charge_id','fecha','username','fecha_fin'], 'safe'],
+            [['charge_id','fecha','username','fecha_fin','estatus'], 'safe'],
             [['monto'], 'number'],
         ];
     }
@@ -98,6 +98,7 @@ class PaymentsSearch extends Payments
         ]);
 
         $query->andFilterWhere(['like', 'charge_id', $this->charge_id])
+            ->andFilterWhere(['like', 'estatus', $this->estatus])
             ->andFilterWhere(['like', 'user.username', $this->username])
             ->andFilterWhere(['between','fecha', $inicio , $fin]);
 

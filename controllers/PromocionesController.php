@@ -31,7 +31,7 @@ class PromocionesController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','create','update'],
+                        'actions' => ['index','update'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],
@@ -96,7 +96,8 @@ class PromocionesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', 'Se actualizaron las promociones con éxito.');
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,

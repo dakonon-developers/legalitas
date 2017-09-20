@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Igualas */
 
-$this->title = 'Create Igualas';
+$this->title = 'Crear Igualas';
 $this->params['breadcrumbs'][] = ['label' => 'Igualas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

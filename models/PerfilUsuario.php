@@ -14,7 +14,6 @@ use Yii;
  * @property string $foto_documento_identidad
  * @property string $telefono_oficina
  * @property string $celular
- * @property string customer_id
  * @property boolean $activo
  * @property integer $fk_nacionalidad
  * @property integer $fk_municipio
@@ -44,14 +43,13 @@ class PerfilUsuario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombres', 'apellidos', 'documento_identidad', 'foto_documento_identidad', 'telefono_oficina', 'celular', 'customer_id', 'activo', 'fk_nacionalidad', 'fk_municipio', 'fk_usuario', 'categoria'], 'required'],
+            [['nombres', 'apellidos', 'documento_identidad', 'foto_documento_identidad', 'telefono_oficina', 'celular', 'activo', 'fk_nacionalidad', 'fk_municipio', 'fk_usuario', 'categoria'], 'required'],
             [['activo'], 'boolean'],
             [['fk_nacionalidad', 'fk_municipio', 'fk_usuario'], 'integer'],
             [['nombres', 'apellidos'], 'string', 'max' => 50],
             [['documento_identidad'], 'string', 'max' => 14],
             [['foto_documento_identidad'], 'string', 'max' => 128],
             [['telefono_oficina', 'celular'], 'string', 'max' => 10],
-            [['customer_id'], 'string', 'max' => 25],
             [['categoria'], 'string', 'max' => 2],
             [['fk_usuario'], 'unique'],
             [['fk_municipio'], 'exist', 'skipOnError' => true, 'targetClass' => Municipio::className(), 'targetAttribute' => ['fk_municipio' => 'id']],
@@ -73,7 +71,6 @@ class PerfilUsuario extends \yii\db\ActiveRecord
             'foto_documento_identidad' => 'Foto Documento Identidad',
             'telefono_oficina' => 'Telefono Oficina',
             'celular' => 'Celular',
-            'customer_id' => 'Stripe Customer Id',
             'activo' => 'Activo',
             'fk_nacionalidad' => 'Nacionalidad',
             'fk_municipio' => 'Municipio',

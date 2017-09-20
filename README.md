@@ -201,9 +201,9 @@ You can see code coverage output under the `tests/_output` directory.
 6. php yii nacionalidad/migrate
 7. php yii materia-servicio/migrate
 8. php yii promocion/init
-9. php yii igualas/migrate
-10. php yii especializacion/migrate
-11. php yii pagos-config/migrate
+9. php yii pagos-config/migrate
+10. php yii igualas/migrate
+11. php yii especializacion/migrate
 
 ## init admin
 

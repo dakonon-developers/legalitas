@@ -99,7 +99,7 @@ class PagosConfigController extends Controller
         {
             $model->monto = str_replace(',', '', $model->monto);
             if ($model->save()){
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
         } else {
             return $this->render('update', [
