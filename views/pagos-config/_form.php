@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'definicion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'monto')->textInput(['onkeyup' => 'render_input_to_cents(this)']) ?>
+    <?= $form->field($model, 'monto')->textInput() ?>
 
     <?= $form->field($model, 'intervalo')->textInput(['maxlength' => true]) ?>
 

@@ -146,6 +146,7 @@ class UsuarioForm extends Model
         $tasa = \app\models\Currency::findOne(1)->valor_cambio;
 
         $precio /= $tasa; 
+        $precio = round($precio,3);
         
         $paypal_charge = chargeToCustomer(
             // $paypal_card,
@@ -196,8 +197,6 @@ class UsuarioForm extends Model
                 ->send();
         
         $perfil = new \app\models\PerfilUsuario();
-        //$perfil->customer_id= "asdfqwtrq3";
-        //$perfil->customer_id= $paypal_card->id;
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;

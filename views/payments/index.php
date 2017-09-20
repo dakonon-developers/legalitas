@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return date('d-m-Y H:i:s',$model->fecha);
             }],
             //'fk_usuario',
+            'estatus',
             ['attribute'=>'username','value'=>'fkUsuario.username'],
 
             ['class' => 'yii\grid\ActionColumn',

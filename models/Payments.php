@@ -68,7 +68,7 @@ class Payments extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'charge_id' => 'Cargo',
-            'estatus' => 'Estado (solicitado, concretado)',
+            'estatus' => 'Estado',
             'approval_link' => 'Link aprovatorio',
             'monto' => 'Monto',
             'fecha' => 'Fecha',

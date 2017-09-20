@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'med_stripe',
             // 'plus_stripe',
 
-            ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{view}'],
         ],
     ]); ?>
 </div>
