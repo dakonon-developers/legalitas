@@ -15,9 +15,9 @@ class IgualasController extends Controller
 
         $tasa = \app\models\Currency::findOne(1)->valor_cambio;
 
-        /*$rows = (new \yii\db\Query())
+        $rows = (new \yii\db\Query())
             ->select(['nombre', 'slim', 'med', 'plus', 'id'])
-            ->from('igualas')
+            ->from('igualas');
         foreach ($rows as $row) {
             echo "creando plan en paypal para ". $row['nombre']."...\n";
 
@@ -37,7 +37,7 @@ class IgualasController extends Controller
             $iguala->save();
             echo "guardado? -> ".$iguala->save()."\n";
             echo "Plan ". $row['nombre'] ." Id de PayPal guardada en base de datos exito\nsamente.\n\n";
-        }*/
+        }
 
 
     }

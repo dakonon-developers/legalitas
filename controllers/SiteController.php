@@ -362,9 +362,9 @@ class SiteController extends Controller
      */
     public function actionSolicita()
     {
-
         $searchModel = new \app\models\ServiciosSearch(['activo'=>true]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
 
         return $this->render('servicios', [
             'dataProvider' => $dataProvider,

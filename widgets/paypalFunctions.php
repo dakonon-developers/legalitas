@@ -66,7 +66,7 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
 }
 
 // function chargeToCustomer($card_obj, $card_id, $precio, $description){
-function chargeToCustomer($precio, $description){
+function chargeToCustomer($precio, $description, $extra_url=""){
   $paypal_key = \app\models\PaypalKey::findOne(1);
   $apiContext = new \PayPal\Rest\ApiContext(
       new \PayPal\Auth\OAuthTokenCredential(
@@ -101,8 +101,13 @@ function chargeToCustomer($precio, $description){
   ->setInvoiceNumber(uniqid());
   $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
   $redirectUrls = new RedirectUrls();
-  $redirectUrls->setReturnUrl("$baseUrl/site/execute-payment?success=true")
-    ->setCancelUrl("$baseUrl/site/execute-payment?success=false");
+  if ($extra_url != ""){
+    $url = $baseUrl."/".$extra_url;
+  }else{
+    $url ="$baseUrl/site/execute-payment?success=true";
+  }
+  $redirectUrls->setReturnUrl($url)
+    ->setCancelUrl("$baseUrl/site/execute-payment?success=false".$extra_url);
   $payment = new Payment();
   $payment->setIntent("sale")
     ->setPayer($payer)

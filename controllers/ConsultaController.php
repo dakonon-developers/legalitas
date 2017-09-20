@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
+header('Content-Type: application/json');
 
 /**
  * ConsultaController implements the CRUD actions for Consulta model.
@@ -35,7 +37,7 @@ class ConsultaController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create','view'],
+                        'actions' => ['create', 'pre-create','view'],
                         'allow' => true,
                         'roles' => ['Usuario'],
                     ],
@@ -81,28 +83,94 @@ class ConsultaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+    public function actionPreCreate($categoria, $servicio){
+        $user = Yii::$app->user;
+        // $payments = new \app\models\Payments::find()->where(['fk_usuario'=>$user->id, '']);
+        // falta verificar si el usuario tiene pagos pendientes o eliminar el payment con estatus
+        // solicitado si es que vamos a crear un nuevo payment con el mismo estatus
+        $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>$user->id])->one();;
+        $url="consulta/create?categoria=".$categoria;
+        $servicio = \app\models\Servicios::find()->where(['id'=>$servicio])->one();
+        $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id, 'estatus'=>'concretado'])->one();
+        $extra_info = "";
+        if ($iguala_usuario){
+            // calcualamos con descuento:
+            if ($iguala_usuario->slim=="1"){
+                $extra_info = "incluyendo el descuento de slim";
+              $precio = $servicio->costo - ($servicio->costo * ($servicio->servicioPromocion->fkPromocion->slim / 100));
+            }
+            if ($iguala_usuario->med=="1"){
+              $extra_info = "incluyendo el descuento de med";
+              $precio = $servicio->costo - ($servicio->costo * ($servicio->servicioPromocion->fkPromocion->med / 100));
+            }
+            if ($iguala_usuario->plus=="1"){
+                $extra_info = "incluyendo el descuento de plus";
+              $precio = $servicio->costo - ($servicio->costo * ($servicio->servicioPromocion->fkPromocion->plus / 100));
+            }
+        }
+        else{
+            $precio = $servicio->costo;
+        }
+        
+        $description = "Solicitud de servicio: ".$servicio->nombre. " ".$extra_info;
+        $paypal_charge = chargeToCustomer($precio, $description, $url);
+        json_decode($paypal_charge, true);
+        $charge = new \app\models\Payments();
+        $charge->charge_id = $paypal_charge->id;
+        $charge->monto = $precio;
+        $charge->fecha = time();
+        $charge->estatus = "solicitado";
+        $charge->approval_link = $paypal_charge->getApprovalLink();
+        $charge->fk_usuario = $user->id;
+        if (!$charge->save()){
+            return false;
+        }
+        return $this->render('preCreate', [
+            'approvalUrl'=>$paypal_charge->getApprovalLink()
+        ]);
+
+    }
     public function actionCreate($categoria)
     {
         $model = new Consulta();
+        $request = Yii::$app->request;
+        $payment_id = $request->get('paymentId');
+        $payment = getPaymentInfo($payment_id);
+        // echo($payment->transactions[0]);die();
+        $success = false;
+        if ($payment->state == "created"){
+            $charge = \app\models\Payments::find()->where(['charge_id'=> $payment->id])->one();
+            $charge->estatus="concretado";
+            $charge->save();
+            Yii::$app->getSession()->setFlash('success','Pago realizado satisfactoriamente');
+            $success = true;
 
-        $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
-        // Se búsca la iguala a la que esta suscrito el usuario
-        $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
-        if($iguala_usuario)
-        {
-            $this->validateParticipation($perfil,$categoria,$iguala_usuario);
-        }
+            $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+            // Se búsca la iguala a la que esta suscrito el usuario
+            $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
+            if($iguala_usuario)
+            {
+                $this->validateParticipation($perfil,$categoria,$iguala_usuario);
+            }
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->fk_servicio = $categoria;
-            $model->fk_cliente = $perfil->id;
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post())) {
+                $model->fk_servicio = $categoria;
+                $model->fk_cliente = $perfil->id;
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+            }
         }
+        else{
+            Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');
+        }
+        return $this->render('create', [
+            'model' => $model,
+            'payment'=>$payment,
+            'success'=>$success
+        ]);
+
+        
     }
 
     private function validateParticipation($perfil,$categoria,$iguala)

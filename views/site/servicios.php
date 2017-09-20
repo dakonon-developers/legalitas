@@ -38,7 +38,7 @@ EOL;
 				$html .= '<b>Descuento MED: </b>'.$model->servicioPromocion->fkPromocion->med.'%<br/>';
 				$html .= '<b>Descuento PLUS: </b>'.$model->servicioPromocion->fkPromocion->plus.'%';
 				$html .= '</div><div class="panel-footer">';
-				$html .= Html::a('Solicitar',['consulta/create', 'categoria' => $model->id], ['class' => 'btn btn-success']);
+				$html .= Html::a('Solicitar',['consulta/pre-create', 'categoria' => $model->id, 'servicio'=>$model->id], ['class' => 'btn btn-success']);
 				$html .= '</div></div>';
                 return $html;
             },

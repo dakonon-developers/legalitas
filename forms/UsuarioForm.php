@@ -151,7 +151,8 @@ class UsuarioForm extends Model
             // $paypal_card,
             // $paypal_card->id,
             $precio, 
-            "Subscripción de ". $this->nombres. " ". $this->apellidos. " a legalitas."
+            "Subscripción de ". $this->nombres. " ". $this->apellidos. " a legalitas.",
+            ""
         );
         json_decode($paypal_charge, true);
         $charge = new \app\models\Payments();
