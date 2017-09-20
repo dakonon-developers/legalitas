@@ -61,10 +61,13 @@ LegalitasAsset::register($this);
                ['label' => 'Ver', 'url' => ['/consulta/index']],
                ['label' => 'Calificaciones', 'url' => ['/calificacion/index']], 
             ]];
-            $menuItems[] = ['label' => 'IGUALAS Y SERVICIOS', 'items' => [
-               ['label' => 'Igualas', 'url' => ['/site/actuaciones']],
+            $menuItems[] = ['label' => 'CONFIGURACIÓN', 'items' => [
+                ['label' => 'Igualas', 'url' => ['/igualas/index']],
                ['label' => 'Servicios', 'url' => ['/servicios/index']], 
                ['label' => 'Servicios - Promociones', 'url' => ['/promociones/index']],
+               ['label' => 'Cobro Inicial', 'url' => ['/pagos-config/index']],
+               ['label' => 'Tasa de Cambio', 'url' => ['/currency/index']],
+               ['label' => 'PayPal', 'url' => ['/paypal-key/index']],
             ]];
         }
         else{

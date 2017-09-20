@@ -29,14 +29,6 @@ class UsuarioForm extends Model
     public $telefono_oficina;
     public $celular;
     
-    public $card_type;
-    public $tarjeta_credito;
-    public $cvc;
-    public $exp_month;
-    public $exp_year;
-    public $first_name;
-    public $last_name;
-
     public $fk_nacionalidad;
     public $fk_municipio;
     public $provincia;
@@ -72,14 +64,12 @@ class UsuarioForm extends Model
             ['password_repeat', 'compare', 'compareAttribute'=>'password'],
 
             [['nombres', 'apellidos', 'documento_identidad', 'telefono_oficina',
-            'celular', 'first_name', 'last_name', 'card_type', 'tarjeta_credito', 'cvc', 'exp_month', 'exp_year', 'fk_nacionalidad', 'fk_municipio',
+            'celular', 'fk_nacionalidad', 'fk_municipio',
              'categoria','provincia'], 'required'],
             [['fk_nacionalidad', 'fk_municipio', 'provincia'], 'integer'],
             [['nombres', 'apellidos','nombre_representante'], 'string', 'max' => 50],
             [['documento_identidad','documento_identidad_representante'], 'string', 'max' => 14],
             [['telefono_oficina', 'celular'], 'string', 'max' => 10],
-            [['tarjeta_credito', 'card_type'], 'string', 'max' => 16],
-            [['first_name', 'last_name'], 'string', 'max' => 200],
 
             [['categoria'], 'string', 'max' => 2],
             [['nombre_representante','documento_identidad_representante'],'required', 'when' => function($model) {
@@ -126,14 +116,6 @@ class UsuarioForm extends Model
             'documento_identidad_representante' => 'Documento de Identidad del Representante',
             'telefono_oficina' => 'Telefono Oficina',
             'celular' => 'Celular',
-
-            'card_type' => 'Tipo de tarjeta (Visa, Mastercard, etc...)',
-            'tarjeta_credito' => 'Tarjeta Crédito',
-            'cvc'=> 'CVC (codigo al reverso de la tarjeta)',
-            'exp_month'=> 'Mes de expiración de la tarjeta',
-            'exp_year'=> 'Año de expiración de la tarjeta',
-            'first_name'=> 'Nombres del propietario de la tarjeta',
-            'last_name'=> 'Apellidos del propietario de la tarjeta',
             
             'fk_nacionalidad' => 'Nacionalidad',
             'fk_municipio' => 'Municipio',
@@ -160,32 +142,18 @@ class UsuarioForm extends Model
         // First make charge to credit card
         $precio = new \app\models\PagosConfig;
         $precio = $precio->find()->where(['definicion'=>'primer_pago'])->one()->monto;
+        //Tasa de cambio
+        $tasa = \app\models\Currency::findOne(1)->valor_cambio;
+
+        $precio /= $tasa; 
         
-        $paypal_card = paypalCreateCreditCard(
-            $this->card_type,
-            $this->tarjeta_credito,
-            $this->exp_month,
-            $this->exp_year,
-            $this->cvc,
-            $this->first_name, 
-            $this->last_name
-        );
-        $paypal_card_decoded = $paypal_card;
-        json_decode($paypal_card_decoded, true);
-        /*if($paypal_card->id == null || $paypal_card->id=='')
-        json_decode($paypal_card_decoded, true);
-        if($paypal_card->id == null || $paypal_card->id=='')
-            return false;
-         if ($paypal_card->status != "succeeded")
-            return false;
-        */
         $paypal_charge = chargeToCustomer(
             // $paypal_card,
             // $paypal_card->id,
             $precio, 
-            "Subscripción de ". $this->first_name. " ". $this->last_name. " a legalitas."
+            "Subscripción de ". $this->nombres. " ". $this->apellidos. " a legalitas."
         );
-        json_decode($paypal_charge, true);*/
+        json_decode($paypal_charge, true);
         $charge = new \app\models\Payments();
         $charge->charge_id = $paypal_charge->id;
         //$charge->charge_id = "asfwq3523tq";
@@ -194,29 +162,6 @@ class UsuarioForm extends Model
         $charge->estatus = "solicitado";
         $charge->approval_link = $paypal_charge->getApprovalLink();
         // $charge->save();
-
-        /*
-            $stripe_customer = stripeCreateCustomer(
-              $this->tarjeta_credito,
-              $this->exp_month,
-              $this->exp_year,
-              $this->cvc
-            );
-            if ($stripe_customer->id == null || $stripe_customer->id == '')
-              return false;
-            $stripe_customer_charge = stripeChargeToCustomer(
-              $stripe_customer->id,
-              $precio
-            );
-
-            if ($stripe_customer_charge->status != "succeeded")
-              return false;
-            $charge = new \app\models\Payments();
-            $charge->charge_id = $stripe_customer_charge->id;
-            $charge->monto = $precio;
-            $charge->fecha = time();
-            $charge->save();
-        */
 
         // Model User
         $user = new \app\models\User();
@@ -238,28 +183,26 @@ class UsuarioForm extends Model
         }
         // Model Perfil
 
-         \Yii::$app->mailer->compose()
+        Yii::$app->mailer->compose()
                 ->setTo($user->email)
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
                 ->setSubject('Confirmacion de Registro')
                 ->setTextBody("
                 Persiona click en el enlace para confirmar tu registro en la paltaforma Legalitas ".
                 Yii::$app->urlManager->createAbsoluteUrl(
-                    ['site/confirm','key'=>$user->auth_key]
-                )
+                    ['site/confirm','key'=>$user->auth_key])
                 )
                 ->send();
         
         $perfil = new \app\models\PerfilUsuario();
         //$perfil->customer_id= "asdfqwtrq3";
-        $perfil->customer_id= $paypal_card->id;
+        //$perfil->customer_id= $paypal_card->id;
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;
         $perfil->documento_identidad = $this->documento_identidad;
         $perfil->foto_documento_identidad = $this->foto_documento_identidad_string;
         $perfil->telefono_oficina = $this->telefono_oficina;
         $perfil->celular = $this->celular;
-        // $perfil->tarjeta_credito = $this->tarjeta_credito;
         $perfil->activo = 0;
         $perfil->fk_nacionalidad = $this->fk_nacionalidad;
         $perfil->fk_municipio = $this->fk_municipio;

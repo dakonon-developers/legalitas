@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Plans;
+use app\models\Currency;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+
 /**
- * PlansController implements the CRUD actions for Plans model.
+ * CurrencyController implements the CRUD actions for Currency model.
  */
-class PlansController extends Controller
+class CurrencyController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,23 +31,23 @@ class PlansController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','create', 'update', 'delete', 'view'],
+                        'actions' => ['index','view','update'],
                         'allow' => true,
-                        'roles' => ['Admin']
-                    ]
+                        'roles' => ['Admin'],
+                    ],
                 ],
             ],
         ];
     }
 
     /**
-     * Lists all Plans models.
+     * Lists all Currency models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Plans::find(),
+            'query' => Currency::find(),
         ]);
 
         return $this->render('index', [
@@ -55,7 +56,7 @@ class PlansController extends Controller
     }
 
     /**
-     * Displays a single Plans model.
+     * Displays a single Currency model.
      * @param integer $id
      * @return mixed
      */
@@ -67,14 +68,14 @@ class PlansController extends Controller
     }
 
     /**
-     * Creates a new Plans model.
+     * Creates a new Currency model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Plans();
-        $model->precio = str_replace(',', '', $model->precio);
+        $model = new Currency();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -85,7 +86,7 @@ class PlansController extends Controller
     }
 
     /**
-     * Updates an existing Plans model.
+     * Updates an existing Currency model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -93,18 +94,9 @@ class PlansController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) )
-        {
-            // var_dump($model);
-            // echo Yii::$app->request->post()["Plans"];
-            // var_dump(Yii::$app->request->post()["Plans"]["intervalo"]);
-            // return false;
-            $model->precio = str_replace(',', '', Yii::$app->request->post()["Plans"]["precio"]);
-            $model->intervalo = Yii::$app->request->post()["Plans"]["intervalo"];
 
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -113,7 +105,7 @@ class PlansController extends Controller
     }
 
     /**
-     * Deletes an existing Plans model.
+     * Deletes an existing Currency model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -126,15 +118,15 @@ class PlansController extends Controller
     }
 
     /**
-     * Finds the Plans model based on its primary key value.
+     * Finds the Currency model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Plans the loaded model
+     * @return Currency the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Plans::findOne($id)) !== null) {
+        if (($model = Currency::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

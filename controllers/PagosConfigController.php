@@ -31,7 +31,7 @@ class PagosConfigController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','create', 'update', 'delete', 'view'],
+                        'actions' => ['index', 'update'],
                         'allow' => true,
                         'roles' => ['Admin']
                     ]

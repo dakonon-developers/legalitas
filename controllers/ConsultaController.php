@@ -87,10 +87,10 @@ class ConsultaController extends Controller
 
         $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
         // Se búsca la iguala a la que esta suscrito el usuario
-        $igula_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
-        if($igula_usuario)
+        $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
+        if($iguala_usuario)
         {
-            $this->validateParticipation($perfil,$categoria,$igula_usuario);
+            $this->validateParticipation($perfil,$categoria,$iguala_usuario);
         }
 
         if ($model->load(Yii::$app->request->post())) {

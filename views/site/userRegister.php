@@ -94,34 +94,6 @@ $categorias = $const['categories'];
                                 <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',])?>
                             </div>
                         </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col-md-12">
-                                <?= $form->field($model, 'card_type')->dropDownList(array('visa'=>'Visa', 'mastercard'=>'MasterCard', 'amex'=>'Amex', 'discover'=> 'Discover', 'maestro'=>'Maestro')) ?>
-                            </div>
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'tarjeta_credito')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999999999',])?>
-                            </div>
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'cvc')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999',])?>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'exp_month')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '99',]) ?>
-                            </div>
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'exp_year')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999',]) ?>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'first_name')->textInput() ?>
-                            </div>
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'last_name')->textInput() ?>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-4">

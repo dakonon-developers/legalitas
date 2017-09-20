@@ -22,15 +22,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'plus_duracion')->textInput() ?>
 
-    <?= $form->field($model, 'slim')->textInput(['onkeyup' => 'render_input_to_cents(this)']) ?>
+    <?= $form->field($model, 'slim')->textInput() ?>
 
-    <?= $form->field($model, 'med')->textInput(['onkeyup' => 'render_input_to_cents(this)']) ?>
+    <?= $form->field($model, 'med')->textInput() ?>
 
-    <?= $form->field($model, 'plus')->textInput(['onkeyup' => 'render_input_to_cents(this)']) ?>
+    <?= $form->field($model, 'plus')->textInput() ?>
 
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

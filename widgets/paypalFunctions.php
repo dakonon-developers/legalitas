@@ -118,7 +118,6 @@ function chargeToCustomer($precio, $description){
       echo "Error in Payment\n";
       echo $ex->getCode(); // Prints the Error Code
     echo $ex->getData(); // Prints the detailed error message 
-    echo "NOOOOOOOOOOOOOOO";
     die($ex);
   } catch (Exception $ex) {
       die($ex);

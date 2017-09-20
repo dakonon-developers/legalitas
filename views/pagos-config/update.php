@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\PagosConfig */
 
-$this->title = 'Update Pagos Config: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Pagos Configs', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Actualizar Pago Inicial: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Pagos Inicial', 'url' => ['index']];
+//$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Actualizar';
 ?>
 <div class="pagos-config-update">
 

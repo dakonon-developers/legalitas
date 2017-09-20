@@ -133,7 +133,6 @@ class IgualasController extends Controller
         $model = $this->findModel($id);
         if ( $model->load(Yii::$app->request->post()) ){
             $iguala = $this->findModel($id);
-            print_r ($iguala);
             $model->slim = str_replace(',', '', $model->slim);
             $model->med = str_replace(',', '', $model->med);
             $model->plus = str_replace(',', '', $model->plus);

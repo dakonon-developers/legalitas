@@ -13,15 +13,17 @@ class IgualasController extends Controller
         Yii::$app->db->createCommand($sql)->execute();
         echo "***Se migro con exito igualas***\n";
 
+        $tasa = \app\models\Currency::findOne(1)->valor_cambio;
+
         /*$rows = (new \yii\db\Query())
             ->select(['nombre', 'slim', 'med', 'plus', 'id'])
             ->from('igualas')
         foreach ($rows as $row) {
             echo "creando plan en paypal para ". $row['nombre']."...\n";
 
-            $plan_slim = paypalCreatePlan($row['slim'], $row['nombre'], $row['nombre']."-slim", "Month");
-            $plan_med = paypalCreatePlan($row['med'], $row['nombre'], $row['nombre']."-med", "Month");
-            $plan_plus = paypalCreatePlan($row['plus'], $row['nombre'], $row['nombre']."plus", "Month");
+            $plan_slim = paypalCreatePlan($row['slim']/$tasa, $row['nombre'], $row['nombre']."-slim", "Month");
+            $plan_med = paypalCreatePlan($row['med']/$tasa, $row['nombre'], $row['nombre']."-med", "Month");
+            $plan_plus = paypalCreatePlan($row['plus']/$tasa, $row['nombre'], $row['nombre']."plus", "Month");
 
             echo "Plan ". $row['nombre'] . " Creado en PayPal fino.\n";
             
@@ -35,7 +37,7 @@ class IgualasController extends Controller
             $iguala->save();
             echo "guardado? -> ".$iguala->save()."\n";
             echo "Plan ". $row['nombre'] ." Id de PayPal guardada en base de datos exito\nsamente.\n\n";
-        }
+        }*/
 
 
     }

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Igualas', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Igualas', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,20 +24,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'nombre',
             //'descripcion:ntext',
+            ['attribute' => 'slim','value'=>function($model){return $model->slim.' $';}],
             'slim_duracion',
+            ['attribute' => 'med','value'=>function($model){return $model->med.' $';}],
             'med_duracion',
-            // 'plus_duracion',
-            // 'slim',
-            // 'med',
-            // 'plus',
+            ['attribute' => 'plus','value'=>function($model){return $model->plus.' $';}],
+            'plus_duracion',
             // 'slim_stripe',
             // 'med_stripe',
             // 'plus_stripe',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}'],
         ],
     ]); ?>
 </div>

@@ -15,34 +15,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Pagos Config', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'definicion',
             'monto',
-            'intervalo',
+            //'intervalo',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template'=>'{update}'],
         ],
     ]); ?>
 </div>
-<script>
-
-    var index = 0;
-    setTimeout(function(){
-        $('table tbody tr td').each(function(){
-            var field = this;
-            if (index % 3 == 0){
-                render_text_to_cents(field)
-            }
-            index += 1;
-        })
-    }, 200);
-</script>

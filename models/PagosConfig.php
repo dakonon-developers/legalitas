@@ -42,7 +42,7 @@ class PagosConfig extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'definicion' => 'Definición',
-            'monto' => 'Precio o Monto en centavos (100 es igual a 1 COP)',
+            'monto' => 'Monto en DOP',
             'intervalo' => 'Intervalo, (month, day, year)',
         ];
     }
