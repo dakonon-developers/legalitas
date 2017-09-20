@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php 
 
-	if ($payment->state=="created") {
+	if ($payment->state=="created" && !$charge->payment_usado) {
 		echo "<p>Pago realizado satisfactoriamente</p>";
 ?>
 	<h3>Datos del pago</h3>

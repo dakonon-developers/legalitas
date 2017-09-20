@@ -20,6 +20,7 @@ class m170813_001724_payments extends Migration
             'monto' => $this->float()->notNull(),
             'fecha' =>$this->integer()->notNull(),
             'confirmado' =>$this->boolean()->defaultValue(false),
+            'payment_usado' =>$this->boolean()->defaultValue(false),
             'fk_usuario' => $this->integer()->notNull(),
             ], $tableOptions);
 

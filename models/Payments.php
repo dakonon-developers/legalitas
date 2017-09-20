@@ -53,6 +53,7 @@ class Payments extends \yii\db\ActiveRecord
             [['charge_id', 'estatus', 'monto', 'fecha', 'fk_usuario'], 'required'],
             [['monto'], 'number'],
             [['fecha', 'fk_usuario'], 'integer'],
+            [['payment_usado', 'confirmado'], 'boolean'],
             [['estatus'], 'string', 'max' => 25],
             [['charge_id'], 'string', 'max' => 255],
             [['approval_link'], 'string', 'max' => 255],
@@ -74,6 +75,7 @@ class Payments extends \yii\db\ActiveRecord
             'fecha' => 'Fecha',
             'fk_usuario' => 'Usuario',
             'username' => 'Usuario',
+            'payment_usado' => 'Pago usado'
         ];
     }
 
