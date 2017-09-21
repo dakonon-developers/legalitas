@@ -156,8 +156,7 @@ class UsuarioForm extends Model
                 "Subscripción de ". $this->nombres. " ". $this->apellidos. " a legalitas.",
                 ""
             );
-        }
-        catch(\Exception $e){
+        }catch(\Exception $e){
             Yii::$app->getSession()->setFlash('danger',$e->getMessage());
             return false;
         }
@@ -201,8 +200,7 @@ class UsuarioForm extends Model
                     ['site/confirm','key'=>$user->auth_key])
                 )
                 ->send();
-        }
-        catch(\Exception $e){
+        }catch(\Exception $e){
             Yii::$app->getSession()->setFlash('warning',"Ocurrió un error al intentar enviar el correo, puede activar su cuenta
             accediendo al siguiente enlace: ".Yii::$app->urlManager->createAbsoluteUrl(['site/confirm','key'=>$user->auth_key]))
             return false;

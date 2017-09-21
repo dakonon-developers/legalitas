@@ -115,8 +115,7 @@ class ConsultaController extends Controller
         $description = "Solicitud de servicio: ".$servicio->nombre. " ".$extra_info;
         try{
             $paypal_charge = chargeToCustomer($precio, $description, $url);
-        }
-        catch(\Exception $e){
+        }catch(\Exception $e){
             Yii::$app->getSession()->setFlash('danger',$e->getMessage());
             return $this->redirect(['site/solicita']);
         }
@@ -147,7 +146,19 @@ class ConsultaController extends Controller
             {
                 return $this->redirect(['site/solicita']);
             }
-            $payment = getPaymentInfo($payment_id);
+            try{
+                $payment = getPaymentInfo($payment_id);
+            }catch(\Exception $e){
+                Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                // return false;
+                return $this->render('create', [
+                    'model' => $model,
+                    'payment'=>false,
+                    'charge'=>false,
+                    'success'=>false,
+                    'categoria'=>$categoria
+                ]);
+            }
             // echo($payment->transactions[0]);die();
             $success = false;
             $charge = \app\models\Payments::find()->where(['charge_id'=> $payment->id])->one();

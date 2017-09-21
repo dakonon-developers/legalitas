@@ -335,7 +335,12 @@ class SiteController extends Controller
     public function actionExecutePayment(){
         $request = Yii::$app->request;
         $payment_id = $request->get('paymentId');
-        $payment = getPaymentInfo($payment_id);
+        try {
+            $payment = getPaymentInfo($payment_id);
+        }catch(\Exception $e){
+            Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+            return $this->render('executePayment', ['payment'=>false]);
+        }
         // echo($payment->transactions[0]);die();
         if ($payment->state == "created"){
             $charge = \app\models\Payments::find()->where(['charge_id'=> $payment->id])->one();

@@ -130,7 +130,12 @@ class PerfilUsuarioController extends Controller
         $igualas_user_viejo = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id, 'estatus'=>'concretado'])->one();
         if ($igualas_user_viejo){
             $plan_viejo = \app\models\Igualas::find()->where(['id'=>$igualas_user_viejo->fk_iguala])->one();
-            $agreement_viejo = paypalSuspendPlanToUser($igualas_user_viejo->subscription_id);
+            try {
+                $agreement_viejo = paypalSuspendPlanToUser($igualas_user_viejo->subscription_id);
+            }catch(\Exception $e){
+                Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                return $this->redirect(['update', 'id' => Yii::$app->user->id]);
+            }
             // $igualas_user_viejo->delete();
             if ($agreement_viejo){
                 $igualas_user_viejo->estatus = "cancelado";

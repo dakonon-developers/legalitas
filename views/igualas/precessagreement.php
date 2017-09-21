@@ -16,31 +16,37 @@ use yii\helpers\Html;
     <?=
         $html_iguala_vieja
     ?>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Estado</th>
-                    <th>Descripción</th>
-                    <th>Pagador</th>
-                    <!-- <th>Precio</th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><?= $agreement->state ?></td>
-                    <td><?= $agreement->description ?></td>
-                    <td>
-                        <b><?= $agreement->payer->payer_info->email ?></b> 
-                        <?= $agreement->payer->payer_info->first_name ?> 
-                        <?= $agreement->payer->payer_info->last_name ?>
-                    </td>
-                    <!-- <td>
-                        <?#= $agreement->plan ?>
-                    </td> -->
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <?php
+        if ($agreement && $agreement->state == "Active" && $igualas_user){
+    ?>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Descripción</th>
+                        <th>Pagador</th>
+                        <!-- <th>Precio</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= $agreement->state ?></td>
+                        <td><?= $agreement->description ?></td>
+                        <td>
+                            <b><?= $agreement->payer->payer_info->email ?></b> 
+                            <?= $agreement->payer->payer_info->first_name ?> 
+                            <?= $agreement->payer->payer_info->last_name ?>
+                        </td>
+                        <!-- <td>
+                            <?#= $agreement->plan ?>
+                        </td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <?php
+        }
+    ?>
 
 </div>

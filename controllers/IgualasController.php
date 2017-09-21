@@ -99,10 +99,16 @@ class IgualasController extends Controller
             // $model->slim_stripe = $plan_slim->id;
             // $model->med_stripe = $plan_med->id;
             // $model->plus_stripe = $plan_plus->id;
-
-            $plan_slim = paypalCreatePlan($model->slim, $model->nombre, $model->nombre."-slim", "Month");
-            $plan_med = paypalCreatePlan($model->med, $model->nombre, $model->nombre."-med", "Month");
-            $plan_plus = paypalCreatePlan($model->plus, $model->nombre, $model->nombre."-plus", "Month");
+            try {
+                $plan_slim = paypalCreatePlan($model->slim, $model->nombre, $model->nombre."-slim", "Month");
+                $plan_med = paypalCreatePlan($model->med, $model->nombre, $model->nombre."-med", "Month");
+                $plan_plus = paypalCreatePlan($model->plus, $model->nombre, $model->nombre."-plus", "Month");
+            }catch(\Exception $e){
+                Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                return $this->render('create', [
+                   'model' => $model,
+                ]);
+            }
             $model->slim_paypal_id = $plan_slim->getId();
             $model->med_paypal_id = $plan_med->getId();
             $model->plus_paypal_id = $plan_plus->getId();
@@ -166,9 +172,14 @@ class IgualasController extends Controller
     public function actionDelete($id)
     {
         $model = \app\models\Igualas::find()->where(['id'=>$id])->one();
-        paypalDeletePlan($model->slim_paypal_id);
-        paypalDeletePlan($model->med_paypal_id);
-        paypalDeletePlan($model->plus_paypal_id);
+        try {
+            paypalDeletePlan($model->slim_paypal_id);
+            paypalDeletePlan($model->med_paypal_id);
+            paypalDeletePlan($model->plus_paypal_id);
+        }catch(\Exception $e){
+            Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+            return $this->redirect(['index']);
+        }
         $model->delete();
 
         return $this->redirect(['index']);
@@ -227,8 +238,12 @@ class IgualasController extends Controller
             }
             $this->setPlan($model,$plan_number);
             
-            
-            $agreement = createSubscriptionStepOne($plan, $perfil->nombres . ' '. $perfil->apellidos);
+            try {         
+                $agreement = createSubscriptionStepOne($plan, $perfil->nombres . ' '. $perfil->apellidos);
+            }catch(\Exception $e){
+                Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                return $this->redirect(['detail','id'=> $id ]);
+            }
             $approvalUrl = $agreement->getApprovalLink();
             // json_decode($agreement, true);
             // echo $approvalUrl;
@@ -264,13 +279,20 @@ class IgualasController extends Controller
     }
     public function actionProcessagreement($token){
         $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
-        $agreement = createSubscriptionStepTwo($token);
+        try {
+            $agreement = createSubscriptionStepTwo($token);
+        }catch(\Exception $e){
+            // Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+            echo "<h3>Por favor, verifique su conexion a internet y Regarge la pagina con F5</h3>\n\n";
+            echo "Acaba de ocurrir un error de conexion con PayPal:\n".$e->getMessage()."\n\n";
+            die();
+        }
         $plan_viejo = false;
         $agreement_viejo = false;
         $html_iguala_vieja = "";
         // $agreement = "ads";
         $igualas_user = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id, 'estatus'=>'solicitado'])->one();
-        if ($agreement->state == "Active" && $igualas_user){
+        if ($agreement && $agreement->state == "Active" && $igualas_user){
             Yii::$app->session->setFlash('success', 'Se ha subscrito al plan correctamente');
             
             $igualas_user_viejo = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id, 'estatus'=>'concretado'])->one();
@@ -278,7 +300,15 @@ class IgualasController extends Controller
             // die();
             if ($igualas_user_viejo){
                 $plan_viejo = \app\models\Igualas::find()->where(['id'=>$igualas_user_viejo->fk_iguala])->one();
-                $agreement_viejo = paypalSuspendPlanToUser($igualas_user_viejo->subscription_id);
+                try {
+                    $agreement_viejo = paypalSuspendPlanToUser($igualas_user_viejo->subscription_id);
+                }catch(\Exception $e){
+                    Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                    return $this->render('precessagreement', [
+                        'agreement' => $agreement,
+                        "html_iguala_vieja" => $html_iguala_vieja
+                    ]);
+                }
                 // $igualas_user_viejo->delete();
                 $igualas_user_viejo->estatus = "cancelado";
                 $igualas_user_viejo->save();

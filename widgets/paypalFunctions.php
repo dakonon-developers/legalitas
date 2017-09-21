@@ -140,10 +140,12 @@ function paypalSuspendPlanToUser($agreement_id){
     $createdAgreement->suspend($agreementStateDescriptor, $apiContext);
     // Lets get the updated Agreement Object
     $agreement = Agreement::get($createdAgreement->getId(), $apiContext);
+  } catch (PayPal\Exception\PayPalConnectionException $ex) {
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   } catch (Exception $ex) {
-      // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
-      echo "Suspended the Agreement", "Agreement", null, $agreementStateDescriptor, $ex;
-      exit(1);
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   }
   return $agreement;
 
@@ -161,10 +163,12 @@ function paypalDeletePlan($plan_id){
   $createdPlan=$createdPlan->get($plan_id, $apiContext);
   try {
     $result = $createdPlan->delete($apiContext);
-  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
-    // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
-    echo $createdPlan->getId(), null, $ex;
-    exit(1);
+  } catch (PayPal\Exception\PayPalConnectionException $ex) {
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
+  } catch (Exception $ex) {
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   }
   return $result;
 }
@@ -234,18 +238,18 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
 
     } catch (PayPal\Exception\PayPalConnectionException $ex) {
-      echo $ex->getCode();
-      echo $ex->getData();
-      die($ex);
+        throw new \Exception('PayPal Error: '.$ex->getMessage());
+        return false;
     } catch (Exception $ex) {
-      die($ex);
+        throw new \Exception('PayPal Error: '.$ex->getMessage());
+        return false;
     }
   } catch (PayPal\Exception\PayPalConnectionException $ex) {
-    echo $ex->getCode();
-    echo $ex->getData();
-    die($ex);
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   } catch (Exception $ex) {
-    die($ex);
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   }
 
 }
@@ -265,8 +269,10 @@ function createSubscriptionStepTwo($token){
     $agreement->execute($token, $apiContext);
   } catch (\PayPal\Exception\PayPalConnectionException $ex) {
     // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
-    echo "Executed an Agreement", "Agreement", $agreement->getId(), $token, $ex;
-    exit(1);
+    throw new \Exception('PayPal Error: '.$ex->getMessage());
+    // echo "Executed an Agreement", "Agreement", $agreement->getId(), $token, $ex;
+    // exit(1);
+    return false;
   }
   return $agreement;
 }
@@ -309,10 +315,9 @@ function createSubscriptionStepOne($plan_id, $name){ //$card_id,
     $agreement = $agreement->create($apiContext);
     $approvalUrl = $agreement->getApprovalLink();
     return $agreement;
-  } catch (PayPal\Exception\PayPalConnectionException $ex) {
-    return $ex->getData();
-  } catch (Exception $ex) {
-    die($ex);
+  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+    throw new \Exception('PayPal Error: '.$ex->getMessage());
+    return false;
   }
 }
 
@@ -326,6 +331,11 @@ function getPaymentInfo($id){
   );
 
   $payment = new \PayPal\Api\Payment();
-  return $payment->get($id, $apiContext);
+  try{
+    return $payment->get($id, $apiContext);
+  } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+    throw new \Exception('PayPal Error: '.$ex->getMessage());
+    return false;
+  }
 }
 ?>

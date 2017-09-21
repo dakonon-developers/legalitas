@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php 
 	if($categoria !=62){
-		if ($payment->state=="created" && !$charge->payment_usado) {
+		if ($payment && $payment->state=="created" && !$charge->payment_usado) {
 			echo "<p>Pago realizado satisfactoriamente</p>";
 ?>
 		<h3>Datos del pago</h3>
@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 		}
 		else{
-			echo "<p>Error al procesar el pago</p>";
+			echo "<p>Error al procesar el pago</p><h3>Por favor verifique su conexión a internet y recargue la página con F5 y continuar</h3>";
 		}
 	}else{?>
 		<div class="consulta-create">
