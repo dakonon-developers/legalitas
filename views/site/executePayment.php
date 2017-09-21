@@ -47,5 +47,4 @@ $request = Yii::$app->request;
 		</tbody>
 	  </table>
 	</div>
-    <code><?= __FILE__ ?></code>
 </div>

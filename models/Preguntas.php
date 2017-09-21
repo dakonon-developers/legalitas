@@ -50,7 +50,7 @@ class Preguntas extends \yii\db\ActiveRecord
             'demandado' => 'Demandado',
             'cantidad' => 'Cantidad',
             'consulta_info' => 'Consulta Info',
-            'fk_user' => 'Fk User',
+            'fk_user' => 'User',
         ];
     }
 

@@ -113,7 +113,13 @@ class ConsultaController extends Controller
         }
         
         $description = "Solicitud de servicio: ".$servicio->nombre. " ".$extra_info;
-        $paypal_charge = chargeToCustomer($precio, $description, $url);
+        try{
+            $paypal_charge = chargeToCustomer($precio, $description, $url);
+        }
+        catch(\Exception $e){
+            Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+            return $this->redirect(['site/solicita']);
+        }
         json_decode($paypal_charge, true);
         $charge = new \app\models\Payments();
         $charge->charge_id = $paypal_charge->id;
@@ -133,48 +139,61 @@ class ConsultaController extends Controller
     public function actionCreate($categoria)
     {
         $model = new Consulta();
-        $request = Yii::$app->request;
-        $payment_id = $request->get('paymentId');
-        $payment = getPaymentInfo($payment_id);
-        // echo($payment->transactions[0]);die();
-        $success = false;
-        $charge = \app\models\Payments::find()->where(['charge_id'=> $payment->id])->one();
-        if ($payment->state == "created"){
-            if (!$charge->payment_usado){
-                $charge->estatus="concretado";
-                $charge->save();
-                Yii::$app->getSession()->setFlash('success','Pago realizado satisfactoriamente');
-                $success = true;
-
-                $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
-                // Se búsca la iguala a la que esta suscrito el usuario
-                $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
-                if($iguala_usuario)
-                {
-                    $this->validateParticipation($perfil,$categoria,$iguala_usuario);
-                }
-
-                if ($model->load(Yii::$app->request->post())) {
-                    $model->fk_servicio = $categoria;
-                    $model->fk_cliente = $perfil->id;
-                    $model->save();
-                    $charge->payment_usado = true;
+        if($categoria!=62)
+        {
+            $request = Yii::$app->request;
+            $payment_id = $request->get('paymentId');
+            if(!isset($payment_id))
+            {
+                return $this->redirect(['site/solicita']);
+            }
+            $payment = getPaymentInfo($payment_id);
+            // echo($payment->transactions[0]);die();
+            $success = false;
+            $charge = \app\models\Payments::find()->where(['charge_id'=> $payment->id])->one();
+            if ($payment->state == "created"){
+                if (!$charge->payment_usado){
+                    $charge->estatus="concretado";
                     $charge->save();
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    Yii::$app->getSession()->setFlash('success','Pago realizado satisfactoriamente');
+                    $success = true;
+
+                    $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+                    // Se búsca la iguala a la que esta suscrito el usuario
+                    $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id])->one();
+                    if($iguala_usuario)
+                    {
+                        $this->validateParticipation($perfil,$categoria,$iguala_usuario);
+                    }
+
+                    if ($model->load(Yii::$app->request->post())) {
+                        $model->fk_servicio = $categoria;
+                        $model->fk_cliente = $perfil->id;
+                        $model->save();
+                        $charge->payment_usado = true;
+                        $charge->save();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                }
+                else{
+                    Yii::$app->getSession()->setFlash('warning','El pago ya ha sido usado para una consulta, debe realizar otra solicitud');
                 }
             }
             else{
-                Yii::$app->getSession()->setFlash('warning','El pago ya ha sido usado para una consulta, debe realizar otra solicitud');
+                Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');
             }
         }
         else{
-            Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');
+            $payment = '';
+            $charge = '';
+            $success = True;
         }
         return $this->render('create', [
             'model' => $model,
             'payment'=>$payment,
             'charge'=>$charge,
-            'success'=>$success
+            'success'=>$success,
+            'categoria'=>$categoria
         ]);
 
         

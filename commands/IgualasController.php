@@ -11,11 +11,13 @@ class IgualasController extends Controller
         $iguala = new \app\models\Igualas;
         $sql = file_get_contents(Yii::getAlias('@app').'/commands/igualas.sql');
         Yii::$app->db->createCommand($sql)->execute();
+        $sql2 = file_get_contents(Yii::getAlias('@app').'/commands/iguala_servicio.sql');
+        Yii::$app->db->createCommand($sql2)->execute();
         echo "***Se migro con exito igualas***\n";
 
         $tasa = \app\models\Currency::findOne(1)->valor_cambio;
 
-        $rows = (new \yii\db\Query())
+        /*$rows = (new \yii\db\Query())
             ->select(['nombre', 'slim', 'med', 'plus', 'id'])
             ->from('igualas');
         foreach ($rows as $row) {
@@ -37,7 +39,7 @@ class IgualasController extends Controller
             $iguala->save();
             echo "guardado? -> ".$iguala->save()."\n";
             echo "Plan ". $row['nombre'] ." Id de PayPal guardada en base de datos exito\nsamente.\n\n";
-        }
+        }*/
 
 
     }
@@ -46,6 +48,7 @@ class IgualasController extends Controller
     {
         Yii::$app->db->createCommand("DELETE FROM igualas")->execute();
         Yii::$app->db->createCommand("ALTER TABLE igualas auto_increment = 1")->execute();
+        Yii::$app->db->createCommand("DELETE FROM igualas_servicios")->execute();
         echo "Se vacio la tabla igualas con exito\n";
 
     }

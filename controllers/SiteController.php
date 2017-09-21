@@ -138,16 +138,15 @@ class SiteController extends Controller
                 $model->documento_identidad);
             if($model->foto_documento_identidad_string!=''){
                 
-                $model->save();
-                $charge = \app\models\Payments::find()->where(['fk_usuario'=>$model->id])->one();
             
-                if($model->email){
+                if($model->save()){
                     Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
+                    $charge = \app\models\Payments::find()->where(['fk_usuario'=>$model->id])->one();
+                    return $this->render('userRegisterStepTwo',['charge'=>$charge]);
                 }
                 else{
-                    Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                    Yii::$app->getSession()->setFlash('warning','Ocurrió un error en el registro');
                 }
-                return $this->render('userRegisterStepTwo',['charge'=>$charge]);
             }
 
             Yii::$app->session->setFlash('error', 'Debe adjuntar un documento.');

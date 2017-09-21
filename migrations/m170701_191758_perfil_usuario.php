@@ -19,7 +19,6 @@ class m170701_191758_perfil_usuario extends Migration
             'foto_documento_identidad' => $this->string(128)->notNull(),
             'telefono_oficina' => $this->string(10)->notNull(),
             'celular' => $this->string(10)->notNull(),
-            'tarjeta_credito' => $this->string(16)->notNull(),
             'activo' => $this->boolean()->notNull(), 
             'fk_nacionalidad' => $this->integer()->notNull(),
             'fk_municipio' => $this->integer()->notNull(),

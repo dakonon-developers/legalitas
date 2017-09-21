@@ -148,13 +148,19 @@ class UsuarioForm extends Model
         $precio /= $tasa; 
         $precio = round($precio,3);
         
-        $paypal_charge = chargeToCustomer(
-            // $paypal_card,
-            // $paypal_card->id,
-            $precio, 
-            "Subscripción de ". $this->nombres. " ". $this->apellidos. " a legalitas.",
-            ""
-        );
+        try{
+            $paypal_charge = chargeToCustomer(
+                // $paypal_card,
+                // $paypal_card->id,
+                $precio, 
+                "Subscripción de ". $this->nombres. " ". $this->apellidos. " a legalitas.",
+                ""
+            );
+        }
+        catch(\Exception $e){
+            Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+            return false;
+        }
         json_decode($paypal_charge, true);
         $charge = new \app\models\Payments();
         $charge->charge_id = $paypal_charge->id;
@@ -183,9 +189,9 @@ class UsuarioForm extends Model
             return false;
 
         }
-        // Model Perfil
 
-        Yii::$app->mailer->compose()
+        try{
+            Yii::$app->mailer->compose()
                 ->setTo($user->email)
                 ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
                 ->setSubject('Confirmacion de Registro')
@@ -195,7 +201,15 @@ class UsuarioForm extends Model
                     ['site/confirm','key'=>$user->auth_key])
                 )
                 ->send();
+        }
+        catch(\Exception $e){
+            Yii::$app->getSession()->setFlash('warning',"Ocurrió un error al intentar enviar el correo, puede activar su cuenta
+            accediendo al siguiente enlace: ".Yii::$app->urlManager->createAbsoluteUrl(['site/confirm','key'=>$user->auth_key]))
+            return false;
+        }
+
         
+        // Model Perfil
         $perfil = new \app\models\PerfilUsuario();
         $perfil->nombres = $this->nombres;
         $perfil->apellidos = $this->apellidos;

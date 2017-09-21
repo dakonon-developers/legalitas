@@ -37,14 +37,6 @@ function paypalCreateCreditCard($type, $card_number, $exp_month, $exp_year, $cvc
             $paypal_key->client_secret// ClientSecret
         )
     );
-  /* $creditCard->setType("visa")
-      ->setNumber("4417119669820331")
-      ->setExpireMonth("11")
-      ->setExpireYear("2019")
-      ->setCvv2("012")
-      ->setFirstName("Joe")
-      ->setLastName("Shopper");
-  */
   // https://developer.paypal.com/webapps/developer/docs/api/#store-a-credit-card
   $creditCard = new \PayPal\Api\CreditCard();
   $creditCard->setType($type)
@@ -118,14 +110,11 @@ function chargeToCustomer($precio, $description, $extra_url=""){
     $payment->create($apiContext);
     
   } catch (PayPal\Exception\PayPalConnectionException $ex) {
-      // echo $ex->getCode(); // Prints the Error Code
-      // echo $ex->getData(); // Prints the detailed error message 
-      echo "Error in Payment\n";
-      echo $ex->getCode(); // Prints the Error Code
-    echo $ex->getData(); // Prints the detailed error message 
-    die($ex);
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   } catch (Exception $ex) {
-      die($ex);
+      throw new \Exception('PayPal Error: '.$ex->getMessage());
+      return false;
   }
   $approvalUrl = $payment->getApprovalLink();
   // echo "<h1>Created Payment Using PayPal. Please visit the URL to Approve.", "Payment", "<a href='$approvalUrl' >$approvalUrl</a></h2>";//, $request, $payment;

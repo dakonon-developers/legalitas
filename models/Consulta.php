@@ -77,9 +77,9 @@ class Consulta extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fk_cliente' => 'Fk Cliente',
-            'fk_servicio' => 'Fk Servicio',
-            'fk_abogado_asignado' => 'Fk Abogado Asignado',
+            'fk_cliente' => 'Cliente',
+            'fk_servicio' => 'Servicio',
+            'fk_abogado_asignado' => 'Abogado Asignado',
             'pregunta' => 'Pregunta',
             'archivo' => 'Archivo',
             'finalizado' => 'Finalizado',

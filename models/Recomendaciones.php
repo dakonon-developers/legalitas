@@ -44,7 +44,7 @@ class Recomendaciones extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fk_calificacion_servicio' => 'Fk Calificacion Servicio',
+            'fk_calificacion_servicio' => 'Calificacion Servicio',
             'correo' => 'Correo',
             'telefono' => 'Telefono',
         ];

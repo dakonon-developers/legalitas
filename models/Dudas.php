@@ -71,8 +71,8 @@ class Dudas extends \yii\db\ActiveRecord
             'adjunto' => 'Adjunto',
             'leido' => 'Leido',
             'fecha' => 'Fecha',
-            'fk_user' => 'Fk User',
-            'fk_consulta' => 'Fk Consulta',
+            'fk_user' => 'Usuario',
+            'fk_consulta' => 'Consulta',
         ];
     }
 

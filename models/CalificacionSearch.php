@@ -74,6 +74,7 @@ class CalificacionSearch extends Calificacion
             return $dataProvider;
         }
 
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
@@ -85,6 +86,7 @@ class CalificacionSearch extends Calificacion
         //$query->andFilterWhere(['like', 'nombres', $this->user]);
         $query->andFilterWhere(['like', 'perfil_abogado.documento_identidad', $this->abogado_documento])
             ->andFilterWhere(['like', 'perfil_usuario.documento_identidad', $this->cliente_documento]);
+
 
         return $dataProvider;
     }

@@ -44,7 +44,7 @@ class Municipio extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fk_provincia' => 'Fk Provincia',
+            'fk_provincia' => 'Provincia',
             'nombre' => 'Nombre',
         ];
     }

@@ -14,6 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <?= $this->render('_search',['model'=>$searchModel]); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -34,10 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
             }],
             'pregunta:ntext',
             // 'imagen',
-            ['attribute'=>'finalizado','value'=>function($model){ return $model->finalizado ? "Si":"No";}],
+            ['attribute'=>'finalizado','value'=>function($model){ return $model->finalizado ? "Si":"No";},
+            'filter'=>array("0"=>"No","1"=>"Si"),],
             //'finalizado',
             'creado_en',
-            //'fecha_fin',
+            'fecha_fin',
 
             ['class' => 'yii\grid\ActionColumn',
                 'template' => '{asignar}',

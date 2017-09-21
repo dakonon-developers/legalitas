@@ -44,8 +44,8 @@ class PreguntaEspecializacion extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fk_pregunta' => 'Fk Pregunta',
-            'fk_especialidad' => 'Fk Especialidad',
+            'fk_pregunta' => 'Pregunta',
+            'fk_especialidad' => 'Especialidad',
         ];
     }
 

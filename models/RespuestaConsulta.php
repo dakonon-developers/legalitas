@@ -70,8 +70,8 @@ class RespuestaConsulta extends \yii\db\ActiveRecord
             'texto' => 'Texto',
             'adjunto' => 'Adjunto',
             'fecha' => 'Fecha',
-            'fk_abogado' => 'Fk Abogado',
-            'fk_consulta' => 'Fk Consulta',
+            'fk_abogado' => 'Abogado',
+            'fk_consulta' => 'Consulta',
         ];
     }
 

@@ -44,7 +44,7 @@ class Calificacion extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fk_consulta' => 'Fk Consulta',
+            'fk_consulta' => 'Consulta',
             'calificacion' => 'Calificacion',
             'fkConsulta.fkAbogadoAsignado.documento_identidad' => 'Documento de Identidad del Abogado',
             'abogado_documento' => 'Documento de Identidad del Abogado',
