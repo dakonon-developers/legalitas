@@ -202,7 +202,7 @@ class UsuarioForm extends Model
                 ->send();
         }catch(\Exception $e){
             Yii::$app->getSession()->setFlash('warning',"Ocurrió un error al intentar enviar el correo, puede activar su cuenta
-            accediendo al siguiente enlace: ".Yii::$app->urlManager->createAbsoluteUrl(['site/confirm','key'=>$user->auth_key]))
+            accediendo al siguiente enlace: ".Yii::$app->urlManager->createAbsoluteUrl(['site/confirm','key'=>$user->auth_key]));
             return false;
         }
 

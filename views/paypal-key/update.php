@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\PaypalKey */
 
-$this->title = 'Update Paypal Key: ' . $model->id;
+$this->title = 'Actualizar Paypal Key: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Paypal Keys', 'url' => ['index']];
 //$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Actualizar';
 ?>
 <div class="paypal-key-update">
 

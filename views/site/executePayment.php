@@ -12,12 +12,13 @@ $request = Yii::$app->request;
 
     <?php 
     	if ($request->get('success') == "true") 
-    		echo "<p>Pago realizado satisfactoriamente</p>";
+    		//echo "<p>Pago realizado satisfactoriamente</p>";
     	else{
     		echo "<p>Error al procesar el pago</p>";
     	}
 
     	if ($payment) {
+    		echo "<p>Pago realizado satisfactoriamente</p>";
 	?>
     		
 		<div class="table-responsive">
