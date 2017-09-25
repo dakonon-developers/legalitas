@@ -194,6 +194,14 @@ class ConsultaController extends Controller
                 Yii::$app->getSession()->setFlash('warning','Error al realizar el pago');
             }
         }
+        else if ($model->load(Yii::$app->request->post())) {
+            $perfil = \app\models\PerfilUsuario::find()->where(['fk_usuario'=>Yii::$app->user->id])->one();
+            $model->fk_servicio = $categoria;
+            $model->fk_cliente = $perfil->id;
+            $model->save();
+            return $this->redirect(['view', 'id' => $model->id]);
+            
+        }
         else{
             $payment = '';
             $charge = '';

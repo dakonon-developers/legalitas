@@ -92,10 +92,20 @@ class ConsultaSearch extends Consulta
             //'fecha_fin' => $this->fecha_fin,
         ]);
 
-        $inicio = 0;
-        if($this->creado_en)
-        {
-            $inicio = strtotime($this->creado_en);
+        $inicio = '';
+        $fin = '';
+        if($this->creado_en!=''){
+            $formato = \DateTime::createFromFormat('d/m/Y', $this->creado_en);
+            if($formato){
+                $inicio = strtotime($formato->format('Y-m-d 00:00:00'));
+                if($this->fecha_fin!=''){
+                    $formato = \DateTime::createFromFormat('d/m/Y', $this->fecha_fin);
+                    if($formato){
+                        $fin = $formato->format('Y-m-d');
+                    }
+                }
+            }
+            
         }
 
         $query->andFilterWhere(['like', 'pregunta', $this->pregunta])
@@ -112,7 +122,7 @@ class ConsultaSearch extends Consulta
             ])
             ->andFilterWhere(['like', 'servicios.nombre', $this->servicio])
             ->andFilterWhere(['>=', 'creado_en', $inicio])
-            ->andFilterWhere(['>=', 'fecha_fin', $this->fecha_fin])
+            ->andFilterWhere(['fecha_fin' => $fin])
             ;
 
         return $dataProvider;

@@ -39,8 +39,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['attribute'=>'finalizado','value'=>function($model){ return $model->finalizado ? "Si":"No";},
             'filter'=>array("0"=>"No","1"=>"Si"),],
             //'finalizado',
-            'creado_en',
-            'fecha_fin',
+            ['attribute'=>'creado_en','value'=>function($model){
+                return date('d-m-Y H:i:s',$model->creado_en);
+            }],
+            //'creado_en',
+            ['attribute'=>'fecha_fin','value'=>function($model){
+                return date('d-m-Y',strtotime($model->fecha_fin));
+            }],
+            //'fecha_fin',
 
             ['class' => 'yii\grid\ActionColumn',
                 'template' => '{asignar}',
