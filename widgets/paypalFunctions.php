@@ -90,7 +90,8 @@ function chargeToCustomer($precio, $description, $extra_url=""){
   $transaction->setAmount($amount)
   ->setDescription($description)
   ->setInvoiceNumber(uniqid());
-  $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
+  //$baseUrl = "http://localhost/legalitas/web";
+  $baseUrl = "https://legalitas.herokuapp.com";
   $redirectUrls = new RedirectUrls();
   if ($extra_url != ""){
     $url = $baseUrl."/".$extra_url;
@@ -203,7 +204,8 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
 
   // Set merchant preferences
   $merchantPreferences = new MerchantPreferences();
-  $baseUrl = "http://localhost/LEGALITAS/legalitas/web";
+  //$baseUrl = "http://localhost/legalitas/web";
+  $baseUrl = "https://legalitas.herokuapp.com";
 
   $merchantPreferences->setReturnUrl($baseUrl.'/igualas/processagreement')
     ->setCancelUrl($baseUrl.'/igualas/cancel')
