@@ -18,7 +18,6 @@ use \PayPal\Api\Agreement;
 use \PayPal\Api\Payer;
 use PayPal\Api\AgreementStateDescriptor;
 use app\models\PaypalKey;
-header('Content-Type: application/json');
 
 /*
  * FALTA:

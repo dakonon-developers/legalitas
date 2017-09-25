@@ -88,9 +88,15 @@ class ConsultaSearch extends Consulta
             'fk_servicio' => $this->fk_servicio,
             'fk_abogado_asignado' => $this->fk_abogado_asignado,
             'finalizado' => $this->finalizado,
-            'creado_en' => $this->creado_en,
-            'fecha_fin' => $this->fecha_fin,
+            //'creado_en' => $this->creado_en,
+            //'fecha_fin' => $this->fecha_fin,
         ]);
+
+        $inicio = 0;
+        if($this->creado_en)
+        {
+            $inicio = strtotime($this->creado_en);
+        }
 
         $query->andFilterWhere(['like', 'pregunta', $this->pregunta])
             ->andFilterWhere(['like', 'archivo', $this->archivo])
@@ -104,7 +110,10 @@ class ConsultaSearch extends Consulta
                 ['like', 'perfil_abogado.nombres', $this->abogado_asignado],
                 ['like', 'perfil_abogado.apellidos', $this->abogado_asignado],
             ])
-            ->andFilterWhere(['like', 'servicios.nombre', $this->servicio]);
+            ->andFilterWhere(['like', 'servicios.nombre', $this->servicio])
+            ->andFilterWhere(['>=', 'creado_en', $inicio])
+            ->andFilterWhere(['>=', 'fecha_fin', $this->fecha_fin])
+            ;
 
         return $dataProvider;
     }

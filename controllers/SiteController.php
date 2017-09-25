@@ -15,9 +15,7 @@ use app\forms\AbogadoForm;
 use app\models\UploadModel;
 use app\forms\PasswordResetRequestForm;
 use app\forms\ResetPasswordForm;
-require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
-header('Content-Type: application/json');
 
 class SiteController extends Controller
 {

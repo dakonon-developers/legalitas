@@ -10,7 +10,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
-header('Content-Type: application/json');
 
 /**
  * ConsultaController implements the CRUD actions for Consulta model.
@@ -114,6 +113,7 @@ class ConsultaController extends Controller
         
         $description = "Solicitud de servicio: ".$servicio->nombre. " ".$extra_info;
         try{
+            //header('Content-Type: application/json');
             $paypal_charge = chargeToCustomer($precio, $description, $url);
         }catch(\Exception $e){
             Yii::$app->getSession()->setFlash('danger',$e->getMessage());

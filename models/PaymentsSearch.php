@@ -75,15 +75,15 @@ class PaymentsSearch extends Payments
         if($this->fecha!=''){
             $formato = \DateTime::createFromFormat('d/m/Y', $this->fecha);
             if($formato){
-                $inicio = $formato->format('Y-m-d 00:00:00');
+                $inicio = strtotime($formato->format('Y-m-d 00:00:00'));
                 if($this->fecha_fin!=''){
                     $formato = \DateTime::createFromFormat('d/m/Y', $this->fecha_fin);
                     if($formato){
-                        $fin = $formato->format('Y-m-d 00:00:00 +1');
+                        $fin = strtotime($formato->format('Y-m-d 00:00:00 +1'));
                     }
                 }
                 else{
-                    $fin = date('Y-m-d H:i:s');    
+                    $fin = strtotime(date('Y-m-d H:i:s'));    
                 }
             }
             

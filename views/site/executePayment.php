@@ -11,8 +11,9 @@ $request = Yii::$app->request;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php 
-    	if ($request->get('success') == "true") 
+    	if ($request->get('success') == "true") {
     		//echo "<p>Pago realizado satisfactoriamente</p>";
+    		}
     	else{
     		echo "<p>Error al procesar el pago</p>";
     	}
