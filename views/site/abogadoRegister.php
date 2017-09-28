@@ -9,7 +9,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\web\View;
 
-$this->title = 'Registrar - Abogado';
+$this->title = 'Registrar - Colaborador';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-register">

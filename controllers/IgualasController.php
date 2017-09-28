@@ -194,8 +194,13 @@ class IgualasController extends Controller
         $searchModel = new IgualasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        // Se buscan también los servicios
+        $serviciosModel = new \app\models\ServiciosSearch(['activo'=>true]);
+        $serviciosProvider = $serviciosModel->search(Yii::$app->request->queryParams);
+
         return $this->render('list', [
             'dataProvider' => $dataProvider,
+            'serviciosProvider' => $serviciosProvider,
         ]);
     }
 

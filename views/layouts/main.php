@@ -38,14 +38,14 @@ LegalitasAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'HOME', 'url' => ['/site/index']],
+        ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']],
+        ['label' => 'SERVICIOS', 'url' => ['/site/servicios']],
+        ['label' => 'CONTRATA', 'url' => ['/igualas/list']],
     ];
     if(Yii::$app->user->isGuest){
-        $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
-        $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
-        $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
         $menuItems[] = ['label' => 'REGISTRARSE', 'items' => [
            ['label' => 'Como Usuario', 'url' => ['/site/user-register']],
-           ['label' => 'Como Abogado', 'url' => ['/site/abogado-register']], 
+           ['label' => 'Como Colaborador', 'url' => ['/site/abogado-register']], 
         ]];
         $menuItems[] = ['label' => 'ENTRAR', 'url' => ['/site/login']];
     }
@@ -82,9 +82,6 @@ LegalitasAsset::register($this);
                    ['label' => 'Mis Calificaciones', 'url' => ['/calificacion/micalificacion']], 
                 ]];
             }
-            $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
-            $menuItems[] = ['label' => 'SERVICIOS', 'url' => ['/site/servicios']];
-            $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
             // Perfil para los usuarios
             if(Yii::$app->user->can('Usuario')){
                 $menuItems[] = ['label' => 'PERFIL', 'url' => ['/perfil-usuario/update?id='.Yii::$app->user->id]];

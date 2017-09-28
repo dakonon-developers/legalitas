@@ -32,7 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="form-group">
             <div class="col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('Entrar', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            </div>
+            <div class="col-lg-11">
+                <h5>¿No tienes cuenta?</h5>
+                Registrate como <?= Html::a('Usuario', ['site/user-register']) ?> o Registrate como <?= Html::a('Colaborador', ['site/abogado-register']) ?>
             </div>
              <div class="col-lg-11" style="color:#999;margin:1em 0">
                     Si olvidó su contraseña, puede <?= Html::a('restablecerla', ['site/request-password-reset']) ?>.
