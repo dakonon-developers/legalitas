@@ -105,34 +105,40 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
                 </div>
-                <div class="item">
+                <div class="item" style="padding-bottom:20px;">
                     <h3>Cuestionario</h3>
-                        <div>
-                            <?= $form->field($model, 'servicios')->dropDownList(ArrayHelper::map($especializacion,'id','nombre'),
-                                ['multiple'=>True]) ?>
+                    <div>
+                        <?= $form->field($model, 'servicios')->dropDownList(ArrayHelper::map($especializacion,'id','nombre'),
+                            ['multiple'=>True]) ?>
+                    </div>
+                    <div>
+                        <?= $form->field($model, 'otros')->textInput(["data-role"=>"tagsinput"]) ?>
+                    </div>
+                    <div>
+                        <?= $form->field($model, 'demandado')->inline()->radioList([1 => 'Si', 0 => 'No'],
+                            ['onchange'=>'radio_value(this,"#cantidad",1);'])
+                            ->label("2. ¿Le han demandado o citado a algún tribunal?") ?>
+                    </div>
+                    <div class="col-md-12" id="cantidad" style="display:none;">
+                        <?= $form->field($model, 'cantidad')->textInput()->label('¿Cuántas veces?') ?>
+                    </div>
+                    <div>
+                        <?= $form->field($model, 'consulta_info')->inline()->radioList([1 => 'Si', 0 => 'No'])
+                        ->label("3. ¿Tiene experiencia consultando?") ?>
+                    </div>
+                    <div class="row">
+                        <div class="text-center">
+                            <?= Html::submitButton('Registrarse', ['class' => 'btn btn-primary']) ?>
                         </div>
-                        <div>
-                            <?= $form->field($model, 'otros')->textInput(["data-role"=>"tagsinput"]) ?>
-                        </div>
-                        <div>
-                            <?= $form->field($model, 'demandado')->inline()->radioList([1 => 'Si', 0 => 'No'],
-                                ['onchange'=>'radio_value(this,"#cantidad",1);'])
-                                ->label("2. ¿Le han demandado o citado a algún tribunal?") ?>
-                        </div>
-                        <div class="col-md-12" id="cantidad" style="display:none;">
-                            <?= $form->field($model, 'cantidad')->textInput()->label('¿Cuántas veces?') ?>
-                        </div>
-                        <div>
-                            <?= $form->field($model, 'consulta_info')->inline()->radioList([1 => 'Si', 0 => 'No'])
-                            ->label("3. ¿Tiene experiencia consultando?") ?>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-offset-1 col-lg-11">
-                                <?= Html::submitButton('Registrarse', ['class' => 'btn btn-primary']) ?>
-                            </div>
-                        </div>
+                    </div>
                 </div>
             </div>
+            <a class="left carousel-control green-color-text" href="#myCarousel" onclick="move_carousel('#myCarousel','prev')">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control green-color-text" href="#myCarousel" onclick="move_carousel('#myCarousel','next')">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
             <ol class="carousel-indicators" id="list">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>

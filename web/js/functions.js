@@ -174,3 +174,8 @@ function line_graphic(container,title,categories,y_axis,data){
 	    series: [data]
 	});
 }
+
+function move_carousel(name,move){
+	$(name).carousel(move);
+	$(name).carousel('pause');
+}

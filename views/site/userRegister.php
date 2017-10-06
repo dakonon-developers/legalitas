@@ -139,6 +139,12 @@ $categorias = $const['categories'];
                         </div>
                     </div>
                 </div>
+                <a class="left carousel-control green-color-text" href="#myCarousel" onclick="move_carousel('#myCarousel','prev')">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control green-color-text" href="#myCarousel" onclick="move_carousel('#myCarousel','next')">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
             </div>
             <ol class="carousel-indicators" id="list">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>

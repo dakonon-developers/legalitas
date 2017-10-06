@@ -2,7 +2,7 @@ INSERT INTO igualas_servicios(fk_iguala, fk_servicio) VALUES
 (1, 64),
 (1, 65),
 (1, 67),
-(2, 68),
+(2, 63),
 (2, 69),
 (3, 65),
 (3, 66),

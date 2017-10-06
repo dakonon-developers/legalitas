@@ -306,16 +306,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays servicios info.
-     *
-     * @return string
-     */
-    public function actionServicios()
-    {
-        return $this->render('serviciosInfo');
-    }
-
-    /**
      * Displays contrata info.
      *
      * @return string

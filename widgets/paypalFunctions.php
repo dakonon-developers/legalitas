@@ -193,7 +193,7 @@ function paypalCreatePlan($amount, $name, $description, $interval="Month"){
     ->setType('REGULAR')
     ->setFrequency($interval)
     ->setFrequencyInterval('1')
-    ->setCycles('12')
+    ->setCycles('6')
     ->setAmount(new Currency(array('value' => $amount, 'currency' => 'USD')));
 
   // Set charge models

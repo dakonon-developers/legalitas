@@ -21,6 +21,7 @@ class m170813_001804_igualas extends Migration
             'slim' => $this->float()->notNull(),
             'med' => $this->float()->notNull(),
             'plus' => $this->float()->notNull(),
+            'estado' => $this->integer()->notNull()->defaultValue(1),
             // 'slim_stripe' => $this->string(25)->notNull()->unique(),
             // 'med_stripe' => $this->string(25)->notNull()->unique(),
             // 'plus_stripe' => $this->string(25)->notNull()->unique(),

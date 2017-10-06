@@ -38,11 +38,10 @@ LegalitasAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'HOME', 'url' => ['/site/index']],
-        ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']],
-        ['label' => 'SERVICIOS', 'url' => ['/site/servicios']],
-        ['label' => 'CONTRATA', 'url' => ['/igualas/list']],
     ];
     if(Yii::$app->user->isGuest){
+        $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
+        $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
         $menuItems[] = ['label' => 'REGISTRARSE', 'items' => [
            ['label' => 'Como Usuario', 'url' => ['/site/user-register']],
            ['label' => 'Como Colaborador', 'url' => ['/site/abogado-register']], 
@@ -73,6 +72,8 @@ LegalitasAsset::register($this);
         else{
             // Actuaciones para los usuarios
             if(Yii::$app->user->can('Usuario')){
+                $menuItems[] = ['label' => 'LEGÁLITAS', 'url' => ['/site/legalitas']];
+                $menuItems[] = ['label' => 'CONTRATA', 'url' => ['/igualas/list']];
                 $menuItems[] = ['label' => 'ACTUACIONES', 'url' => ['/site/actuaciones']];
             }
             // Actuaciones para los abogados

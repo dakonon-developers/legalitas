@@ -39,12 +39,14 @@ $this->title = 'LegalitasRd';
             </div>
         <?php endif;  ?>
         </div><br/>
-        <div class="row">
-            <div class="text-center">
-                <h4>¿Ya te registraste? Entonces prueba</h4>
-                <?= Html::a('Iniciar Sesión', Url::to(['/site/login']), ['class' => 'btn btn-home btn-flat btn-lg']) ?>
+        <?php if(\Yii::$app->user->isGuest): ?>
+            <div class="row">
+                <div class="text-center">
+                    <h4>¿Ya te registraste? Entonces prueba</h4>
+                    <?= Html::a('Iniciar Sesión', Url::to(['/site/login']), ['class' => 'btn btn-home btn-flat btn-lg']) ?>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
 
     </div>
 </div>

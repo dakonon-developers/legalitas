@@ -103,6 +103,22 @@ aside{
     list-style: none;
 }
 
+.carousel-control .glyphicon-chevron-right {
+  right: -20%;
+}
+
+.carousel-control.right {
+    background-image:none;
+}
+
+.carousel-control .glyphicon-chevron-left {
+  left: -20%;
+}
+
+.carousel-control.left {
+    background-image:none;
+}
+
 
 /*
     Portafolio
@@ -217,7 +233,7 @@ aside{
 
 .list-view .item{
   margin-top: 15px;
-  margin-bottom: 100px;
+  margin-bottom: 30px;
 }
 
 .label-info {
@@ -242,3 +258,21 @@ aside{
 .pagination > li > a:hover{
   color: #69a48e;
 }
+
+.not_decoration{ 
+  list-style: none; 
+}
+
+.green-color-text a, .green-color-text span{
+  color:#69a48e;
+}
+
+.danger-text a, .danger-text span{
+  color:#a94442;
+}
+
+.warning-text a, .danger-text span{
+  color:#c38821;
+}
+
+
