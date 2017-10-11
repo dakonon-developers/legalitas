@@ -14,6 +14,8 @@ class ServicioPaymentsSearch extends ServicioPayments
 {
     public $fecha;
     public $fecha_fin;
+    public $servicio;
+    public $cliente;
     /**
      * @inheritdoc
      */
@@ -21,7 +23,7 @@ class ServicioPaymentsSearch extends ServicioPayments
     {
         return [
             [['id', 'fk_service', 'fk_users_cliente', 'fk_payments'], 'integer'],
-            [['fecha','fecha_fin'],'safe']
+            [['fecha','fecha_fin','servicio','cliente'],'safe']
         ];
     }
 
@@ -46,12 +48,24 @@ class ServicioPaymentsSearch extends ServicioPayments
         $query = ServicioPayments::find();
 
         $query->joinWith('fkPayments');
+        $query->joinWith('fkService');
+        $query->joinWith('fkUsersCliente.fkUsuario');
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['servicio'] = [
+            'asc' => ['servicios.nombre' => SORT_ASC],
+            'desc' => ['servicios.nombre' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['cliente'] = [
+            'asc' => ['user.username' => SORT_ASC],
+            'desc' => ['user.username' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -90,7 +104,9 @@ class ServicioPaymentsSearch extends ServicioPayments
             'fk_payments' => $this->fk_payments,
         ]);
 
-        $query->andFilterWhere(['between','payments.fecha', $inicio , $fin]);
+        $query->andFilterWhere(['between','payments.fecha', $inicio , $fin])
+            ->andFilterWhere(['like', 'user.username', $this->cliente])
+            ->andFilterWhere(['like', 'servicios.nombre', $this->servicio]);
 
         return $dataProvider;
     }

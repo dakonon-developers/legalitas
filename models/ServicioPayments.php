@@ -48,9 +48,13 @@ class ServicioPayments extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'fk_service' => 'Fk Service',
-            'fk_users_cliente' => 'Fk Users Cliente',
-            'fk_payments' => 'Fk Payments',
+            'fk_service' =>  'Servicio',
+            'fk_users_cliente' => 'Cliente',
+            'fk_payments' => 'Pagos',
+            'fkPayments.fecha' => 'Fecha de Pago',
+            'servicio' =>  'Servicio',
+            'cliente' => 'Cliente',
+
         ];
     }
 

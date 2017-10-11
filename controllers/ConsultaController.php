@@ -137,7 +137,7 @@ class ConsultaController extends Controller
         }
         else{
             $servicios_payment = new \app\models\ServicioPayments();
-            $servicios_payment->fk_service = $servicio;
+            $servicios_payment->fk_service = $servicio->id;
             $servicios_payment->fk_users_cliente = $perfil->id;
             $servicios_payment->fk_payments = $charge->id;
             $servicios_payment->save();

@@ -21,8 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'fkService.nombre',
-            'fkUsersCliente.nombres',
+            ['attribute'=>'servicio','value'=>'fkService.nombre'],
+            ['attribute'=>'cliente','value'=>'fkUsersCliente.nombres'],
             'fkPayments.fecha',
 
             ['class' => 'yii\grid\ActionColumn',
