@@ -179,3 +179,21 @@ function move_carousel(name,move){
 	$(name).carousel(move);
 	$(name).carousel('pause');
 }
+
+function show_familia(element,id){
+	if($(element).val()==='FA'){
+		$(id).show(1000);
+	}
+	else{
+		$(id).hide(500);	
+	}
+}
+
+function agregar_otro_miembro(){
+	$('#miembros_familia').append($('#familia_form').html());
+}
+
+function remove_element(element){
+	var container = $(element).parent().parent();
+	$(container).remove();
+}

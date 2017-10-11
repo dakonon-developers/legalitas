@@ -92,23 +92,28 @@ class ConsultaController extends Controller
         $servicio = \app\models\Servicios::find()->where(['id'=>$servicio])->one();
         $iguala_usuario = \app\models\IgualasUsers::find()->where(['fk_users_cliente'=>$perfil->id, 'estatus'=>'concretado'])->one();
         $extra_info = "";
+
+        //Tasa de cambio
+        $tasa = \app\models\Currency::findOne(1)->valor_cambio;
+        $costo = $servicio->costo/$tasa;
+        $costo = round($costo,3);
         if ($iguala_usuario){
             // calcualamos con descuento:
             if ($iguala_usuario->slim=="1"){
                 $extra_info = "incluyendo el descuento de slim";
-              $precio = $servicio->costo - ($servicio->costo * ($servicio->servicioPromocion->fkPromocion->slim / 100));
+              $precio = $costo - ($costo * ($servicio->servicioPromocion->fkPromocion->slim / 100));
             }
             if ($iguala_usuario->med=="1"){
               $extra_info = "incluyendo el descuento de med";
-              $precio = $servicio->costo - ($servicio->costo * ($servicio->servicioPromocion->fkPromocion->med / 100));
+              $precio = $costo - ($costo * ($servicio->servicioPromocion->fkPromocion->med / 100));
             }
             if ($iguala_usuario->plus=="1"){
                 $extra_info = "incluyendo el descuento de plus";
-              $precio = $servicio->costo - ($servicio->costo * ($servicio->servicioPromocion->fkPromocion->plus / 100));
+              $precio = $costo - ($costo * ($servicio->servicioPromocion->fkPromocion->plus / 100));
             }
         }
         else{
-            $precio = $servicio->costo;
+            $precio = $costo;
         }
         
         $description = "Solicitud de servicio: ".$servicio->nombre. " ".$extra_info;
@@ -129,6 +134,13 @@ class ConsultaController extends Controller
         $charge->fk_usuario = $user->id;
         if (!$charge->save()){
             return false;
+        }
+        else{
+            $servicios_payment = new \app\models\ServicioPayments();
+            $servicios_payment->fk_service = $servicio;
+            $servicios_payment->fk_users_cliente = $perfil->id;
+            $servicios_payment->fk_payments = $charge->id;
+            $servicios_payment->save();
         }
         return $this->render('preCreate', [
             'approvalUrl'=>$paypal_charge->getApprovalLink()

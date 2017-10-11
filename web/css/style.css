@@ -103,20 +103,14 @@ aside{
     list-style: none;
 }
 
-.carousel-control .glyphicon-chevron-right {
-  right: -20%;
-}
-
 .carousel-control.right {
     background-image:none;
-}
-
-.carousel-control .glyphicon-chevron-left {
-  left: -20%;
+    right: -15%;
 }
 
 .carousel-control.left {
     background-image:none;
+    left: -15%;
 }
 
 
@@ -271,7 +265,7 @@ aside{
   color:#a94442;
 }
 
-.warning-text a, .danger-text span{
+.warning-text a, .warning-text span{
   color:#c38821;
 }
 

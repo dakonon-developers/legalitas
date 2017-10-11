@@ -7,4 +7,8 @@ return [
     	'OA' => 'Oficina de Abogados',
     	'NE' => 'Negocio',
     ],
+    'integrante_familia' => [
+    	'CO' => 'Conyúgue',
+    	'HI' => 'Hijo',
+    ],
 ];

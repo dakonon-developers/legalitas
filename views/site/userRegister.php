@@ -15,6 +15,7 @@ $this->title = 'Registrarse - Usuario';
 $this->params['breadcrumbs'][] = $this->title;
 
 $categorias = $const['categories'];
+$miembro_familia = $const['integrante_familia'];
 
 ?>
 <div class="site-register">
@@ -33,7 +34,7 @@ $categorias = $const['categories'];
         <div class="form-group">
             <?= $form->field($model, 'categoria')->dropDownList($categorias,
             ['prompt'=>'Seleccione una categoría','onchange'=>
-            'show_content(this,"#register");show_representante(this,"#representante");show_content(this,"#list");']) ?>
+            'show_content(this,"#register");show_representante(this,"#representante");show_content(this,"#list");show_familia(this,"#familia");']) ?>
         </div>
 
         <div id="myCarousel" class="carousel slide">
@@ -77,15 +78,6 @@ $categorias = $const['categories'];
                             </div>
                         </div>
 
-                        <div class="row" id="representante" style="display:none;">
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'nombre_representante')->textInput() ?>
-                            </div>
-                            <div class="col-md-6">
-                                <?= $form->field($model, 'documento_identidad_representante')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',]) ?>
-                            </div>
-                        </div>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <?= $form->field($model, 'telefono_oficina')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',])?>
@@ -94,6 +86,33 @@ $categorias = $const['categories'];
                                 <?= $form->field($model, 'celular')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '9999999999',])?>
                             </div>
                         </div>
+
+                        <div class="row" id="representante" style="display:none;">
+                            <h3 class="text-center">Representante</h3>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'nombre_representante')->textInput() ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= $form->field($model, 'documento_identidad_representante')->textInput()->widget(\yii\widgets\MaskedInput::className(), ['mask' => '999-9999999-9',]) ?>
+                            </div>
+                        </div>
+
+                        <div class="row" id="familia" style="display:none;">
+                            <h3 class="text-center">Miembros de la Familia</h3>
+                            <div id="miembros_familia">
+                                <div class="col-md-6">
+                                    <?= $form->field($model, 'miembro')->textInput() ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?= $form->field($model, 'tipo')->dropDownList($miembro_familia,['prompt'=>'Seleccione el tipo de miembro']) ?>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                Agregar otro miembro <a onclick="agregar_otro_miembro();" class="green-color-text" style="cursor: pointer">
+                                <span class="glyphicon glyphicon-plus"></span></a>
+                            </div>
+                        </div>
+
 
                         <div class="row">
                             <div class="col-md-4">
@@ -154,6 +173,22 @@ $categorias = $const['categories'];
         </div>
 
     <?php ActiveForm::end(); ?>
+
+<div class="row" id="familia_form" style="display:none;">
+    <div class="row container">
+        <div class="col-md-5">
+            <?= $form->field($model, 'miembro_extra[]')->textInput() ?>
+        </div>
+        <div class="col-md-5">
+            <?= $form->field($model, 'tipo_extra[]')->dropDownList($miembro_familia,['prompt'=>'Seleccione el tipo de miembro']) ?>
+        </div>
+        <div class="col-md-2">
+            <br/>
+            Remover <a onclick="remove_element(this);" class="text-danger" style="cursor: pointer">
+            <span class="glyphicon glyphicon-minus"></span></a>
+        </div>
+    </div>
+</div>
 <?php
     $this->registerJs(
         "var municipio = ".\yii\helpers\Json::htmlEncode($municipio).";",
@@ -164,6 +199,12 @@ $categorias = $const['categories'];
     $script = <<< JS
     if ($('#usuarioform-categoria').val()!=""){
         $('#register').show();
+    }
+    if ($('#usuarioform-categoria').val()=="OA" || $('#usuarioform-categoria').val()=="NE"){
+        show_representante($('#usuarioform-categoria'),"#representante");
+    }
+    else if ($('#usuarioform-categoria').val()=="FA"){
+        show_familia($('#usuarioform-categoria'),"#familia");
     }
     if($('#usuarioform-fk_nacionalidad').val()!=""){
         $('#usuarioform-provincia').removeAttr('disabled');

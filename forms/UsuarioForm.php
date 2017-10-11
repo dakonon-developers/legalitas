@@ -28,7 +28,6 @@ class UsuarioForm extends Model
     public $foto_documento_identidad_string;
     public $telefono_oficina;
     public $celular;
-    
     public $fk_nacionalidad;
     public $fk_municipio;
     public $provincia;
@@ -39,6 +38,11 @@ class UsuarioForm extends Model
     public $consulta_info;
     public $servicios;
     public $otros;
+    // Familia
+    public $miembro;
+    public $tipo;
+    public $miembro_extra;
+    public $tipo_extra;
 
 
     /**
@@ -93,6 +97,15 @@ class UsuarioForm extends Model
                     return $('.field-usuarioform-demandado input[type=\'radio\']:checked').val() === \"1\";
                 }" ],
             [['otros'], 'string', 'max' => 256],
+            [['miembro_extra','tipo_extra'], 'safe'],
+            ['miembro', 'string', 'max' => 100],
+            ['tipo', 'string', 'max' => 2],
+            [['miembro','tipo'],'required', 'when' => function($model) {
+                return $model->categoria == 'OA' or $model->categoria == 'NE';},
+                'whenClient' => "function (attribute, value) {
+                    return $('#categoria').val() == 'FA';
+                }" 
+            ],
         ];
     }
 
@@ -116,7 +129,6 @@ class UsuarioForm extends Model
             'documento_identidad_representante' => 'Documento de Identidad del Representante',
             'telefono_oficina' => 'Telefono Oficina',
             'celular' => 'Celular',
-            
             'fk_nacionalidad' => 'Nacionalidad',
             'fk_municipio' => 'Municipio',
             'categoria' => 'Categoría',
@@ -124,6 +136,9 @@ class UsuarioForm extends Model
             'demandado' => 'Demandado',
             'cantidad' => 'Cantidad',
             'consulta_info' => 'Info',
+            // Familia
+            'miembro' => 'Miembro',
+            'tipo' => 'Tipo',
         ];
     }
 
@@ -228,6 +243,26 @@ class UsuarioForm extends Model
             $perfil_rep->documento_identidad_representante = $this->documento_identidad_representante;
             $perfil_rep->fk_perfil_usuario = $perfil->id;
             $perfil_rep->save();
+        }
+        //Si la categoria amerita crear familia
+        else if($this->categoria=='FA'){
+            $familia = new \app\models\Familia();
+            $familia->miembro = $this->miembro;
+            $familia->tipo = $this->tipo;
+            $familia->fk_perfil_usuario = $perfil->id;
+            $familia->save();
+            if((count($model->miembro_extra)>0 and count($model->tipo_extra)>0)
+                and (count($model->miembro_extra) == count($model->tipo_extra))
+                )
+            {
+                foreach ($model->miembro_extra as $key => $value) {
+                    $familia = new \app\models\Familia();
+                    $familia->miembro = $value;
+                    $familia->tipo = $model->tipo_extra[$key];
+                    $familia->fk_perfil_usuario = $perfil->id;
+                    $familia->save();
+                }
+            }
         }
         // Model de pregunta
         $pregunta = new \app\models\Preguntas();

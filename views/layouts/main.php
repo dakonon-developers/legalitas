@@ -59,6 +59,7 @@ LegalitasAsset::register($this);
             $menuItems[] = ['label' => 'ACTUACIONES', 'items' => [
                ['label' => 'Ver', 'url' => ['/consulta/index']],
                ['label' => 'Calificaciones', 'url' => ['/calificacion/index']], 
+               ['label' => 'Registro de Uso', 'url' => ['/servicio-payments/index']],
             ]];
             $menuItems[] = ['label' => 'CONFIGURACIÓN', 'items' => [
                 ['label' => 'Igualas', 'url' => ['/igualas/index']],
