@@ -23,7 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['attribute'=>'servicio','value'=>'fkService.nombre'],
             ['attribute'=>'cliente','value'=>'fkUsersCliente.nombres'],
-            'fkPayments.fecha',
+            ['attribute'=>'fkPayments.fecha','value'=>function($model){
+                return date('d/m/Y',$model->fkPayments->fecha);
+            }],
 
             ['class' => 'yii\grid\ActionColumn',
             'template'=>'{view}'],
