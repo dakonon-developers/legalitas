@@ -24,7 +24,8 @@ $this->title = 'LegalitasRd';
                 <div class="col-md-offset-1 col-md-4">
                     <?= Html::a('Solicita', Url::to(['/site/solicita']), ['class' => 'btn btn-home btn-block btn-flat btn-lg']) ?>
                 </div>
-        <?php else:  ?>
+        <?php else: ?>
+            <?php if(\Yii::$app->user->isGuest): ?>
             <div class="col-md-offset-1 col-md-4">
                 <h4 class="text-center">Bienvenido a LegalitasRd</h4>
                 <br/>
@@ -37,6 +38,11 @@ $this->title = 'LegalitasRd';
             <div class="col-md-offset-1 col-md-4">
                 <?= Html::a('Registrate Como Colaborador', Url::to(['/site/abogado-register']), ['class' => 'btn btn-block btn-home btn-flat btn-lg']) ?>
             </div>
+            <?php else:  ?>
+                <div class="col-md-offset-1 col-md-4">
+                    <h4 class="text-center">Bienvenido a LegalitasRd</h4>
+                </div>
+            <?php endif;  ?>
         <?php endif;  ?>
         </div><br/>
         <?php if(\Yii::$app->user->isGuest): ?>
