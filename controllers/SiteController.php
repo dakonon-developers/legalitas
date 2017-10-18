@@ -135,8 +135,7 @@ class SiteController extends Controller
             $model->foto_documento_identidad_string = $uploads->upload(UploadedFile::getInstance($model, 'foto_documento_identidad'),
                 $model->documento_identidad);
             if($model->foto_documento_identidad_string!=''){
-                
-            
+                   
                 if($model->save()){
                     Yii::$app->session->setFlash('success', 'Se registro con éxito, verifique su correo.');
                     $charge = \app\models\Payments::find()->where(['fk_usuario'=>$model->id])->one();

@@ -52,6 +52,8 @@ class ServicioPayments extends \yii\db\ActiveRecord
             'fk_users_cliente' => 'Cliente',
             'fk_payments' => 'Pagos',
             'fkPayments.fecha' => 'Fecha de Pago',
+            'fkPayments.monto' => 'Monto de Pago ($)',
+            'fkPayments.estatus' => 'Estado de Pago',
             'servicio' =>  'Servicio',
             'cliente' => 'Cliente',
 

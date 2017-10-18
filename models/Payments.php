@@ -71,7 +71,7 @@ class Payments extends \yii\db\ActiveRecord
             'charge_id' => 'Cargo',
             'estatus' => 'Estado',
             'approval_link' => 'Link aprovatorio',
-            'monto' => 'Monto',
+            'monto' => 'Monto ($)',
             'fecha' => 'Fecha',
             'fk_usuario' => 'Usuario',
             'username' => 'Usuario',

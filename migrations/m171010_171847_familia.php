@@ -15,7 +15,7 @@ class m171010_171847_familia extends Migration
             'id' => $this->primaryKey(),
             'miembro' => $this->string(100)->notNull(),
             'tipo' => $this->string(2)->notNull(),
-            'fk_perfil_usuario' => $this->integer()->notNull()->unique(),
+            'fk_perfil_usuario' => $this->integer()->notNull(),
             ], $tableOptions);
         
         $this->createIndex('i-fk_usuario_familia','familia','fk_perfil_usuario');

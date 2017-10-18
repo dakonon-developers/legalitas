@@ -10,9 +10,6 @@ use yii\web\View;
 /* @var $form yii\widgets\ActiveForm */
 $const = require(__DIR__ . '/../../config/constants.php');
 
-$this->title = 'Registrarse - Usuario';
-$this->params['breadcrumbs'][] = $this->title;
-
 $categorias = $const['categories'];
 ?>
 

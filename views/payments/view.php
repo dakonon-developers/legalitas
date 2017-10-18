@@ -6,13 +6,13 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Payments */
 
-$this->title = $model->id;
+$this->title = date('d-m-Y H:i:s (a)',$model->fecha);
 $this->params['breadcrumbs'][] = ['label' => 'Pagos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="payments-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>Pago Realizado el <?= Html::encode($this->title) ?></h1>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'charge_id',
             'monto',
-            'fecha',
+            //'fecha',
+            ['attribute' => 'fecha', 'value'=> date('d-m-Y H:i:s (a)',$model->fecha)],
             ['attribute' => 'fk_usuario', 'value'=>$model->fkUsuario->username],
         ],
     ]) ?>

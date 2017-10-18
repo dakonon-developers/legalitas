@@ -34,7 +34,6 @@ class Familia extends \yii\db\ActiveRecord
             [['fk_perfil_usuario'], 'integer'],
             [['miembro'], 'string', 'max' => 100],
             [['tipo'], 'string', 'max' => 2],
-            [['fk_perfil_usuario'], 'unique'],
             [['fk_perfil_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => PerfilUsuario::className(), 'targetAttribute' => ['fk_perfil_usuario' => 'id']],
         ];
     }

@@ -251,14 +251,14 @@ class UsuarioForm extends Model
             $familia->tipo = $this->tipo;
             $familia->fk_perfil_usuario = $perfil->id;
             $familia->save();
-            if((count($model->miembro_extra)>0 and count($model->tipo_extra)>0)
-                and (count($model->miembro_extra) == count($model->tipo_extra))
+            if((count($this->miembro_extra)>0 and count($this->tipo_extra)>0)
+                and (count($this->miembro_extra) == count($this->tipo_extra))
                 )
             {
-                foreach ($model->miembro_extra as $key => $value) {
+                foreach ($this->miembro_extra as $key => $value) {
                     $familia = new \app\models\Familia();
                     $familia->miembro = $value;
-                    $familia->tipo = $model->tipo_extra[$key];
+                    $familia->tipo = $this->tipo_extra[$key];
                     $familia->fk_perfil_usuario = $perfil->id;
                     $familia->save();
                 }
