@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'stripe.php';
 require_once  dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'widgets'.DIRECTORY_SEPARATOR.'paypalFunctions.php';
 
@@ -40,7 +41,7 @@ class IgualasController extends Controller
                         'roles' => ['@','?'],
                     ],
                     [
-                        'actions' => ['index','view','create','delete'],
+                        'actions' => ['index','view','create','update','delete','activar'],
                         'allow' => true,
                         'roles' => ['Admin'],
                     ],
@@ -89,43 +90,46 @@ class IgualasController extends Controller
     public function actionCreate()
     {
         $model = new Igualas();
-        if ( $model->load(Yii::$app->request->post()) ){
-            $model->slim = str_replace(',', '', $model->slim);
-            $model->med = str_replace(',', '', $model->med);
-            $model->plus = str_replace(',', '', $model->plus);
-            // $plan_slim = stripeCreatePlan($model->slim, $model->nombre."-slim", $model->nombre."-slim");
-            // $plan_med = stripeCreatePlan($model->med, $model->nombre."-med", $model->nombre."-med");
-            // $plan_plus = stripeCreatePlan($model->plus, $model->nombre."-plus", $model->nombre."-plus");
-            // $model->slim_stripe = $plan_slim->id;
-            // $model->med_stripe = $plan_med->id;
-            // $model->plus_stripe = $plan_plus->id;
-            try {
-                $plan_slim = paypalCreatePlan($model->slim, $model->nombre, $model->nombre."-slim", "Month");
-                $plan_med = paypalCreatePlan($model->med, $model->nombre, $model->nombre."-med", "Month");
-                $plan_plus = paypalCreatePlan($model->plus, $model->nombre, $model->nombre."-plus", "Month");
-            }catch(\Exception $e){
-                Yii::$app->getSession()->setFlash('danger',$e->getMessage());
-                return $this->render('create', [
-                   'model' => $model,
-                ]);
+        $servicios = \app\models\Servicios::find()->where(['activo'=>true])->all();
+        $post = Yii::$app->request->post();
+        if ( $model->load($post) ){
+            if ($post['Igualas']['igualasServicios']==null)
+            {
+                Yii::$app->getSession()->setFlash('danger','Debe agregar al menos un servicio en la iguala');
             }
-            $model->slim_paypal_id = $plan_slim->getId();
-            $model->med_paypal_id = $plan_med->getId();
-            $model->plus_paypal_id = $plan_plus->getId();
+            else{
+                $model->slim = str_replace(',', '', $model->slim);
+                $model->med = str_replace(',', '', $model->med);
+                $model->plus = str_replace(',', '', $model->plus);
+                try {
+                    $plan_slim = paypalCreatePlan($model->slim, $model->nombre, $model->nombre."-slim", "Month");
+                    $plan_med = paypalCreatePlan($model->med, $model->nombre, $model->nombre."-med", "Month");
+                    $plan_plus = paypalCreatePlan($model->plus, $model->nombre, $model->nombre."-plus", "Month");
+                }catch(\Exception $e){
+                    Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                    return $this->render('create', [
+                       'model' => $model,
+                    ]);
+                }
+                $model->slim_paypal_id = $plan_slim->getId();
+                $model->med_paypal_id = $plan_med->getId();
+                $model->plus_paypal_id = $plan_plus->getId();
 
-            if ($model && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                if ($model && $model->save()) {
+                    foreach ($post['Igualas']['igualasServicios'] as $key => $value) {
+                        $igualaServicio = new \app\models\IgualasServicios();
+                        $igualaServicio->fk_servicio = $value;
+                        $igualaServicio->fk_iguala = $model->id;
+                        $igualaServicio->save();
+                    }
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
-            else {
-                return $this->render('create', [
-                   'model' => $model,
-                ]);
-            }
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('create', [
+            'model' => $model,
+            'servicios' => $servicios,
+        ]);
     }
 
     /**
@@ -137,30 +141,72 @@ class IgualasController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( $model->load(Yii::$app->request->post()) ){
-            $iguala = $this->findModel($id);
-            $model->slim = str_replace(',', '', $model->slim);
-            $model->med = str_replace(',', '', $model->med);
-            $model->plus = str_replace(',', '', $model->plus);
-            if ($model->slim != $iguala->slim){
-                // stripeUpdatePlan($model->slim_stripe, $model->slim);
-            }
-            if ($model->med != $iguala->med){
-                // stripeUpdatePlan($model->med_stripe, $model->med);
-            }
-            if ($model->plus != $iguala->plus){
-                // stripeUpdatePlan($model->plus_stripe, $model->plus);
-            }
+        $iguala = new Igualas();
+        $servicios = \app\models\Servicios::find()->where(['activo'=>true])->all();
 
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+        $post = Yii::$app->request->post();
+        if ( $model->load($post) ){
+            $iguala->load($post);
+            if ($post['Igualas']['igualasServicios']==null)
+            {
+                Yii::$app->getSession()->setFlash('danger','Debe agregar al menos un servicio en la iguala');
+            }
+            else{
+                $model->nombre = $model->nombre.date('now');
+                $model->visible = 0;
+                $model->estado = 0;
+                $model->save();
+
+                $iguala_servicio = ArrayHelper::getColumn($model->igualasServicios,'fk_servicio');
+                $iguala->slim = str_replace(',', '', $model->slim);
+                $iguala->med = str_replace(',', '', $model->med);
+                $iguala->plus = str_replace(',', '', $model->plus);
+
+                try {
+                    paypalDeletePlan($model->slim);
+                    paypalDeletePlan($model->med);
+                    paypalDeletePlan($model->plus);
+
+                    $plan_slim = paypalCreatePlan($iguala->slim, $iguala->nombre, $iguala->nombre."-slim", "Month");
+                    $plan_med = paypalCreatePlan($iguala->med, $iguala->nombre, $iguala->nombre."-med", "Month");
+                    $plan_plus = paypalCreatePlan($iguala->plus, $iguala->nombre, $iguala->nombre."-plus", "Month");
+                }catch(\Exception $e){
+                    Yii::$app->getSession()->setFlash('danger',$e->getMessage());
+                    return $this->render('update', [
+                       'model' => $model,
+                       'servicios' => $servicios,
+                    ]);
+                }
+                $iguala->slim_paypal_id = $plan_slim->getId();
+                $iguala->med_paypal_id = $plan_med->getId();
+                $iguala->plus_paypal_id = $plan_plus->getId();
+
+
+                if ($iguala->save()) {
+                    foreach ($model->igualasServicios as $key => $value) {
+                        if(!in_array($value->fk_servicio, $post['Igualas']['igualasServicios']))
+                        {
+                            $value->delete();
+                        }
+                        else{
+                            unset($post['Igualas']['igualasServicios'][$key]);
+                        }
+                    }
+                    foreach ($post['Igualas']['igualasServicios'] as $key => $value) {
+                        $igualaServicio = new \app\models\IgualasServicios();
+                        $igualaServicio->fk_servicio = $value;
+                        $igualaServicio->fk_iguala = $iguala->id;
+                        $igualaServicio->save();
+                    }
+                    return $this->redirect(['view', 'id' => $iguala->id]);
+                }
+
             }
         }
-        else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+            'servicios' => $servicios,
+        ]);
     }
 
     /**
@@ -360,6 +406,28 @@ class IgualasController extends Controller
             $model->plus = 1;
         }
         $model->save();
+    }
+
+    /**
+    *   Funcion para permitir al usuario activar/desactivar perfiles
+    *   @author Rodrigo Da Costa
+    *   @date 23/10/2017
+    */
+    public function actionActivar($id)
+    {
+        $model = $this->findModel($id);
+        if($model->estado)
+        {
+            $model->estado=0;
+            Yii::$app->getSession()->setFlash('warning',"Se desactivó la iguala con éxito.");
+        }
+        else
+        {
+            $model->estado=1;
+            Yii::$app->getSession()->setFlash('success',"Se activó la iguala con éxito.");
+        }
+        $model->save();
+        return $this->redirect('index');
     }
 
     /**

@@ -33,11 +33,31 @@ $this->params['breadcrumbs'][] = $this->title;
             'med_duracion',
             ['attribute' => 'plus','value'=>function($model){return $model->plus.' $';}],
             'plus_duracion',
+            ['attribute' => 'estado','value'=>function($model){return $model->estado ? "Activa":"Inactiva";},
+            'filter' => array(0 => 'Inactiva', 1 => 'Activa' )
+            ],
             // 'slim_stripe',
             // 'med_stripe',
             // 'plus_stripe',
 
-            ['class' => 'yii\grid\ActionColumn','template'=>'{view}'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{view}{update}{activar}',
+                'buttons'=> [
+                    'activar' => function($url,$model)
+                    {
+                        return Html::a(
+                        '<span class="glyphicon glyphicon-refresh"></span>',
+                        ['activar','id'=>$model->id],
+                        [
+                            'title'=> 'Activar',
+                            'data-pjax' => '0',
+                            'data' => [
+                                'confirm' => '¿Desea activar/desactivar esta iguala?',
+                                'method' => 'post',
+                            ],
+                        ]);
+                    }
+                ],
+            ],
         ],
     ]); ?>
 </div>

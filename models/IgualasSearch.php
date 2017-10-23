@@ -18,7 +18,7 @@ class IgualasSearch extends Igualas
     public function rules()
     {
         return [
-            [['id', 'slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
+            [['id', 'slim_duracion', 'med_duracion', 'plus_duracion','estado'], 'integer'],
             [['nombre'], 'safe'],
             [['slim', 'med', 'plus', 'slim_paypal_id', 'med_paypal_id', 'plus_paypal_id'], 'number'],
         ];
@@ -67,9 +67,11 @@ class IgualasSearch extends Igualas
             'slim' => $this->slim,
             'med' => $this->med,
             'plus' => $this->plus,
+            'estado' => $this->estado,
             'slim_paypal_id' => $this->slim_paypal_id,
             'med_paypal_id' => $this->med_paypal_id,
             'plus_paypal_id' => $this->plus_paypal_id,
+            'visible' => 1,
         ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre]);

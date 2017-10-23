@@ -13,6 +13,8 @@ use Yii;
  * @property integer $slim_duracion
  * @property integer $med_duracion
  * @property integer $plus_duracion
+ * @property integer $estado
+ * @property integer $visible
  * @property double $slim
  * @property double $med
  * @property double $plus
@@ -44,7 +46,7 @@ class Igualas extends \yii\db\ActiveRecord
         return [
             [['nombre', 'slim', 'med', 'plus'], 'required'],
             //[['descripcion'], 'string'],
-            [['slim_duracion', 'med_duracion', 'plus_duracion'], 'integer'],
+            [['slim_duracion', 'med_duracion', 'plus_duracion','estado','visible'], 'integer'],
             // [['slim', 'med', 'plus'], 'number'],
             [['nombre', 'slim_paypal_id', 'med_paypal_id', 'plus_paypal_id'], 'string', 'max' => 255],
             [['slim_paypal_id'], 'unique'],
@@ -61,16 +63,18 @@ class Igualas extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
-            'slim_duracion' => 'Slim Duracion',
-            'med_duracion' => 'Med Duracion',
-            'plus_duracion' => 'Plus Duracion',
+            'descripcion' => 'Descripción',
+            'slim_duracion' => 'Slim Duración',
+            'med_duracion' => 'Med Duración',
+            'plus_duracion' => 'Plus Duración',
             'slim' => 'Slim',
             'med' => 'Med',
             'plus' => 'Plus',
             'slim_paypal_id' => 'Slim Paypal ID',
             'med_paypal_id' => 'Med Paypal ID',
             'plus_paypal_id' => 'Plus Paypal ID',
+            'estado' => 'Estado',
+            'igualasServicios' => 'Asignar Servicio a Iguala',
         ];
     }
 

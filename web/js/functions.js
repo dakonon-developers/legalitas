@@ -197,3 +197,9 @@ function remove_element(element){
 	var container = $(element).parent().parent();
 	$(container).remove();
 }
+
+function load_servicios(){
+	$.each(servicios,function(key,value){
+		$('input[value='+value.id+']').prop('checked',true)
+	});
+}

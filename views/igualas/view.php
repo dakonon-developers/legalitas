@@ -26,13 +26,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'slim',
             'med',
             'plus',
+            ['attribute' => 'estado','value'=>$model->estado ? "Activa":"Inactiva"]
             // 'slim_stripe',
             // 'med_stripe',
             // 'plus_stripe',
         ],
     ]) ?>
 
+    <h3 class="text-center">Servicios asignados</h3>
+    <ul>
+        <?php 
+            foreach ($model->igualasServicios as $key => $value) {
+                echo '<li>'.$value->fkServicio->nombre.'</li>';
+            }
+        ?>
+    </ul>
+
+    <div class="alert alert-danger">Si eliminas esta iguala, a los usuarios que esten inscritos se les seguira cobrando hasta el vencimiento
+        de la misma.
+    </div>
+
     <p>
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id], [
+            'class' => 'btn btn-primary']) ?>
         <?= Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
