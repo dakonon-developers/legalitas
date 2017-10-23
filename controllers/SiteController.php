@@ -27,7 +27,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout','actuaciones'],
+                'only' => ['logout','actuaciones','mail'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
@@ -38,6 +38,11 @@ class SiteController extends Controller
                         'actions' => ['actuaciones'],
                         'allow' => true,
                         'roles' => ['Usuario','Abogado Interno','Abogado Externo'],
+                    ],
+                    [
+                        'actions' => ['mail'],
+                        'allow' => true,
+                        'roles' => ['Admin'],
                     ],
                 ],
             ],
@@ -359,6 +364,29 @@ class SiteController extends Controller
 
         return $this->render('servicios', [
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Muestra envía correos a un listado x de usuarios.
+     *
+     * @return render send_mail
+     */
+    public function actionMail(){
+        $model = new \app\forms\SendMailsForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if($model->sendMails($emails)){
+
+                Yii::$app->session->setFlash('success', 'Se enviaron los correos con éxito.');
+
+            } else {
+                Yii::$app->session->setFlash('error', 'Lo sentimos, no se pudieron enviar correos.');
+            }
+        }
+
+        return $this->render('send_mail',[
+            'model' => $model
         ]);
     }
 }

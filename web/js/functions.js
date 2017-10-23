@@ -203,3 +203,18 @@ function load_servicios(){
 		$('input[value='+value.id+']').prop('checked',true)
 	});
 }
+
+function llenar_grupo(valor){
+	var init = '<option value>Seleccione el grupo</option>';
+	if(valor!=''){
+		$('#sendmailsform-email').html("");
+		$('#sendmailsform-email').attr('disabled',false);
+		$.each($('#sendmailsform-email option'),function(key,value){
+			console.log(value);
+		})
+
+	}
+	else{
+		$('#sendmailsform-email').attr('disabled',true);
+	}
+}

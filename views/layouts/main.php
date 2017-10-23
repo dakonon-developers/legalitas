@@ -62,7 +62,8 @@ LegalitasAsset::register($this);
                ['label' => 'Registro de Uso', 'url' => ['/servicio-payments/index']],
             ]];
             $menuItems[] = ['label' => 'CONFIGURACIÓN', 'items' => [
-                ['label' => 'Igualas', 'url' => ['/igualas/index']],
+               ['label' => 'Envíar Correos', 'url' => ['/site/mail']],
+               ['label' => 'Igualas', 'url' => ['/igualas/index']],
                ['label' => 'Servicios', 'url' => ['/servicios/index']], 
                ['label' => 'Servicios - Promociones', 'url' => ['/promociones/index']],
                ['label' => 'Cobro Inicial', 'url' => ['/pagos-config/index']],
