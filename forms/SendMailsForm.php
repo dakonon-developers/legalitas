@@ -50,15 +50,22 @@ class SendMailsForm extends Model
     public function sendMails($emails)
     {
         if ($this->validate()) {
-            Yii::$app->mailer->compose()
-                ->setFrom([[Yii::$app->params['adminEmail'] => 'Administrador LegalitasRd']])
-                ->setTo($emails)
-                ->setSubject($this->subject)
-                ->setTextBody($this->body)
-                ->send();
+            try{
+                
+                Yii::$app->mailer->compose()
+                    ->setFrom([\Yii::$app->params['adminEmail'] => 'Administrador LegalitasRd'])
+                    ->setTo($emails)
+                    ->setSubject($this->subject)
+                    ->setTextBody($this->body)
+                    ->send();
+                return true;
+                
+            }catch(\Exception $e){
 
-            return true;
+                return false;
+            }
+            
         }
-        return false;
+
     }
 }

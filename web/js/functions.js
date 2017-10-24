@@ -205,14 +205,23 @@ function load_servicios(){
 }
 
 function llenar_grupo(valor){
-	var init = '<option value>Seleccione el grupo</option>';
+	var init = '<option>Seleccione el grupo</option>';
 	if(valor!=''){
 		$('#sendmailsform-email').html("");
 		$('#sendmailsform-email').attr('disabled',false);
-		$.each($('#sendmailsform-email option'),function(key,value){
-			console.log(value);
-		})
-
+		if(valor==1){
+			var option = '<option value="1">Cliente</option>';
+			option += '<option value="2">Abogado</option>';
+			option += '<option value="3">Todos</option>';
+			$('#sendmailsform-email').html(option);
+		}
+		else{
+			var option = '';
+			$.each(igualas,function(key,value){
+				option += '<option value="'+value.id+'">'+value.nombre+'</option>';
+			});
+			$('#sendmailsform-email').html(option);
+		}
 	}
 	else{
 		$('#sendmailsform-email').attr('disabled',true);

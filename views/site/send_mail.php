@@ -7,6 +7,7 @@ $primera_lista = [1 => 'Todos', 2 => 'Por Igualas'];
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\web\View;
 
 $this->title = 'Enviar Correos';
 $this->params['breadcrumbs'][] = $this->title;
@@ -44,4 +45,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
     </div>
 
+</div>
+
+<?php
+    $this->registerJs(
+        "var igualas = ".\yii\helpers\Json::htmlEncode($igualas).";",
+        View::POS_HEAD,'igualas'
+    );
+    $script = <<< JS
+    if($('sendmailsform-tipo').val()!='')
+    {
+        llenar_grupo($('#sendmailsform-tipo').val());
+    }
+JS;
+
+    $this->registerJs($script);
+?>
 </div>

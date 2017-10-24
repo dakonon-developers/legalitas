@@ -376,17 +376,70 @@ class SiteController extends Controller
         $model = new \app\forms\SendMailsForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if($model->sendMails($emails)){
-
-                Yii::$app->session->setFlash('success', 'Se enviaron los correos con éxito.');
-
-            } else {
-                Yii::$app->session->setFlash('error', 'Lo sentimos, no se pudieron enviar correos.');
+            if($model->tipo == 1){
+                if($model->email==1){
+                    $mails = $this->getUsersMail(true);
+                }
+                else if($model->email==2){
+                    $mails = $this->getUsersMail(false);
+                }
+                else{
+                    $mails = $this->getUsersMail(false,true);   
+                }
             }
-        }
+            else{
+                $mails = $this->getIgualasMail($model->email);
+            }
+            if(count($mails)>0)
+            {
+                if($model->sendMails($mails)){
+                    Yii::$app->session->setFlash('success', 'Se enviaron los correos con éxito.');
+                } else {
+                    Yii::$app->session->setFlash('error', 'Lo sentimos, no se pudieron enviar correos.');
+                }
+            }
+            else{
+                Yii::$app->session->setFlash('error', 'No hay correos de usuario aquí.');
+            }
 
+        }
+        $igualas = \app\models\Igualas::find()->where(['visible'=>1])->all();
         return $this->render('send_mail',[
-            'model' => $model
+            'model' => $model,
+            'igualas' => $igualas
         ]);
     }
+
+    /**
+     * Obtiene los correos de los usuarios del sistema.
+     *
+     * @param $cliente Booleano para saber si es cliente o no
+     * @param $all Booleano para saber si son todos los usuarios
+     * @return array con los correos
+     */
+    public function getUsersMail($cliente,$all=false){
+        if($all){
+            return \yii\helpers\ArrayHelper::getColumn(\app\models\User::find()->where('"username" != \'admin\'')->asArray()->all(),'email');
+        }
+        if($cliente){
+            return \yii\helpers\ArrayHelper::getColumn(\app\models\PerfilUsuario::find()->joinWith('fkUsuario')->asArray()->all(),'fkUsuario.email');
+        }
+        else{
+            return \yii\helpers\ArrayHelper::getColumn(\app\models\PerfilAbogado::find()->joinWith('fkUsuario')->asArray()->all(),'fkUsuario.email');   
+        }
+    }
+
+        /**
+     * Obtiene los correos de los usuarios por iguala.
+     *
+     * @param $iguala_id Integer Recibe el id de la iguala
+     * @return array con los correos
+     */
+    public function getIgualasMail($iguala_id){
+        $query =\app\models\IgualasUsers::find()->where(['fk_iguala'=>$iguala_id])
+        ->joinWith('fkUsersCliente.fkUsuario')
+        ->asArray()->all();
+        return \yii\helpers\ArrayHelper::getColumn($query,'fkUsersCliente.fkUsuario.email');
+    }
+
 }
