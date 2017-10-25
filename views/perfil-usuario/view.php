@@ -10,7 +10,9 @@ $categorias = $const['categories'];
 /* @var $model app\models\PerfilUsuario */
 
 $this->title = $model->nombres.' '.$model->apellidos;
-$this->params['breadcrumbs'][] = ['label' => 'Perfil Usuarios', 'url' => ['index']];
+if(\Yii::$app->user->can('Admin')){
+    $this->params['breadcrumbs'][] = ['label' => 'Perfil Usuarios', 'url' => ['index']];
+}
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="perfil-usuario-view">

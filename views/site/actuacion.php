@@ -48,20 +48,13 @@ $this->params['breadcrumbs'][] = $this->title;
             $html_dudas .= '<li class="not_decoration">'.$dudas_enlace.'</li></ul>';
             $html .= $html_respuesta;
             $html .= $html_dudas;
+            if(\Yii::$app->user->can('Abogado Interno')){
+                $button = '<li class="not_decoration">';
+                $button .= '<a href="'.Url::to(['/perfil-usuario/view', 'id' => $model->fk_cliente]).'">Ver Perfil del Cliente</a></li>';
+                $html .= $button;
+            }
             $html .= '</ul></li></ul>';
-            /*$buttons = '<a class="btn btn-success" href="'.Url::to(['/respuesta-consulta', 'consulta' => $model->id]).'">Respuesta</a>';
-            $buttons .= '<a class="btn btn-primary" href="'.Url::to(['/dudas', 'consulta' => $model->id]).'">Dudas</a>';
-            $html = '<div class="panel panel-default">';
-            $html .= '<div class="panel-heading">';
-            $html .= $model->pregunta;
-            $html .= ' </div>';
-            $html .= '<div class="panel-body">';
-            $html .= '<b>Archivo: </b>'.$archivo.'<br/>';
-            $html .= '<b>Abogado: </b>'.$abogado.'<br/>';
-            $html .= '<b>Finalizado: </b>'.$finalizado.'<br/>';
-            $html .= '</div>';
-            $html .= '<div class="panel-footer">'. $buttons .'</div>';
-            $html .= '</div>';*/
+
             return $html;
         },
     ]) ?>

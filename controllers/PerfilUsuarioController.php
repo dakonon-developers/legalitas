@@ -41,6 +41,11 @@ class PerfilUsuarioController extends Controller
                         'roles' => ['Usuario'],
                     ],
                     [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['Abogado Interno'],
+                    ],
+                    [
                         'actions' => ['index','activar','view', 'change-password'],
                         'allow' => true,
                         'roles' => ['Admin'],
