@@ -54,15 +54,15 @@ use yii\web\View;
                     </div>
                 </div>
 
-                    <div class="row">
+                    <!--<div class="row">
                     <!--
                         <div class="col-md-6">
                                 <?= $form->field($model, 'cv_adjunto')->fileInput() ?>
-                        </div>-->
+                        </div>
                         <div class="col-md-6">
                                 <?= $form->field($model, 'tipo_abogado')->checkbox(['data-toggle'=>'toggle', 'data-on'=>'Interno','data-off'=> 'Externo', 'onchange'=>'checkbox_abogado(this,".field-abogadoform-consulta_info>label");']) ?>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="row">
                         <div class="col-md-4">
                             <?= $form->field($model, 'fk_nacionalidad')->dropDownList(ArrayHelper::map($nacionalidad,'id','nombre'),
